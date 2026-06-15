@@ -67,7 +67,7 @@ def run_ranking_pipeline(candidates_path, jd_input, out_csv_path, top_n=100, use
         
         # Run BM25 filter
         bm25_filter = BM25Filter(all_candidates)
-        selected_candidates = bm25_filter.filter_candidates(parsed_jd, top_n=1500)
+        selected_candidates = bm25_filter.filter_candidates(parsed_jd, top_n=1000)
         
         for cand in selected_candidates:
             candidates_for_deep_scoring.append(cand)

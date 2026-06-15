@@ -1,7 +1,7 @@
 import os
 import sys
 
-def generate_rule_based_reasoning(candidate, score, breakdown, rank=None):
+def generate_rule_based_reasoning(candidate, score, breakdown, target_skills=None, rank=None):
     """
     Generate dynamic, non-templated candidate reasoning highlighting credentials,
     specific skills matched, platform signals, and potential concerns.
@@ -14,14 +14,24 @@ def generate_rule_based_reasoning(candidate, score, breakdown, rank=None):
     trap_score = breakdown.get("trap_score", 0.0)
     is_trap = trap_score > 0.4
     
-    # Count and extract matched AI skills
+    # Count and extract matched skills (filter by target_skills to avoid non-JD or excluded skills like Computer Vision)
     skills = candidate.get("skills", [])
-    from src.honeypot_detector import AI_SKILLS
     matched_skills = []
-    for s in skills:
-        s_name = s.get("name", "")
-        if s_name.lower() in {sk.lower() for sk in AI_SKILLS}:
-            matched_skills.append(s_name)
+    
+    if target_skills:
+        target_skills_lower = {s.lower() for s in target_skills}
+        for s in skills:
+            s_name = s.get("name", "")
+            if s_name.lower() in target_skills_lower:
+                matched_skills.append(s_name)
+    else:
+        # Fallback to AI_SKILLS taxonomy if target_skills not provided
+        from src.honeypot_detector import AI_SKILLS
+        for s in skills:
+            s_name = s.get("name", "")
+            if s_name.lower() in {sk.lower() for sk in AI_SKILLS}:
+                matched_skills.append(s_name)
+                
     ai_skill_count = len(matched_skills)
     
     if is_trap:
@@ -202,11 +212,12 @@ def rerank_top_candidates(top_candidates, parsed_jd, use_llm=False):
             top_candidates,
             key=lambda x: (-round(x["_final_score"] / 100.0, 4), x["candidate_id"])
         )
+        target_skills = set(parsed_jd.get("required_skills", []) + parsed_jd.get("nice_to_have_skills", []))
         for rank, cand in enumerate(sorted_candidates, 1):
             cand["_rank"] = rank
             score = cand["_final_score"]
             breakdown = cand["_breakdown"]
-            cand["_reasoning"] = generate_rule_based_reasoning(cand, score, breakdown, rank)
+            cand["_reasoning"] = generate_rule_based_reasoning(cand, score, breakdown, target_skills, rank)
         return sorted_candidates
             
     # If LLM succeeded, apply standard sorting and ranking
