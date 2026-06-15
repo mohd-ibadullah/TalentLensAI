@@ -155,9 +155,36 @@ def compute_signal_bonus(signals):
         
     # If no data, return a neutral score
     if not scores:
-        return 0.5
+        base_score = 0.5
+    else:
+        base_score = float(np.mean(scores))
         
-    return float(np.mean(scores))
+    # Apply advanced behavioral signal envelopes
+    modifier = 0.0
+    
+    # 1. Notice Period Bonus (+0.05 if notice period <= 30 days and not -1)
+    notice = signals.get("notice_period_days", -1)
+    if notice != -1 and notice <= 30:
+        modifier += 0.05
+        
+    # 2. Recruiter Response Rate Penalty (-0.05 if response rate < 0.15 and not -1)
+    if resp != -1 and resp < 0.15:
+        modifier -= 0.05
+        
+    # 3. Inactivity Penalty (-0.03 if last_active_date > 180 days relative to 2026-06-16)
+    last_active = signals.get("last_active_date", None)
+    if last_active:
+        try:
+            from datetime import datetime, date
+            ref_date = date(2026, 6, 16)
+            active_date = datetime.strptime(last_active, "%Y-%m-%d").date()
+            if (ref_date - active_date).days > 180:
+                modifier -= 0.03
+        except Exception:
+            pass
+            
+    final_score = base_score + modifier
+    return float(np.clip(final_score, 0.0, 1.0))
 
 def calculate_candidate_score(candidate, semantic_similarity, trap_score, parsed_jd, weights=None):
     """
