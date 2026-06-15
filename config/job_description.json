@@ -1,0 +1,35 @@
+{
+  "role_title": "Senior AI Engineer — Search, Retrieval & Ranking",
+  "min_years_experience": 4.0,
+  "seniority_level": "Senior",
+  "required_skills": [
+    "Python",
+    "NLP",
+    "Vector Search",
+    "Embeddings",
+    "LLM Fine-tuning",
+    "Information Retrieval",
+    "Ranking Systems"
+  ],
+  "nice_to_have_skills": [
+    "PyTorch",
+    "TensorFlow",
+    "Distributed Systems",
+    "MLOps",
+    "RAG",
+    "Milvus",
+    "FAISS",
+    "Pinecone"
+  ],
+  "domain_keywords": [
+    "AI",
+    "ML",
+    "Search Infrastructure",
+    "Recommendation Systems",
+    "Natural Language Processing",
+    "Information Retrieval",
+    "Ranking",
+    "Vector Search",
+    "Embeddings"
+  ]
+}
