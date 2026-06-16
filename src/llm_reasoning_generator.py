@@ -179,7 +179,7 @@ def main():
                         help="Path to job_description.json")
     parser.add_argument("--submission", default=str(project_root / "outputs" / "mohd_ibadullah.csv"),
                         help="Path to our submission CSV to update")
-    parser.add_argument("--gemini-key", default=os.environ.get("GEMINI_API_KEY", "AIzaSyBzfUPgrDLgL9_Ng8ibanXSLkwxvTfwySQ"),
+    parser.add_argument("--gemini-key", default=os.environ.get("GEMINI_API_KEY", ""),
                         help="Gemini API Key")
     parser.add_argument("--groq-key", default=os.environ.get("api_key") or os.environ.get("GROQ_API_KEY"),
                         help="Groq API Key")
