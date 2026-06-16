@@ -65,7 +65,7 @@ streamlit run app/streamlit_app.py
 
 ## 📊 Core Performance Metrics
 *   **Scanning Speed:** Streams and parses 100,000 JSON lines in a single pass in **~10 seconds**.
-*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~139 seconds**.
+*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~151 seconds**.
 *   **Memory Footprint:** Uses **~800MB RAM** during streaming (well under the 16GB budget).
 *   **Decoy Resilience:** Correctly identifies and penalizes all decoy profiles (like `CAND_0000002` through `CAND_0000005`), filtering them completely out of the top 100 (0.0% honeypot rate).
 
@@ -73,6 +73,6 @@ streamlit run app/streamlit_app.py
 
 ## ⚠️ Limitations
 - Live demo runs on 50-candidate sample (Streamlit Cloud memory constraints prevent full 100K dataset hosting)
-- Embedding model is single-vector (bi-encoder); a cross-encoder reranker on top 100 would improve precision further
+- Cross-encoder reranker added for top-150 precision boost; further gains possible with larger cross-encoder models
 - No formal evaluation metrics (NDCG, MAP) against labeled ground truth — ranking quality is validated via 0% honeypot rate and manual inspection
 - Rule-based reasoning generator produces deterministic text; LLM-generated reasoning would be more natural

@@ -1,5 +1,14 @@
 # TalentLens AI — Development Changelog
 
+## v1.4.0 — Cross-Encoder Reranker & Repo Hygiene
+- Added cross-encoder/ms-marco-MiniLM-L6-v2 pairwise reranker (Stage 5)
+- Pipeline now 6 stages: BM25 → Honeypot → Embedding → Scoring → Cross-Encoder → Reasoning
+- Blended scoring: 60% feature score + 40% cross-encoder score for top-150 candidates
+- Cross-encoder adds only ~4s runtime (total: ~151s, well under 300s budget)
+- Score range widened: 0.57–0.93 (vs 0.70–0.89 before) — better differentiation
+- Added .gitignore, MIT LICENSE, fixed all hardcoded paths, added Limitations to README
+- 0 honeypots in top 100, validate_submission.py PASS
+
 ## v1.3.0 — Recruiter Explainability & Fairness (Final)
 - Added Gemini 2.5 Flash powered Interview Question Generator in Streamlit
 - Added Fairness & Responsible AI documentation
