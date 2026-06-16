@@ -1,15 +1,33 @@
+"""
+Test pipeline on sample candidates.
+Usage: python src/test_pipeline.py --data ./data/sample_candidates.json
+"""
 import json
 import os
 import sys
+import argparse
+from pathlib import Path
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.pipeline import run_ranking_pipeline
 
+
 def test():
-    candidates_path = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/sample_candidates.json"
-    jd_config_path = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/talent-lens-ai/config/job_description.json"
-    out_csv_path = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/talent-lens-ai/outputs/sample_test_run.csv"
-    
+    project_root = Path(__file__).resolve().parent.parent
+
+    parser = argparse.ArgumentParser(description="Test pipeline on sample data")
+    parser.add_argument("--data", default=str(project_root / "data" / "sample_candidates.json"),
+                        help="Path to sample_candidates.json")
+    parser.add_argument("--jd", default=str(project_root / "config" / "job_description.json"),
+                        help="Path to job_description.json")
+    parser.add_argument("--out", default=str(project_root / "outputs" / "sample_test_run.csv"),
+                        help="Output CSV path")
+    args = parser.parse_args()
+
+    candidates_path = args.data
+    jd_config_path = args.jd
+    out_csv_path = args.out
+
     # Load JD
     with open(jd_config_path, "r", encoding="utf-8") as f:
         jd_input = json.load(f)

@@ -1,13 +1,27 @@
+"""
+Honeypot detector evaluation on sample candidates.
+Usage: python src/test_honeypot.py --data ./data/sample_candidates.json
+"""
 import json
 import os
 import sys
+import argparse
+from pathlib import Path
 
 # Add src folder to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.honeypot_detector import detect_trap
 
+
 def analyze_honeypots():
-    data_path = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/sample_candidates.json"
+    project_root = Path(__file__).resolve().parent.parent
+
+    parser = argparse.ArgumentParser(description="Evaluate honeypot detector")
+    parser.add_argument("--data", default=str(project_root / "data" / "sample_candidates.json"),
+                        help="Path to sample_candidates.json")
+    args = parser.parse_args()
+
+    data_path = args.data
     with open(data_path, "r", encoding="utf-8") as f:
         candidates = json.load(f)
 
