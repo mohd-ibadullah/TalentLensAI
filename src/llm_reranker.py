@@ -1,7 +1,7 @@
 import os
 import sys
 
-def generate_rule_based_reasoning(candidate, score, breakdown, target_skills=None, rank=None):
+def generate_rule_based_reasoning(candidate: dict, score: float, breakdown: dict, target_skills: set[str] | None = None, rank: int | None = None) -> str:
     """
     Generate dynamic, non-templated candidate reasoning highlighting credentials,
     specific skills matched, platform signals, and potential concerns.
@@ -141,7 +141,7 @@ def generate_rule_based_reasoning(candidate, score, breakdown, target_skills=Non
         
     return reasoning
 
-def rerank_top_candidates(top_candidates, parsed_jd, use_llm=False):
+def rerank_top_candidates(top_candidates: list[dict], parsed_jd: dict, use_llm: bool = False) -> list[dict]:
     """
     Reranks the top candidates and generates the required reasoning text.
     Returns the final list of candidates with ranks, scores, and reasonings.

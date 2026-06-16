@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoModel
 import numpy as np
 
 class EmbeddingScorer:
-    def __init__(self, model_name="BAAI/bge-base-en-v1.5"):
+    def __init__(self, model_name: str = "BAAI/bge-base-en-v1.5") -> None:
         """
         Load the tokenizer and model locally using Hugging Face transformers.
         BGE-base-en-v1.5 produces 768-dim embeddings with superior retrieval quality
@@ -31,7 +31,7 @@ class EmbeddingScorer:
         """
         return model_output[0][:, 0]  # First token ([CLS]) from each sequence
 
-    def get_embeddings(self, texts, batch_size=128, is_query=False):
+    def get_embeddings(self, texts: list[str], batch_size: int = 128, is_query: bool = False) -> np.ndarray:
         """
         Computes L2-normalized embeddings for a list of texts in batches.
         For BGE models, query texts get an instruction prefix for better retrieval.
@@ -70,7 +70,7 @@ class EmbeddingScorer:
             
         return np.vstack(all_embeddings)
 
-    def compute_similarity(self, jd_text, candidate_texts):
+    def compute_similarity(self, jd_text: str, candidate_texts: list[str]) -> list[float]:
         """
         Computes cosine similarity between the JD text and a list of candidate texts.
         Since embeddings are L2 normalized, cosine similarity is just the dot product.
@@ -88,3 +88,4 @@ class EmbeddingScorer:
         similarities = np.dot(cand_embeddings, jd_embedding) # Shape: (N,)
         
         return list(similarities.astype(float))
+

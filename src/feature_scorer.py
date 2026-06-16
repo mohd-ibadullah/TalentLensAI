@@ -17,7 +17,7 @@ PROFICIENCY_MULTIPLIERS = {
     "expert": 1.2
 }
 
-def match_skill(cand_skill_name, target_skills):
+def match_skill(cand_skill_name: str, target_skills: list[str]) -> tuple[str | None, bool, float]:
     """
     Uses RapidFuzz to match candidate's skill against a list of target skills.
     Returns (matched_skill_name, is_match, score) where score is 0-1.
@@ -40,7 +40,7 @@ def match_skill(cand_skill_name, target_skills):
             
     return None, False, 0.0
 
-def compute_skill_match_score(candidate_skills, parsed_jd):
+def compute_skill_match_score(candidate_skills: list[dict], parsed_jd: dict) -> float:
     """
     Calculates a normalized score in [0.0, 1.0] indicating skill fit.
     Weighs required skills higher than nice-to-have, and scales based on 
@@ -87,7 +87,7 @@ def compute_skill_match_score(candidate_skills, parsed_jd):
     normalized_score = min(1.0, total_points / max_possible_points) if max_possible_points > 0 else 0.0
     return normalized_score
 
-def compute_title_seniority_match(profile, parsed_jd):
+def compute_title_seniority_match(profile: dict, parsed_jd: dict) -> float:
     """
     Calculates title alignment and years of experience fit.
     Returns a score in [0.0, 1.0].
@@ -121,7 +121,7 @@ def compute_title_seniority_match(profile, parsed_jd):
     # Combine: 60% title relevance, 40% experience relevance
     return 0.6 * title_relevance + 0.4 * yoe_score
 
-def compute_signal_bonus(signals):
+def compute_signal_bonus(signals: dict) -> float:
     """
     Normalize Redrob signals. -1 values are treated as missing/neutral,
     not penalized. Returns a score in [0.0, 1.0].
@@ -186,7 +186,7 @@ def compute_signal_bonus(signals):
     final_score = base_score + modifier
     return float(np.clip(final_score, 0.0, 1.0))
 
-def calculate_candidate_score(candidate, semantic_similarity, trap_score, parsed_jd, weights=None):
+def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_score: float, parsed_jd: dict, weights: dict | None = None) -> tuple[float, dict]:
     """
     Combines all scoring components into a final score in [0.0, 100.0].
     Returns final score and a dictionary containing individual components.
@@ -240,3 +240,4 @@ def calculate_candidate_score(candidate, semantic_similarity, trap_score, parsed
     }
     
     return float(final_score), breakdown
+

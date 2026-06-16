@@ -40,7 +40,7 @@ TITLE_CATEGORY_MAP = {
     "software engineer": "Software Engineering", "developer": "Software Engineering", "coder": "Software Engineering"
 }
 
-def classify_title(title):
+def classify_title(title: str) -> str:
     """Classify a job title into a standard category."""
     if not title:
         return "Unknown"
@@ -56,7 +56,7 @@ def classify_title(title):
             
     return "Other"
 
-def check_boilerplate_description(desc):
+def check_boilerplate_description(desc: str) -> str | None:
     """Check if the description matches one of the known duplicate templates."""
     if not desc:
         return None
@@ -66,7 +66,7 @@ def check_boilerplate_description(desc):
             return category
     return None
 
-def detect_trap(candidate):
+def detect_trap(candidate: dict) -> tuple[float, str]:
     """
     Evaluates a candidate profile to determine if it is a decoy/honeypot.
     Returns:

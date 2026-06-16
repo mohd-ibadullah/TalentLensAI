@@ -11,7 +11,7 @@ COMMON_SKILLS_TAXONOMY = [
     "Machine Learning", "Deep Learning", "Natural Language Processing", "Computer Vision"
 ]
 
-def parse_job_description(jd_input):
+def parse_job_description(jd_input: dict | str) -> dict:
     """
     Parses a job description which can be either a dictionary (structured JSON) or a free-text string.
     Returns a structured dictionary of requirements.
