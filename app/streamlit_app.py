@@ -408,6 +408,25 @@ if __name__ == "__main__":
 
             st.subheader("🏆 Discovery Ranking (Top Matches)")
 
+            # Generate downloadable CSV from ranked results
+            csv_rows = []
+            for idx, cand in enumerate(ranked[:100]):
+                csv_rows.append({
+                    "candidate_id": cand["candidate_id"],
+                    "rank": cand["_rank"],
+                    "score": round(cand["_final_score"] / 100.0, 4),
+                    "reasoning": cand["_reasoning"]
+                })
+            df_download = pd.DataFrame(csv_rows)
+            csv_data = df_download.to_csv(index=False)
+            st.download_button(
+                label="📥 Download Ranked CSV",
+                data=csv_data,
+                file_name="ranked_candidates.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+
             # Display candidates
             for idx in range(min(max_results, len(ranked))):
                 cand = ranked[idx]
