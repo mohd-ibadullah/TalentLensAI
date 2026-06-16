@@ -207,10 +207,12 @@ if __name__ == "__main__":
     </style>
     """, unsafe_allow_html=True)
 
-    # Data paths
-    SAMPLE_PATH = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/sample_candidates.json"
-    FULL_PATH = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl"
-    DEFAULT_JD_PATH = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/talent-lens-ai/config/job_description.json"
+    # Data paths — resolved relative to project root for portability (local + Streamlit Cloud)
+    _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    SAMPLE_PATH = os.path.join(_PROJECT_ROOT, "data", "sample_candidates.json")
+    FULL_PATH = os.path.join(_PROJECT_ROOT, "data", "candidates.jsonl")  # Only available locally
+    DEFAULT_JD_PATH = os.path.join(_PROJECT_ROOT, "config", "job_description.json")
+    _FULL_DATASET_AVAILABLE = os.path.exists(FULL_PATH)
 
     @st.cache_resource
     def load_embedding_model():
@@ -285,11 +287,15 @@ if __name__ == "__main__":
     # Sidebar
     st.sidebar.header("🔧 Configuration")
 
-    dataset_type = st.sidebar.selectbox(
-        "Select Dataset Source",
-        options=["Sample Dataset (50 candidates)", "Full Dataset (100,000 candidates)"],
-        index=1  # Default to Full Dataset for demo impact
-    )
+    if _FULL_DATASET_AVAILABLE:
+        dataset_type = st.sidebar.selectbox(
+            "Select Dataset Source",
+            options=["Sample Dataset (50 candidates)", "Full Dataset (100,000 candidates)"],
+            index=1  # Default to Full Dataset for demo impact
+        )
+    else:
+        dataset_type = "Sample Dataset (50 candidates)"
+        st.sidebar.info("🔍 Running on Sample Dataset (50 candidates). Full dataset available in local mode only.")
 
     # Custom Weights tuning
     st.sidebar.subheader("⚖️ Scoring Formula Weights")
