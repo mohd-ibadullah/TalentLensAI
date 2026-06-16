@@ -1,7 +1,7 @@
 import re
 from rank_bm25 import BM25Okapi
 
-def tokenize(text):
+def tokenize(text: str) -> list[str]:
     """
     Simple word tokenizer: lowercases text and extracts alphanumeric tokens.
     """
@@ -9,7 +9,7 @@ def tokenize(text):
         return []
     return re.findall(r'\b\w+\b', text.lower())
 
-def build_candidate_document(candidate):
+def build_candidate_document(candidate: dict) -> str:
     """
     Combine candidate profile fields into a single text document for lexical search.
     """
@@ -30,13 +30,13 @@ def build_candidate_document(candidate):
     return document_text
 
 class BM25Filter:
-    def __init__(self, candidates_list):
+    def __init__(self, candidates_list: list[dict]) -> None:
         self.candidates = candidates_list
         self.corpus = [build_candidate_document(c) for c in candidates_list]
         self.tokenized_corpus = [tokenize(doc) for doc in self.corpus]
         self.bm25 = BM25Okapi(self.tokenized_corpus)
         
-    def filter_candidates(self, parsed_jd, top_n=3000):
+    def filter_candidates(self, parsed_jd: dict, top_n: int = 3000) -> list[dict]:
         """
         Rank all candidates using BM25 against the Job Description and return the top N.
         """
@@ -66,3 +66,4 @@ class BM25Filter:
             top_candidates.append(cand)
             
         return top_candidates
+

@@ -27,7 +27,7 @@ class CrossEncoderReranker:
         yoe = profile.get("years_of_experience", 0)
         return f"{title} ({yoe} years). {summary}. Skills: {top_skills_str}"
 
-    def rerank(self, jd_text: str, candidates: list, blend_weight: float = 0.4) -> list:
+    def rerank(self, jd_text: str, candidates: list[dict], blend_weight: float = 0.4) -> list[dict]:
         """
         Rerank candidates using cross-encoder scores blended with original scores.
         
