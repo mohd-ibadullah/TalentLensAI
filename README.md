@@ -5,7 +5,7 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
 ---
 
 ## 🌟 Key Features
-1. **Lexical BM25 Filtering (Stage 1):** Instantly filters candidate pools down from 100,000 to the top 1,500 using a memory-efficient index.
+1. **Lexical BM25 Filtering (Stage 1):** Instantly filters candidate pools down from 100,000 to the top 1,000 using a memory-efficient index.
 2. **Honeypot/Trap Detector (Stage 2):** Detects keyword-stuffer profiles using career mismatch algorithms, role category mapping, summary templates checking, and career title-description consistency checks.
 3. **Deep Scorer (Stage 3):** Combines semantic text similarity (`BAAI/bge-base-en-v1.5`, 768-dim with instruction-tuned query encoding), weighted skill-matching (with `RapidFuzz`), title relevance, and Redrob signals (recruiter response rate, connection counts, open-to-work status, profile completeness) without penalizing missing values.
 4. **Interactive Dashboard:** Premium dark-themed Streamlit application allowing custom JDs, dynamic weight tuning, and detailed candidate card expansions.
