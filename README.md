@@ -69,3 +69,10 @@ streamlit run app/streamlit_app.py
 *   **Memory Footprint:** Uses **~800MB RAM** during streaming (well under the 16GB budget).
 *   **Decoy Resilience:** Correctly identifies and penalizes all decoy profiles (like `CAND_0000002` through `CAND_0000005`), filtering them completely out of the top 100 (0.0% honeypot rate).
 
+---
+
+## ⚠️ Limitations
+- Live demo runs on 50-candidate sample (Streamlit Cloud memory constraints prevent full 100K dataset hosting)
+- Embedding model is single-vector (bi-encoder); a cross-encoder reranker on top 100 would improve precision further
+- No formal evaluation metrics (NDCG, MAP) against labeled ground truth — ranking quality is validated via 0% honeypot rate and manual inspection
+- Rule-based reasoning generator produces deterministic text; LLM-generated reasoning would be more natural
