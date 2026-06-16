@@ -54,7 +54,7 @@ streamlit run app/streamlit_app.py
 
 ## 🔍 System Architecture & Pipeline Flow
 1. **JD Parsing:** Standardizes job title, required skills, optional skills, experience, and domain keywords.
-2. **BM25 Lexical Filter (100K ➔ 1.5K):** A fast single-pass search index reduces candidate count by filtering summaries, titles, and skills against the JD.
+2. **BM25 Lexical Filter (100K ➔ 1K):** A fast single-pass search index reduces candidate count by filtering summaries, titles, and skills against the JD.
 3. **Honeypot Mismatch Check:** Flags candidates claiming advanced AI skills but whose career history reveals unrelated roles (e.g. Accountant, HR, Operations, Customer Support), or those using copy-pasted summary templates.
 4. **Embedding Scorer:** Computes semantic similarity between the parsed JD and the candidate profiles using a local `BAAI/bge-base-en-v1.5` transformer model (768-dim, CLS-pooling with instruction prefix for queries, batch size = 128, max length = 160) on CPU.
 5. **Aggregated Feature Scorer:**

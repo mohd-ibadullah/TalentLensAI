@@ -19,7 +19,7 @@ Semantic(35%) + Skills(30%) + Title/YoE(15%) + Signals(10%) - Trap Penalty(40%)
 [Stage 5] Dynamic Reasoning Generator
 Non-templated, rank-aware, concern-honest candidate summaries
          ↓
-Output: Top 100 ranked candidates (CSV) — 125 seconds total
+Output: Top 100 ranked candidates (CSV) — ~139 seconds total
 ```
 
 ## Key Design Decisions
@@ -32,7 +32,7 @@ Output: Top 100 ranked candidates (CSV) — 125 seconds total
 ## Performance Benchmarks
 | Metric | Value |
 |--------|-------|
-| Total Runtime (100K candidates) | 125.72 seconds |
+| Total Runtime (100K candidates) | ~139 seconds |
 | Stage 1 BM25 Filter | ~8 seconds |
 | Stage 2-3 Embedding | ~110 seconds |
 | Stage 4-5 Scoring + Output | ~7 seconds |
