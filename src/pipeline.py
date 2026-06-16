@@ -16,7 +16,7 @@ from feature_scorer import calculate_candidate_score
 from llm_reranker import rerank_top_candidates
 from cross_encoder_reranker import CrossEncoderReranker
 
-def run_ranking_pipeline(candidates_path, jd_input, out_csv_path, top_n=100, use_llm=False, weights=None):
+def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str, top_n: int = 100, use_llm: bool = False, weights: dict | None = None) -> list[dict]:
     """
     Executes the end-to-end TalentLens AI ranking pipeline:
     1. Parse Job Description.

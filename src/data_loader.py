@@ -1,7 +1,9 @@
 import json
 import os
 
-def load_sample_candidates(file_path):
+from typing import Iterator
+
+def load_sample_candidates(file_path: str) -> list[dict]:
     """
     Load candidate profiles from a JSON array file (development sample).
     """
@@ -10,7 +12,7 @@ def load_sample_candidates(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-def stream_candidates(file_path):
+def stream_candidates(file_path: str) -> Iterator[dict]:
     """
     A generator that streams candidate profiles line-by-line from a JSONL file.
     This prevents high memory usage when loading the full 100K candidates.
@@ -24,3 +26,4 @@ def stream_candidates(file_path):
             if not line:
                 continue
             yield json.loads(line)
+
