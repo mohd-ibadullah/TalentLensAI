@@ -11,22 +11,22 @@ team_name: "talent-lens-ai-team"  # Used in leaderboard and announcements
 
 primary_contact:
   name: "Mohd Ibadullah"
-  email: "mohd.ibadullah@example.com"   # Used for all organizer communication
-  phone: "+91-9999999999"        # Used for top-50 / top-10 outreach
+  email: "mohdibadullah13@gmail.com"   # Used for all organizer communication
+  phone: ""        # Used for top-50 / top-10 outreach
 
 team_members:
   - name: "Mohd Ibadullah"
-    email: "mohd.ibadullah@example.com"
+    email: "mohdibadullah13@gmail.com"
     role: "ML Engineer"          # Optional, e.g. "Team Lead", "Backend", "Data"
 
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "https://github.com/ibadullah/talent-lens-ai"
+github_repo: "https://github.com/mohd-ibadullah/TalentLensAI"
 # Required. Must be reachable. Private repos OK if you can grant organizer
 # access at Stage 3.
 
-sandbox_link: "https://huggingface.co/spaces/ibadullah/talent-lens-ai"
+sandbox_link: "https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app"
 # Required. A working hosted environment where the ranker can be run.
 
 reproduce_command: "python rank.py --candidates ../[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl --out ./mohd_ibadullah.csv"
