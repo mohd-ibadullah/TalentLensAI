@@ -1,11 +1,22 @@
+"""
+Data exploration script for candidate profiles.
+Usage: python src/explore.py --data ./path/to/sample_candidates.json
+"""
 import json
 import os
+import argparse
 import pandas as pd
 from collections import Counter
 
+
 def main():
-    data_path = r"c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/sample_candidates.json"
-    
+    parser = argparse.ArgumentParser(description="Explore candidate dataset")
+    parser.add_argument("--data", default="./data/sample_candidates.json",
+                        help="Path to sample_candidates.json")
+    args = parser.parse_args()
+
+    data_path = args.data
+
     if not os.path.exists(data_path):
         print(f"Error: {data_path} does not exist.")
         return
