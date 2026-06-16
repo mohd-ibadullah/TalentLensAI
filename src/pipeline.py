@@ -14,15 +14,17 @@ from honeypot_detector import detect_trap
 from embedding_scorer import EmbeddingScorer
 from feature_scorer import calculate_candidate_score
 from llm_reranker import rerank_top_candidates
+from cross_encoder_reranker import CrossEncoderReranker
 
 def run_ranking_pipeline(candidates_path, jd_input, out_csv_path, top_n=100, use_llm=False, weights=None):
     """
     Executes the end-to-end TalentLens AI ranking pipeline:
     1. Parse Job Description.
-    2. Coarse BM25 Filter (streams and selects top 3000).
-    3. Run Honeypot Trap Detector and calculate feature scores.
-    4. Optional LLM reranking and reasoning generation.
-    5. Formats and writes the top 100 candidates to a validated CSV.
+    2. Coarse BM25 Filter (100K -> top 1,000).
+    3. Honeypot Trap Detection + Semantic Embedding Scoring.
+    4. Weighted Feature Scoring.
+    5. Cross-Encoder Reranker (top 100 precision boost).
+    6. Reasoning Generation + CSV Output.
     """
     start_time = time.time()
     print("=" * 60)
@@ -121,19 +123,25 @@ def run_ranking_pipeline(candidates_path, jd_input, out_csv_path, top_n=100, use
         cand["_breakdown"] = breakdown
         scored_candidates.append(cand)
         
-    # 4. Stage 4: LLM Rerank / Reasoning Generation (Runs on top 150 candidates only)
-    print("\nStep 4: Running Stage 4 Reranking and Reasoning Generator...")
-    # Sort by score descending to get top 150
+    # 4. Stage 4: Sort by feature score to get top candidates
+    print("\nStep 4: Sorting by feature scores...")
     scored_candidates.sort(key=lambda x: (-x["_final_score"], x["candidate_id"]))
-    top_subset_for_rerank = scored_candidates[:min(150, len(scored_candidates))]
+    top_subset = scored_candidates[:min(150, len(scored_candidates))]
     
-    reranked_top = rerank_top_candidates(top_subset_for_rerank, parsed_jd, use_llm=use_llm)
+    # 5. Stage 5: Cross-Encoder Reranker (precision boost on top candidates)
+    print("\nStep 5: Running Cross-Encoder Reranker...")
+    cross_encoder = CrossEncoderReranker()
+    top_subset = cross_encoder.rerank(jd_embedding_text, top_subset, blend_weight=0.4)
     
-    # Update candidate entries
+    # 6. Stage 6: Reasoning Generation
+    print("\nStep 6: Generating candidate reasonings...")
+    reranked_top = rerank_top_candidates(top_subset, parsed_jd, use_llm=use_llm)
+    
+    # Final output
     final_output_list = reranked_top[:min(top_n, len(reranked_top))]
     
-    # 5. Output top candidates to CSV
-    print(f"\nStep 5: Writing results to {out_csv_path}...")
+    # Write to CSV
+    print(f"\nWriting results to {out_csv_path}...")
     output_rows = []
     for cand in final_output_list:
         output_rows.append({
