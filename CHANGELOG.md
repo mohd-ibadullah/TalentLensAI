@@ -4,10 +4,10 @@
 - Added Gemini 2.5 Flash powered Interview Question Generator in Streamlit
 - Added Fairness & Responsible AI documentation
 - Advanced Signal Envelopes: notice period bonus, inactivity penalty
-- Runtime: 125s on 100K candidates
+- Runtime: ~139s on 100K candidates
 
 ## v1.2.0 — Pipeline Speed Optimization  
-- Reduced execution time from 304s to 125s (58% speedup)
+- Reduced execution time from 304s to ~139s (54% speedup)
 - Single-pass JSONL streaming, batch size 128, max_length 160
 - BM25 filter tuned to 1000 candidates for optimal speed/quality balance
 - 97% ranking overlap vs previous version
