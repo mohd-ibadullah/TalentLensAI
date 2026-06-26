@@ -101,25 +101,45 @@ def compute_title_seniority_match(profile: dict, parsed_jd: dict) -> float:
     # 1. Title Relevance Score
     title_relevance = 0.1
     
-    # Direct exact match or strong containment of keyword search / AI terms
-    ai_terms = ["ai", "ml", "machine learning", "nlp", "search", "retrieval", "ranking", "data scientist", "deep learning"]
+    # Negative keywords — roles clearly unrelated to Search/AI/NLP JD
+    negative_titles = [
+        "computer vision", "frontend", "front-end", "front end", "android",
+        "ios developer", "ui designer", "ux designer", "graphic designer",
+        "customer support", "sales", "marketing", "hr manager",
+        "accountant", "finance", "legal", "operations manager",
+        "network admin", "system administrator", "devops"
+    ]
     
-    if any(term in current_title for term in target_title.split()):
+    # Check for negative title match first
+    if any(neg in current_title for neg in negative_titles):
+        title_relevance = 0.05  # Heavy penalty for clearly irrelevant roles
+    # Direct exact match or strong containment of keyword search / AI terms
+    elif any(term in current_title for term in target_title.split()):
         title_relevance = 1.0
-    elif any(term in current_title for term in ai_terms):
-        title_relevance = 0.8
-    elif "software engineer" in current_title or "backend engineer" in current_title or "developer" in current_title or "analyst" in current_title:
-        title_relevance = 0.6
+    else:
+        ai_terms = ["ai", "ml", "machine learning", "nlp", "search", "retrieval",
+                     "ranking", "data scientist", "deep learning", "applied scientist"]
+        if any(term in current_title for term in ai_terms):
+            title_relevance = 0.8
+        elif "software engineer" in current_title or "backend engineer" in current_title or "developer" in current_title or "analyst" in current_title:
+            title_relevance = 0.6
         
-    # 2. Years of Experience Fit
+    # 2. Years of Experience Fit — stronger penalty for far below minimum
     yoe_score = 0.0
     if yoe >= min_yoe:
         yoe_score = 1.0
+    elif yoe >= min_yoe * 0.8:
+        # Within 80-100% of requirement (e.g., 4-5 YoE when 5 required) — slight penalty
+        yoe_score = 0.8
+    elif yoe >= min_yoe * 0.6:
+        # Within 60-80% of requirement (e.g., 3-4 YoE when 5 required) — moderate penalty
+        yoe_score = 0.5
     elif yoe > 0:
-        yoe_score = yoe / min_yoe
+        # Below 60% of requirement — heavy penalty
+        yoe_score = 0.2 * (yoe / min_yoe)
         
-    # Combine: 60% title relevance, 40% experience relevance
-    return 0.6 * title_relevance + 0.4 * yoe_score
+    # Combine: 50% title relevance, 50% experience relevance (increased YoE weight)
+    return 0.5 * title_relevance + 0.5 * yoe_score
 
 def compute_signal_bonus(signals: dict) -> float:
     """
