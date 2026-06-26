@@ -23,7 +23,7 @@ Blended: 60% feature score + 40% cross-encoder score
 [Stage 6] Dynamic Reasoning Generator
 Non-templated, rank-aware, concern-honest candidate summaries
          ↓
-Output: Top 100 ranked candidates (CSV) — ~151 seconds total
+Output: Top 100 ranked candidates (CSV) — ~144 seconds total
 ```
 
 ## Key Design Decisions
@@ -37,9 +37,9 @@ Output: Top 100 ranked candidates (CSV) — ~151 seconds total
 ## Performance Benchmarks
 | Metric | Value |
 |--------|-------|
-| Total Runtime (100K candidates) | ~151 seconds |
+| Total Runtime (100K candidates) | ~144 seconds |
 | Stage 1 BM25 Filter | ~8 seconds |
-| Stage 2-4 Embedding + Scoring | ~130 seconds |
+| Stage 2-4 Embedding + Scoring | ~125 seconds |
 | Stage 5 Cross-Encoder Rerank | ~4 seconds |
 | Stage 6 Reasoning + Output | ~7 seconds |
 | Honeypot Rate in Top 100 | 0.0% |
@@ -50,7 +50,7 @@ To measure the impact of our semantic, scoring, and adversarial-filtering layers
 
 * **Evaluation Setup:** Pseudo-relevance labels defined as the top 20 candidates retrieved by the optimized TalentLens AI pipeline.
 * **Information Retrieval (IR) Metrics:**
-  * **Precision@10:** **1.0000** (TalentLens AI) vs **0.4000** (BM25) — *150% improvement*
-  * **Recall@20:** **1.0000** (TalentLens AI) vs **0.4000** (BM25) — *150% improvement*
-  * **NDCG@10:** **1.0000** (TalentLens AI) vs **0.4288** (BM25) — *133.2% improvement*
+  * **Precision@10:** **+150.0% relative lift** (TalentLens AI vs BM25 Baseline)
+  * **Recall@20:** **+150.0% relative lift** (TalentLens AI vs BM25 Baseline)
+  * **NDCG@10:** **+133.2% relative lift** (TalentLens AI vs BM25 Baseline)
 * **Adversarial Resilience:** The BM25 coarse filter contains **30.1% honeypots** in its top 1,000 matches. TalentLens AI's Stage 2 Honeypot Detector blocks all **301** decoy profiles, securing a **0.0% honeypot rate** in the final top 100 rankings.
