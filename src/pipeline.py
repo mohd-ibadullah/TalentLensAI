@@ -131,7 +131,12 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
     # 5. Stage 5: Cross-Encoder Reranker (precision boost on top candidates)
     print("\nStep 5: Running Cross-Encoder Reranker...")
     cross_encoder = CrossEncoderReranker()
-    top_subset = cross_encoder.rerank(jd_embedding_text, top_subset, blend_weight=0.4)
+    top_subset = cross_encoder.rerank(
+        jd_embedding_text,
+        top_subset,
+        blend_weight=0.4,
+        min_yoe=float(parsed_jd.get("min_years_experience", 0.0))
+    )
     
     # 6. Stage 6: Reasoning Generation
     print("\nStep 6: Generating candidate reasonings...")
