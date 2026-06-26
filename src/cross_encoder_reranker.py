@@ -27,7 +27,7 @@ class CrossEncoderReranker:
         yoe = profile.get("years_of_experience", 0)
         return f"{title} ({yoe} years). {summary}. Skills: {top_skills_str}"
 
-    def rerank(self, jd_text: str, candidates: list[dict], blend_weight: float = 0.4) -> list[dict]:
+    def rerank(self, jd_text: str, candidates: list[dict], blend_weight: float = 0.4, min_yoe: float = 0.0) -> list[dict]:
         """
         Rerank candidates using cross-encoder scores blended with original scores.
         
@@ -36,6 +36,7 @@ class CrossEncoderReranker:
             candidates: List of candidate dicts with '_final_score' already set.
             blend_weight: Weight for cross-encoder score (1 - blend_weight for original).
                           Default 0.4 means 60% original + 40% cross-encoder.
+            min_yoe: Minimum years of experience requirement to enforce.
         
         Returns:
             Reranked list of candidates with updated '_final_score' and '_rank'.
@@ -71,6 +72,14 @@ class CrossEncoderReranker:
 
             # Blend: 60% original feature score + 40% cross-encoder score
             blended = (1 - blend_weight) * original_score + blend_weight * normalized_ce
+            
+            # Apply YoE deficit penalty to blended score
+            profile = cand.get("profile", {})
+            yoe = float(profile.get("years_of_experience", 0.0))
+            if min_yoe > 0.0 and yoe < min_yoe:
+                yoe_penalty = 30.0 * (1.0 - yoe / min_yoe)
+                blended -= yoe_penalty
+                
             cand["_final_score"] = blended
 
         # Re-sort by blended score descending, tie-break by candidate_id ascending
