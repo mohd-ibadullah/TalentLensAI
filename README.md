@@ -27,6 +27,10 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
    ```bash
    pip install -r requirements.txt
    ```
+3. Pre-download and cache local model files (for offline running compliance):
+   ```bash
+   python src/download_models.py
+   ```
 
 ---
 
