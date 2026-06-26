@@ -3,9 +3,9 @@ from rapidfuzz import fuzz
 
 # Default weights as specified in the PRD
 SCORING_WEIGHTS = {
-    "semantic_similarity": 0.35,
-    "skill_match_score": 0.30,
-    "title_seniority_match": 0.15,
+    "semantic_similarity": 0.40,
+    "skill_match_score": 0.20,
+    "title_seniority_match": 0.20,
     "signal_bonus": 0.10,
     "trap_penalty": 0.40
 }
@@ -273,23 +273,24 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     # Calculate JD Disqualifiers (penalty)
     disqualifier_penalty = 0.0
     
-    # A. Consulting-only career (TCS/Infosys/Wipro type)
+    # A. Consulting-heavy career (TCS/Infosys/Wipro type)
     consulting_companies = [
         "tcs", "tata consultancy", "infosys", "wipro", "cognizant", 
         "accenture", "hcl", "tech mahindra", "capgemini", "lnt infotech", "l&t infotech"
     ]
     
-    has_non_consulting = False
-    companies_count = 0
+    consulting_duration = 0.0
+    total_duration = 0.0
     for job in career_history:
         comp = job.get("company", "").lower()
+        dur = float(job.get("duration_months", 0.0) or 0.0)
         if comp:
-            companies_count += 1
-            if not any(consulting in comp for consulting in consulting_companies):
-                has_non_consulting = True
+            total_duration += dur
+            if any(consulting in comp for consulting in consulting_companies):
+                consulting_duration += dur
                 
-    is_consulting_only = (companies_count > 0 and not has_non_consulting)
-    if is_consulting_only:
+    is_consulting_heavy = (total_duration > 0 and (consulting_duration / total_duration) > 0.60)
+    if is_consulting_heavy:
         disqualifier_penalty += 20.0
         
     # B. Pure CV / speech / robotics without NLP/IR
@@ -313,12 +314,18 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     if is_hr_mktg_stuffing:
         disqualifier_penalty += 20.0
         
-    # D. LangChain-only profile, no production ML
+    # D. LangChain-only profile, no production ML and no ML titles
     has_langchain = "langchain" in summary_lower or any("langchain" in sk for sk in skills_lower)
     production_ml_keywords = ["pytorch", "tensorflow", "scikit-learn", "sklearn", "keras", "mlops", "production", "kubernetes", "docker", "aws", "gcp", "azure"]
     has_production_ml = any(kw in summary_lower or any(kw in sk for sk in skills_lower) for kw in production_ml_keywords)
     
-    is_langchain_only = (has_langchain and not has_production_ml)
+    has_ml_title = False
+    for job in career_history:
+        job_title = job.get("title", "").lower()
+        if any(term in job_title for term in ["machine learning", "ml ", "ai ", "nlp", "data scientist", "deep learning", "applied scientist"]):
+            has_ml_title = True
+            
+    is_langchain_only = (has_langchain and not has_production_ml and not has_ml_title)
     if is_langchain_only:
         disqualifier_penalty += 20.0
         
@@ -335,7 +342,7 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
             ref_date = date(2026, 6, 16)
             active_date = datetime.strptime(last_active, "%Y-%m-%d").date()
             if (ref_date - active_date).days > 180:
-                behavioral_adjustment -= 5.0
+                behavioral_adjustment -= 10.0  # Increased inactivity penalty to -10.0
         except Exception:
             pass
             
