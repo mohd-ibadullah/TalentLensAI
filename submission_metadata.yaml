@@ -29,7 +29,7 @@ github_repo: "https://github.com/mohd-ibadullah/TalentLensAI"
 sandbox_link: "https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app"
 # Required. A working hosted environment where the ranker can be run.
 
-reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./mohd_ibadullah.csv"
+reproduce_command: "python src/run_pipeline_full.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv"
 # The single command that produces submission.csv from candidates.jsonl.
 # Should run end-to-end within 5 minutes on CPU with 16GB RAM and no network.
 
@@ -62,7 +62,7 @@ ai_usage_summary: |
 # Approach summary (optional but recommended)
 # ============================================================================
 methodology_summary: |
-  TalentLens AI uses a 5-stage ranking engine designed for both speed and precision.
+  TalentLens AI uses a 6-stage ranking engine designed for both speed and precision.
   It filters 100,000 candidates to the top 1,000 using a lightweight BM25 pass.
   A honeypot trap detector checks profile consistency (detecting summary templates, 
   title-skill mismatches, and duplicated career histories) to heavily penalize
