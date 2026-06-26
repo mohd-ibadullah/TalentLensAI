@@ -245,14 +245,109 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     # Apply subtractive trap penalty (trap penalty is scaled out of 100 as well)
     penalty = weights["trap_penalty"] * trap_score * 100.0
     
-    # Calculate YoE deficit penalty
+    # Calculate YoE deficit penalty (hard gate rules)
     yoe = float(profile.get("years_of_experience", 0.0))
-    min_yoe = float(parsed_jd.get("min_years_experience", 4.0))
+    min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
     yoe_penalty = 0.0
-    if yoe < min_yoe:
-        yoe_penalty = 30.0 * (1.0 - yoe / min_yoe) if min_yoe > 0 else 0.0
+    if yoe < 4.0:
+        yoe_penalty = 50.0  # Pushes out of top 100
+    elif yoe < min_yoe:
+        yoe_penalty = 15.0  # Pushes out of top 50
         
-    final_score = scaled_positive - penalty - yoe_penalty
+    # Calculate Career Relevance Bonus
+    career_history = candidate.get("career_history", [])
+    career_bonus = 0.0
+    career_keywords = ["ranking", "retrieval", "recommendation", "search", "embedding", "recruiter", "product company"]
+    
+    matches_found = 0
+    for job in career_history:
+        job_title = job.get("title", "").lower()
+        job_desc = job.get("description", "").lower() if job.get("description") else ""
+        for kw in career_keywords:
+            if kw in job_title or kw in job_desc:
+                matches_found += 1
+                
+    if matches_found > 0:
+        career_bonus = min(10.0, 3.0 * matches_found)
+        
+    # Calculate JD Disqualifiers (penalty)
+    disqualifier_penalty = 0.0
+    
+    # A. Consulting-only career (TCS/Infosys/Wipro type)
+    consulting_companies = [
+        "tcs", "tata consultancy", "infosys", "wipro", "cognizant", 
+        "accenture", "hcl", "tech mahindra", "capgemini", "lnt infotech", "l&t infotech"
+    ]
+    
+    has_non_consulting = False
+    companies_count = 0
+    for job in career_history:
+        comp = job.get("company", "").lower()
+        if comp:
+            companies_count += 1
+            if not any(consulting in comp for consulting in consulting_companies):
+                has_non_consulting = True
+                
+    is_consulting_only = (companies_count > 0 and not has_non_consulting)
+    if is_consulting_only:
+        disqualifier_penalty += 20.0
+        
+    # B. Pure CV / speech / robotics without NLP/IR
+    cv_keywords = ["computer vision", "cv engineer", "speech recognition", "speech processing", "robotics", "audio engineer", "speech engineer", "image processing"]
+    nlp_ir_keywords = ["nlp", "natural language", "search", "retrieval", "recommendation", "information retrieval", "ranking", "llm", "embeddings"]
+    
+    summary_lower = profile.get("summary", "").lower()
+    title_lower = profile.get("current_title", "").lower()
+    skills_lower = [s.get("name", "").lower() for s in skills]
+    
+    has_cv = any(kw in summary_lower or kw in title_lower or any(kw in sk for sk in skills_lower) for kw in cv_keywords)
+    has_nlp_ir = any(kw in summary_lower or kw in title_lower or any(kw in sk for sk in skills_lower) for kw in nlp_ir_keywords)
+    
+    is_pure_cv = (has_cv and not has_nlp_ir)
+    if is_pure_cv:
+        disqualifier_penalty += 20.0
+        
+    # C. Marketing/HR title + AI skills stuffing
+    hr_mktg_keywords = ["marketing", "hr ", "hr manager", "human resources", "recruiter", "sales"]
+    is_hr_mktg_stuffing = any(kw in title_lower for kw in hr_mktg_keywords) and has_nlp_ir
+    if is_hr_mktg_stuffing:
+        disqualifier_penalty += 20.0
+        
+    # D. LangChain-only profile, no production ML
+    has_langchain = "langchain" in summary_lower or any("langchain" in sk for sk in skills_lower)
+    production_ml_keywords = ["pytorch", "tensorflow", "scikit-learn", "sklearn", "keras", "mlops", "production", "kubernetes", "docker", "aws", "gcp", "azure"]
+    has_production_ml = any(kw in summary_lower or any(kw in sk for sk in skills_lower) for kw in production_ml_keywords)
+    
+    is_langchain_only = (has_langchain and not has_production_ml)
+    if is_langchain_only:
+        disqualifier_penalty += 20.0
+        
+    # Calculate Behavioral Signals adjustment
+    behavioral_adjustment = 0.0
+    resp = signals.get("recruiter_response_rate", -1)
+    if resp != -1 and resp < 0.15:
+        behavioral_adjustment -= 10.0
+        
+    last_active = signals.get("last_active_date", None)
+    if last_active:
+        try:
+            from datetime import datetime, date
+            ref_date = date(2026, 6, 16)
+            active_date = datetime.strptime(last_active, "%Y-%m-%d").date()
+            if (ref_date - active_date).days > 180:
+                behavioral_adjustment -= 5.0
+        except Exception:
+            pass
+            
+    notice = signals.get("notice_period_days", -1)
+    if notice != -1 and notice > 60:
+        behavioral_adjustment -= 5.0
+        
+    open_to_work = signals.get("open_to_work_flag", False)
+    if open_to_work and resp >= 0.70:
+        behavioral_adjustment += 5.0
+        
+    final_score = scaled_positive - penalty - yoe_penalty + career_bonus - disqualifier_penalty + behavioral_adjustment
     final_score = min(100.0, max(0.0, final_score))
     
     # Return score and component breakdown
@@ -264,7 +359,10 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
         "trap_score": float(trap_score),
         "raw_positive_score": float(scaled_positive),
         "trap_penalty_applied": float(penalty),
-        "yoe_penalty_applied": float(yoe_penalty)
+        "yoe_penalty_applied": float(yoe_penalty),
+        "career_bonus_applied": float(career_bonus),
+        "disqualifier_penalty_applied": float(disqualifier_penalty),
+        "behavioral_adjustment": float(behavioral_adjustment)
     }
     
     return float(final_score), breakdown

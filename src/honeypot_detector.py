@@ -125,6 +125,29 @@ def detect_trap(candidate: dict) -> tuple[float, str]:
     trap_score = 0.0
     reasons = []
     
+    # Check for company foundation year vs job start date timeline inconsistency
+    for role in career_history:
+        role_desc = role.get("description", "")
+        if not role_desc:
+            continue
+        
+        # Look for "founded in YYYY" or similar
+        found_match = re.search(r'(?:founded|established|started|incorporated|set up|since)\s+in\s+(\d{4})', role_desc, re.IGNORECASE)
+        if not found_match:
+            found_match = re.search(r'(?:founded|established|started|incorporated|set up)\s+(\d{4})', role_desc, re.IGNORECASE)
+            
+        if found_match:
+            founded_year = int(found_match.group(1))
+            start_date_str = role.get("start_date")
+            if start_date_str:
+                try:
+                    start_year = int(start_date_str.split("-")[0])
+                    if start_year < founded_year:
+                        trap_score += 1.0
+                        reasons.append(f"Impossible timeline: Candidate started working at company in {start_year}, but description says company was founded/established in {founded_year}.")
+                except Exception:
+                    pass
+    
     # If it is the classic marketing manager summary decoy
     if is_decoy_summary:
         trap_score += 0.4
