@@ -245,7 +245,14 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     # Apply subtractive trap penalty (trap penalty is scaled out of 100 as well)
     penalty = weights["trap_penalty"] * trap_score * 100.0
     
-    final_score = scaled_positive - penalty
+    # Calculate YoE deficit penalty
+    yoe = float(profile.get("years_of_experience", 0.0))
+    min_yoe = float(parsed_jd.get("min_years_experience", 4.0))
+    yoe_penalty = 0.0
+    if yoe < min_yoe:
+        yoe_penalty = 30.0 * (1.0 - yoe / min_yoe) if min_yoe > 0 else 0.0
+        
+    final_score = scaled_positive - penalty - yoe_penalty
     final_score = min(100.0, max(0.0, final_score))
     
     # Return score and component breakdown
@@ -256,7 +263,8 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
         "signal_bonus": float(signals_score),
         "trap_score": float(trap_score),
         "raw_positive_score": float(scaled_positive),
-        "trap_penalty_applied": float(penalty)
+        "trap_penalty_applied": float(penalty),
+        "yoe_penalty_applied": float(yoe_penalty)
     }
     
     return float(final_score), breakdown
