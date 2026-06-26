@@ -76,9 +76,11 @@ class CrossEncoderReranker:
             # Apply YoE deficit penalty to blended score
             profile = cand.get("profile", {})
             yoe = float(profile.get("years_of_experience", 0.0))
-            if min_yoe > 0.0 and yoe < min_yoe:
-                yoe_penalty = 30.0 * (1.0 - yoe / min_yoe)
-                blended -= yoe_penalty
+            if min_yoe > 0.0:
+                if yoe < 4.0:
+                    blended -= 50.0
+                elif yoe < min_yoe:
+                    blended -= 15.0
                 
             cand["_final_score"] = blended
 
