@@ -14,7 +14,7 @@ Flags career-title mismatches, keyword stuffing, template profiles
 BAAI/bge-base-en-v1.5 local model, cosine similarity
          ↓
 [Stage 4] Feature Scoring Engine
-Semantic(35%) + Skills(30%) + Title/YoE(15%) + Signals(10%) - Trap Penalty(40%)
+Semantic(40%) + Skills(20%) + Title/YoE(20%) + Signals(10%) - Trap Penalty(40%)
          ↓
 [Stage 5] Cross-Encoder Reranker
 cross-encoder/ms-marco-MiniLM-L6-v2 pairwise relevance scoring
