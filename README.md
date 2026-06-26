@@ -58,14 +58,14 @@ streamlit run app/streamlit_app.py
 3. **Honeypot Mismatch Check:** Flags candidates claiming advanced AI skills but whose career history reveals unrelated roles (e.g. Accountant, HR, Operations, Customer Support), or those using copy-pasted summary templates.
 4. **Embedding Scorer:** Computes semantic similarity between the parsed JD and the candidate profiles using a local `BAAI/bge-base-en-v1.5` transformer model (768-dim, CLS-pooling with instruction prefix for queries, batch size = 128, max length = 160) on CPU.
 5. **Aggregated Feature Scorer:**
-   $$Final\_Score = 100 \times \left( \frac{0.35 \times Sim + 0.30 \times Skills + 0.15 \times Title + 0.10 \times Signals}{0.90} \right) - 0.40 \times Trap\_Penalty$$
+   $$Final\_Score = 100 \times \left( \frac{0.40 \times Sim + 0.20 \times Skills + 0.20 \times Title + 0.10 \times Signals}{0.90} \right) - 40 \times Trap\_Score - YoE\_Penalty + Career\_Bonus - Disqualifier\_Penalty + Behavioral\_Adj$$
 6. **Tie-Breaker Sort:** Sorts candidates by rounded score (4 decimals) descending, then candidate_id ascending.
 
 ---
 
 ## 📊 Core Performance Metrics
 *   **Scanning Speed:** Streams and parses 100,000 JSON lines in a single pass in **~10 seconds**.
-*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~151 seconds**.
+*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~144 seconds**.
 *   **Memory Footprint:** Uses **~800MB RAM** during streaming (well under the 16GB budget).
 *   **Decoy Resilience:** Correctly identifies and penalizes all decoy profiles (like `CAND_0000002` through `CAND_0000005`), filtering them completely out of the top 100 (0.0% honeypot rate).
 
