@@ -1,6 +1,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModel
 import numpy as np
+import json
 
 class EmbeddingScorer:
     def __init__(self, model_name: str = "BAAI/bge-base-en-v1.5") -> None:
@@ -16,6 +17,55 @@ class EmbeddingScorer:
         self.model.eval() # Set model to evaluation mode
         self.model_name = model_name
         self._is_bge = "bge" in model_name.lower()
+        self.candidate_embeddings = None
+        self.candidate_ids = []
+        self.id_to_index = {}
+        
+    def load_precomputed_embeddings(self, embeddings_path: str, ids_path: str):
+        """
+        Loads the precomputed embeddings matrix and Candidate IDs ordering list.
+        """
+        print(f"Loading precomputed embeddings from {embeddings_path}...")
+        self.candidate_embeddings = np.load(embeddings_path) # Shape: (N, D)
+        with open(ids_path, "r", encoding="utf-8") as f:
+            self.candidate_ids = json.load(f)
+        self.id_to_index = {cid: idx for idx, cid in enumerate(self.candidate_ids)}
+        print(f"Loaded {len(self.candidate_ids)} candidate vectors of dimensions {self.candidate_embeddings.shape[1]}")
+
+    def search_similar_candidates(self, jd_text: str, top_n: int = 1000) -> list[tuple[str, float]]:
+        """
+        Computes cosine similarities between the JD and all 100K precomputed candidate vectors.
+        Since vectors are L2-normalized, cosine similarity is just the dot product.
+        Returns a list of tuples (candidate_id, score) sorted by score descending.
+        """
+        if self.candidate_embeddings is None:
+            raise ValueError("Precomputed embeddings matrix is not loaded. Call load_precomputed_embeddings first.")
+            
+        # Get query embedding (with instruction prefix if BGE)
+        jd_embedding = self.get_embeddings([jd_text], is_query=True)[0] # Shape: (D,)
+        
+        # Dot product over all 100K candidates matrix
+        similarities = np.dot(self.candidate_embeddings, jd_embedding) # Shape: (N,)
+        
+        # Sort and get top_n
+        top_indices = np.argsort(-similarities)[:top_n]
+        
+        results = []
+        for idx in top_indices:
+            results.append((self.candidate_ids[idx], float(similarities[idx])))
+            
+        return results
+
+    def get_candidate_similarity_by_id(self, candidate_id: str, jd_embedding: np.ndarray) -> float:
+        """
+        Lookup candidate embedding by ID and calculate dot product with query embedding.
+        """
+        idx = self.id_to_index.get(candidate_id)
+        if idx is not None and self.candidate_embeddings is not None:
+            cand_embedding = self.candidate_embeddings[idx]
+            return float(np.dot(cand_embedding, jd_embedding))
+        return 0.5 # Neutral fallback if not found or not loaded
+
         
     def _mean_pooling(self, model_output, attention_mask):
         """

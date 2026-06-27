@@ -248,12 +248,7 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     # Calculate YoE deficit penalty (hard gate rules)
     yoe = float(profile.get("years_of_experience", 0.0))
     min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
-    yoe_penalty = 0.0
-    if yoe < 4.0:
-        yoe_penalty = 50.0  # Pushes out of top 100
-    elif yoe < min_yoe:
-        yoe_penalty = 15.0  # Pushes out of top 50
-        
+    
     # Calculate Career Relevance Bonus
     career_history = candidate.get("career_history", [])
     career_bonus = 0.0
@@ -354,10 +349,47 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     if open_to_work and resp >= 0.70:
         behavioral_adjustment += 5.0
         
-    final_score = scaled_positive - penalty - yoe_penalty + career_bonus - disqualifier_penalty + behavioral_adjustment
+    # Multiplicative Veto Factors
+    # 1. Honeypot/Trap Factor (Score set to exactly 0.0 if flagged)
+    trap_factor = 1.0
+    if trap_score > 0.40:
+        trap_factor = 0.0
+        
+    # 2. YoE Hard Gate (Set score to 0.0 if experience is below 4 years)
+    yoe_factor = 1.0
+    yoe_penalty_applied = 0.0
+    if yoe < 4.0:
+        yoe_factor = 0.0
+        yoe_penalty_applied = 100.0  # Pushes out entirely
+    elif yoe < min_yoe:
+        yoe_factor = 0.70  # Scale down candidates below minimum target
+        yoe_penalty_applied = 30.0
+        
+    # 3. Disqualifier Factors
+    disq_factor = 1.0
+    disqualifier_penalty_applied = 0.0
+    if is_consulting_heavy:
+        disq_factor *= 0.50
+        disqualifier_penalty_applied += 20.0
+    if is_pure_cv:
+        disq_factor *= 0.50
+        disqualifier_penalty_applied += 20.0
+    if is_hr_mktg_stuffing:
+        disq_factor *= 0.0  # Absolute rejection for marketing/HR stuffers
+        disqualifier_penalty_applied += 100.0
+    if is_langchain_only:
+        disq_factor *= 0.50
+        disqualifier_penalty_applied += 20.0
+        
+    # Calculate multiplied score
+    base_score = scaled_positive + career_bonus
+    multiplied_score = base_score * trap_factor * yoe_factor * disq_factor
+    
+    # Final Score with behavioral adjustment
+    final_score = multiplied_score + behavioral_adjustment
     final_score = min(100.0, max(0.0, final_score))
     
-    # Return score and component breakdown
+    # Return score and component breakdown (compatible with UI display)
     breakdown = {
         "semantic_similarity": float(semantic_similarity),
         "skill_match_score": float(skill_score),
@@ -366,10 +398,13 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
         "trap_score": float(trap_score),
         "raw_positive_score": float(scaled_positive),
         "trap_penalty_applied": float(penalty),
-        "yoe_penalty_applied": float(yoe_penalty),
+        "yoe_penalty_applied": float(yoe_penalty_applied),
         "career_bonus_applied": float(career_bonus),
-        "disqualifier_penalty_applied": float(disqualifier_penalty),
-        "behavioral_adjustment": float(behavioral_adjustment)
+        "disqualifier_penalty_applied": float(disqualifier_penalty_applied),
+        "behavioral_adjustment": float(behavioral_adjustment),
+        "trap_factor": float(trap_factor),
+        "yoe_factor": float(yoe_factor),
+        "disq_factor": float(disq_factor)
     }
     
     return float(final_score), breakdown

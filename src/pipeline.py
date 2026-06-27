@@ -3,6 +3,7 @@ import sys
 import time
 import json
 import pandas as pd
+from pathlib import Path
 
 # Add current folder to path
 sys.path.append(os.path.dirname(__file__))
@@ -20,7 +21,7 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
     """
     Executes the end-to-end TalentLens AI ranking pipeline:
     1. Parse Job Description.
-    2. Coarse BM25 Filter (100K -> top 1,000).
+    2. Hybrid Retrieval (BM25 + Dense Semantic Recall).
     3. Honeypot Trap Detection + Semantic Embedding Scoring.
     4. Weighted Feature Scoring.
     5. Cross-Encoder Reranker (top 100 precision boost).
@@ -41,12 +42,31 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
     print(f"Nice-to-have Skills: {parsed_jd['nice_to_have_skills']}")
     print(f"Min Years Exp: {parsed_jd['min_years_experience']}")
     
-    # 2. Stage 1: Coarse Filtering
-    print("\nStep 2: Performing Stage 1 Coarse Filtering...")
+    # Build JD text for embedding — enriched with domain keywords and seniority
+    jd_embedding_text = (
+        f"{parsed_jd['role_title']}. "
+        f"Required skills: {', '.join(parsed_jd['required_skills'])}. "
+        f"Nice to have: {', '.join(parsed_jd['nice_to_have_skills'])}. "
+        f"Domain: {', '.join(parsed_jd.get('domain_keywords', []))}. "
+        f"Seniority: {parsed_jd.get('seniority_level', 'senior')}"
+    )
     
-    # Handle sample JSON vs full JSONL
+    # Check if precomputed embeddings exist
+    project_root = Path(__file__).resolve().parent.parent
+    npy_path = project_root / "data" / "candidate_embeddings.npy"
+    json_path = project_root / "data" / "candidate_ids.json"
+    
+    has_precomputed = npy_path.exists() and json_path.exists()
+    
+    # Load embedding model
+    embedding_scorer = EmbeddingScorer()
+    if has_precomputed:
+        embedding_scorer.load_precomputed_embeddings(str(npy_path), str(json_path))
+    
+    # 2. Stage 1: Hybrid Retrieval Filter
+    print("\nStep 2: Performing Hybrid Retrieval Stage...")
+    
     is_jsonl = candidates_path.lower().endswith(".jsonl")
-    
     candidates_for_deep_scoring = []
     
     if not is_jsonl:
@@ -55,7 +75,7 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
         all_candidates = load_sample_candidates(candidates_path)
         print(f"Loaded {len(all_candidates)} candidates.")
         
-        # Apply BM25 filtering (keep all or top_n * 30 for testing)
+        # Apply BM25 filtering
         bm25_filter = BM25Filter(all_candidates)
         candidates_for_deep_scoring = bm25_filter.filter_candidates(parsed_jd, top_n=2000)
     else:
@@ -67,46 +87,69 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
             
         print(f"Loaded {len(all_candidates)} profiles into memory.")
         
-        # Run BM25 filter
+        # Run BM25 filter (Lexical Recall)
+        print("Building BM25 index and performing Lexical search...")
         bm25_filter = BM25Filter(all_candidates)
-        selected_candidates = bm25_filter.filter_candidates(parsed_jd, top_n=1000)
+        bm25_candidates = bm25_filter.filter_candidates(parsed_jd, top_n=1000)
         
-        for cand in selected_candidates:
-            candidates_for_deep_scoring.append(cand)
+        if has_precomputed:
+            # Run Dense Vector search (Semantic Recall)
+            print("Performing Dense Semantic vector search...")
+            dense_results = embedding_scorer.search_similar_candidates(jd_embedding_text, top_n=1000)
             
+            # Map candidate IDs to candidate objects for fast retrieval
+            cand_map = {c["candidate_id"]: c for c in all_candidates}
+            
+            seen_ids = set()
+            # Add BM25 recall candidates first to preserve order
+            for cand in bm25_candidates:
+                cid = cand["candidate_id"]
+                if cid not in seen_ids:
+                    seen_ids.add(cid)
+                    candidates_for_deep_scoring.append(cand)
+                    
+            # Add Dense recall candidates who are not already selected
+            for cid, sim in dense_results:
+                if cid not in seen_ids:
+                    cand = cand_map.get(cid)
+                    if cand:
+                        seen_ids.add(cid)
+                        candidates_for_deep_scoring.append(cand)
+            print(f"Hybrid retrieval complete: {len(bm25_candidates)} BM25 + {len(dense_results)} Dense -> {len(candidates_for_deep_scoring)} unique candidates.")
+        else:
+            print("Precomputed vectors not found. Falling back to BM25-only retrieval.")
+            for cand in bm25_candidates:
+                candidates_for_deep_scoring.append(cand)
+                
     print(f"Coarse filter completed. Evaluating {len(candidates_for_deep_scoring)} candidates.")
     
     # 3. Stage 2 & 3: Honeypot Detection & Feature Scoring
     print("\nStep 3: Evaluating Honeypot trap scores and Semantic embeddings...")
     
-    # Load embedding model
-    embedding_scorer = EmbeddingScorer()
+    # Calculate similarities (Fast lookup if precomputed, otherwise compute on the fly)
+    print("Computing profile similarity scores...")
+    similarities = []
     
-    # Pre-calculate candidate texts for embeddings
-    # We embed candidate's key attributes (title, headline, skills, career) first, followed by summary.
-    # This prevents critical structured details from being truncated.
-    candidate_texts = []
-    for cand in candidates_for_deep_scoring:
-        profile = cand.get("profile", {})
-        title = profile.get("current_title", "")
-        headline = profile.get("headline", "")
-        summary = profile.get("summary", "")
-        skills_str = ", ".join([s.get("name", "") for s in cand.get("skills", [])[:15]])
-        career_titles = " | ".join([r.get("title", "") for r in cand.get("career_history", [])[:5]])
-        candidate_texts.append(f"Title: {title}. Headline: {headline}. Skills: {skills_str}. Career: {career_titles}. Summary: {summary}")
+    if has_precomputed and is_jsonl:
+        print("Loading similarities from precomputed cache...")
+        jd_embedding_vec = embedding_scorer.get_embeddings([jd_embedding_text], is_query=True)[0]
+        for cand in candidates_for_deep_scoring:
+            sim = embedding_scorer.get_candidate_similarity_by_id(cand["candidate_id"], jd_embedding_vec)
+            similarities.append(sim)
+    else:
+        # Pre-calculate texts for embedding computation on the fly
+        print("Computing embeddings dynamically...")
+        candidate_texts = []
+        for cand in candidates_for_deep_scoring:
+            profile = cand.get("profile", {})
+            title = profile.get("current_title", "")
+            headline = profile.get("headline", "")
+            summary = profile.get("summary", "")
+            skills_str = ", ".join([s.get("name", "") for s in cand.get("skills", [])[:15]])
+            career_titles = " | ".join([r.get("title", "") for r in cand.get("career_history", [])[:5]])
+            candidate_texts.append(f"Title: {title}. Headline: {headline}. Skills: {skills_str}. Career: {career_titles}. Summary: {summary}")
+        similarities = embedding_scorer.compute_similarity(jd_embedding_text, candidate_texts)
         
-    # Build JD text for embedding — enriched with domain keywords and seniority
-    jd_embedding_text = (
-        f"{parsed_jd['role_title']}. "
-        f"Required skills: {', '.join(parsed_jd['required_skills'])}. "
-        f"Nice to have: {', '.join(parsed_jd['nice_to_have_skills'])}. "
-        f"Domain: {', '.join(parsed_jd.get('domain_keywords', []))}. "
-        f"Seniority: {parsed_jd.get('seniority_level', 'senior')}"
-    )
-    
-    print("Computing profile embeddings...")
-    similarities = embedding_scorer.compute_similarity(jd_embedding_text, candidate_texts)
-    
     print("Scoring candidates...")
     scored_candidates = []
     
