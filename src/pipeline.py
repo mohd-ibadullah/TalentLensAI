@@ -58,11 +58,6 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
     
     has_precomputed = npy_path.exists() and json_path.exists()
     
-    # Load embedding model
-    embedding_scorer = EmbeddingScorer()
-    if has_precomputed:
-        embedding_scorer.load_precomputed_embeddings(str(npy_path), str(json_path))
-    
     # 2. Stage 1: Hybrid Retrieval Filter
     print("\nStep 2: Performing Hybrid Retrieval Stage...")
     
@@ -78,6 +73,7 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
         # Apply BM25 filtering
         bm25_filter = BM25Filter(all_candidates)
         candidates_for_deep_scoring = bm25_filter.filter_candidates(parsed_jd, top_n=2000)
+        has_precomputed = False # Disable cache for sample JSON
     else:
         # Production mode: single-pass loading
         print("Streaming JSONL (single pass) to load all candidates...")
@@ -87,6 +83,24 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
             
         print(f"Loaded {len(all_candidates)} profiles into memory.")
         
+        # Verify if precomputed embeddings match the current loaded candidates
+        if has_precomputed:
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    precomputed_ids = json.load(f)
+                dataset_ids = [c["candidate_id"] for c in all_candidates[:10]]
+                pre_subset = precomputed_ids[:10]
+                if len(precomputed_ids) != len(all_candidates) or dataset_ids != pre_subset:
+                    print("Warning: Candidate dataset has changed or size mismatch. Disabling precomputed embeddings cache to ensure accuracy.")
+                    has_precomputed = False
+            except Exception:
+                has_precomputed = False
+                
+        # Load embedding model and load precomputed files if valid
+        embedding_scorer = EmbeddingScorer()
+        if has_precomputed:
+            embedding_scorer.load_precomputed_embeddings(str(npy_path), str(json_path))
+            
         # Run BM25 filter (Lexical Recall)
         print("Building BM25 index and performing Lexical search...")
         bm25_filter = BM25Filter(all_candidates)
@@ -117,7 +131,7 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
                         candidates_for_deep_scoring.append(cand)
             print(f"Hybrid retrieval complete: {len(bm25_candidates)} BM25 + {len(dense_results)} Dense -> {len(candidates_for_deep_scoring)} unique candidates.")
         else:
-            print("Precomputed vectors not found. Falling back to BM25-only retrieval.")
+            print("Precomputed vectors not found or disabled. Falling back to BM25-only retrieval.")
             for cand in bm25_candidates:
                 candidates_for_deep_scoring.append(cand)
                 
