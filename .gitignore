@@ -11,3 +11,9 @@ Thumbs.db
 .pytest_cache/
 htmlcov/
 .coverage
+data/candidate_embeddings.npy
+data/candidate_ids.json
+outputs/mohd_ibadullah_e2e_test.csv
+outputs/rank_smoke.csv
+outputs/timing_test.csv
+
