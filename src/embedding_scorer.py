@@ -26,7 +26,8 @@ class EmbeddingScorer:
         Loads the precomputed embeddings matrix and Candidate IDs ordering list.
         """
         print(f"Loading precomputed embeddings from {embeddings_path}...")
-        self.candidate_embeddings = np.load(embeddings_path) # Shape: (N, D)
+        # mmap keeps peak RAM low for the 100K x 768 matrix (~300 MB on disk, not duplicated in RAM)
+        self.candidate_embeddings = np.load(embeddings_path, mmap_mode="r")
         with open(ids_path, "r", encoding="utf-8") as f:
             self.candidate_ids = json.load(f)
         self.id_to_index = {cid: idx for idx, cid in enumerate(self.candidate_ids)}

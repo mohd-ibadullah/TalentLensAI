@@ -16,4 +16,6 @@ data/candidate_ids.json
 outputs/mohd_ibadullah_e2e_test.csv
 outputs/rank_smoke.csv
 outputs/timing_test.csv
+outputs/qa_*.csv
+scratch/
 

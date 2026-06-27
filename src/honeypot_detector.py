@@ -162,7 +162,23 @@ def detect_trap(candidate: dict) -> tuple[float, str]:
         trap_score += skill_stuffing_score
         reasons.append(f"Non-AI Title '{current_title}' ({current_category}) but stuffed with {ai_skill_count} AI/ML skills: {candidate_ai_skills}")
     elif is_non_ai_title and ai_skill_count >= 1:
-        trap_score += 0.1
+        trap_score += 0.25
+        reasons.append(f"Non-AI title '{current_title}' lists AI skills without aligned career history")
+
+    # Expert/advanced skills claimed with zero months of use (honeypot pattern)
+    for s in skills:
+        prof = (s.get("proficiency") or "").lower()
+        dur = int(s.get("duration_months") or 0)
+        s_name = s.get("name", "")
+        if prof in ("expert", "advanced") and dur == 0:
+            trap_score += 0.35
+            reasons.append(f"Expert-level '{s_name}' claimed with 0 months experience")
+            break
+
+    # Repeated boilerplate descriptions across roles
+    if boilerplate_roles_count >= 2:
+        trap_score += 0.35
+        reasons.append(f"{boilerplate_roles_count} roles use known decoy description templates")
         
     # Career history inconsistencies
     if total_roles > 0:

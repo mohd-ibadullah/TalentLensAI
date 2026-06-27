@@ -35,35 +35,46 @@ class BM25Filter:
         self.corpus = [build_candidate_document(c) for c in candidates_list]
         self.tokenized_corpus = [tokenize(doc) for doc in self.corpus]
         self.bm25 = BM25Okapi(self.tokenized_corpus)
+
+    @classmethod
+    def from_corpus(cls, corpus: list[str]) -> "BM25Filter":
+        """Build a BM25 index from pre-built document strings (memory-efficient path)."""
+        inst = cls.__new__(cls)
+        inst.candidates = None
+        inst.corpus = corpus
+        inst.tokenized_corpus = [tokenize(doc) for doc in corpus]
+        inst.bm25 = BM25Okapi(inst.tokenized_corpus)
+        return inst
+
+    def _build_query(self, parsed_jd: dict) -> list[str]:
+        query_parts = [
+            parsed_jd["role_title"],
+            *parsed_jd["required_skills"],
+            *parsed_jd["nice_to_have_skills"],
+            *parsed_jd["domain_keywords"],
+        ]
+        return tokenize(" ".join(query_parts))
+
+    def get_top_indices(self, parsed_jd: dict, top_n: int = 3000) -> list[int]:
+        """Return indices of top-N candidates by BM25 score (descending)."""
+        tokenized_query = self._build_query(parsed_jd)
+        scores = self.bm25.get_scores(tokenized_query)
+        ranked_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
+        return ranked_indices[:top_n]
         
     def filter_candidates(self, parsed_jd: dict, top_n: int = 3000) -> list[dict]:
         """
         Rank all candidates using BM25 against the Job Description and return the top N.
         """
-        # Build query from JD
-        query_parts = []
-        query_parts.append(parsed_jd["role_title"])
-        query_parts.extend(parsed_jd["required_skills"])
-        query_parts.extend(parsed_jd["nice_to_have_skills"])
-        query_parts.extend(parsed_jd["domain_keywords"])
-        
-        query_text = " ".join(query_parts)
-        tokenized_query = tokenize(query_text)
-        
-        # Calculate BM25 scores
+        top_indices = self.get_top_indices(parsed_jd, top_n=top_n)
+        tokenized_query = self._build_query(parsed_jd)
         scores = self.bm25.get_scores(tokenized_query)
-        
-        # Sort candidates by score descending
-        candidates_with_scores = list(zip(self.candidates, scores))
-        candidates_with_scores.sort(key=lambda x: x[1], reverse=True)
-        
-        # Return the top N candidates along with their BM25 score
+
         top_candidates = []
-        for i in range(min(top_n, len(candidates_with_scores))):
-            cand, score = candidates_with_scores[i]
-            # Attach BM25 score to metadata for record keeping
-            cand["_bm25_score"] = float(score)
+        for idx in top_indices:
+            cand = self.candidates[idx]
+            cand["_bm25_score"] = float(scores[idx])
             top_candidates.append(cand)
-            
+
         return top_candidates
 

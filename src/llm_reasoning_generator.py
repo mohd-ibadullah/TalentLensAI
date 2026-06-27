@@ -1,7 +1,7 @@
 """
-Script to update candidate reasonings in outputs/mohd_ibadullah.csv.
-Uses Gemini 2.5 Flash Lite with automatic failover to Groq (Llama 3.3 70B)
-to handle the Gemini API key's daily quota limit.
+DEV-ONLY: Post-hoc API reasoning rewriter — NOT part of judge reproduction.
+Ranking uses offline rule-based reasoning in src/llm_reranker.py (use_llm=False).
+Do not run this during Stage 3 evaluation.
 """
 import os
 import sys
