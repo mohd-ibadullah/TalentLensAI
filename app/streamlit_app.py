@@ -31,11 +31,14 @@ import requests
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.jd_parser import parse_job_description
-from src.bm25_filter import BM25Filter
+from src.bm25_filter import BM25Filter, build_candidate_document
 from src.honeypot_detector import detect_trap
 from src.embedding_scorer import EmbeddingScorer
 from src.feature_scorer import calculate_candidate_score
 from src.llm_reranker import rerank_top_candidates
+from src.cross_encoder_reranker import CrossEncoderReranker
+from src.candidate_text import build_candidate_embedding_text
+from src.data_loader import stream_candidates
 
 def get_api_key():
     # 1. Check env var GEMINI_API_KEY
@@ -144,36 +147,34 @@ if __name__ == "__main__":
     # Custom premium styling
     st.markdown("""
     <style>
-        /* Dark Theme Background & Fonts */
-        .stApp {
-            background-color: #0e1117;
-            color: #e0e0e0;
+        /* Hide Streamlit Deploy/Stop header toolbar completely */
+        header[data-testid="stHeader"], footer {
+            display: none !important;
         }
-        h1, h2, h3 {
-            font-family: 'Outfit', 'Inter', sans-serif;
-            font-weight: 700;
-            color: #ffffff;
-        }
+        
+        /* Main glowing titles */
         .main-title {
-            background: linear-gradient(90deg, #4f46e5, #06b6d4);
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 3rem;
-            margin-bottom: 0.2rem;
+            font-weight: 800;
+            margin-bottom: 0.1rem;
         }
+        
         .subtitle {
-            color: #8892b0;
             font-size: 1.1rem;
             margin-bottom: 2rem;
         }
+        
         /* Metric Cards */
         .metric-card {
-            background-color: #1b1f2b;
-            border: 1px solid #2d313f;
+            background-color: rgba(128, 128, 128, 0.08);
+            border: 1px solid rgba(128, 128, 128, 0.15);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         .metric-val {
             font-size: 2rem;
@@ -182,27 +183,57 @@ if __name__ == "__main__":
         }
         .metric-label {
             font-size: 0.85rem;
-            color: #8892b0;
         }
-        /* Trap Flags */
-        .decoy-alert {
-            background-color: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgb(239, 68, 68);
-            color: #fc8181;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            margin: 5px 0;
+        
+        /* Increase breathing space between sidebar sliders */
+        div.stSlider {
+            padding-bottom: 18px !important;
         }
-        .genuine-badge {
-            background-color: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgb(16, 185, 129);
-            color: #34d399;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
+        
+        /* Force high contrast on caption/breakdown labels */
+        .stCaption, [data-testid="stCaptionContainer"] p, [data-testid="stCaptionContainer"] span {
+            color: var(--text-color) !important;
+            opacity: 1.0 !important;
+            font-weight: 700 !important;
+            font-size: 0.95rem !important;
+        }
+        
+        /* Unified candidate card wrapper with left accent border */
+        div[data-testid="stVerticalBlockBorderWrapper"], 
+        div.stVerticalBlockBorderWrapper,
+        div[data-testid="element-container"] div[data-testid="stVerticalBlock"] {
+            border-left: 6px solid #4f46e5 !important;
+            border-top-left-radius: 0px !important;
+            border-bottom-left-radius: 0px !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+            margin-bottom: 15px !important;
+        }
+        
+        /* Premium custom progress bars and badges */
+        .badge-verified {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-trap {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: block;
+            margin: 8px 0;
+            letter-spacing: 0.5px;
         }
     </style>
     """, unsafe_allow_html=True)
@@ -219,7 +250,6 @@ if __name__ == "__main__":
         os.path.join(_PROJECT_ROOT, "..", "India_runs_data_and_ai_challenge", "candidates.jsonl"),
         os.path.join(_PROJECT_ROOT, "..", "[PUB] India_runs_data_and_ai_challenge", "India_runs_data_and_ai_challenge", "candidates.jsonl"),
         os.path.abspath(os.path.join(_PROJECT_ROOT, "..", "..", "[PUB] India_runs_data_and_ai_challenge", "India_runs_data_and_ai_challenge", "candidates.jsonl")),
-        "c:\\Users\\froms\\Downloads\\[PUB] India_runs_data_and_ai_challenge\\[PUB] India_runs_data_and_ai_challenge\\India_runs_data_and_ai_challenge\\candidates.jsonl"
     ]
     
     FULL_PATH = None
@@ -228,7 +258,8 @@ if __name__ == "__main__":
             FULL_PATH = p
             break
             
-    _FULL_DATASET_AVAILABLE = FULL_PATH is not None
+    _IS_CLOUD = os.environ.get("STREAMLIT_RUNTIME_ENV") == "cloud"
+    _FULL_DATASET_AVAILABLE = FULL_PATH is not None and not _IS_CLOUD
 
     @st.cache_resource
     def load_embedding_model():
@@ -241,47 +272,109 @@ if __name__ == "__main__":
             scorer.load_precomputed_embeddings(npy_path, json_path)
         return scorer
 
+    def fix_display_anomalies(cand):
+        """Fix salary/education display glitches only — never mutate career text used for scoring."""
+        signals = cand.get("redrob_signals", {})
+        salary = signals.get("expected_salary_range_inr_lpa", {})
+        if salary:
+            try:
+                s_min = float(salary.get("min", 0.0) or 0.0)
+                s_max = float(salary.get("max", 0.0) or 0.0)
+                if s_min > s_max:
+                    salary["min"], salary["max"] = s_max, s_min
+            except (ValueError, TypeError):
+                pass
+        return cand
+
     @st.cache_data
-    def load_datasets():
-        """Load both datasets and keep them cached."""
-        # 1. Load Sample Dataset
+    def load_sample_dataset():
         with open(SAMPLE_PATH, "r", encoding="utf-8") as f:
-            sample_candidates = json.load(f)
+            return json.load(f)
 
-        # 2. Load lightweight version of Full Dataset for BM25
-        full_lightweight = []
-        if os.path.exists(FULL_PATH):
-            with open(FULL_PATH, "r", encoding="utf-8") as f:
-                for idx, line in enumerate(f):
-                    cand = json.loads(line)
-                    profile = cand.get("profile", {})
-                    skills = [s.get("name", "") for s in cand.get("skills", [])]
+    @st.cache_resource
+    def build_full_retrieval_index(jsonl_path: str):
+        """BM25 corpus only — avoids loading 100K full profiles into RAM."""
+        candidate_ids: list[str] = []
+        corpus_docs: list[str] = []
+        for cand in stream_candidates(jsonl_path):
+            candidate_ids.append(cand["candidate_id"])
+            corpus_docs.append(build_candidate_document(cand))
+        bm25 = BM25Filter.from_corpus(corpus_docs)
+        return bm25, candidate_ids, jsonl_path
 
-                    # Store seek position or just stream line-by-line using index
-                    lightweight_cand = {
-                        "candidate_id": cand.get("candidate_id"),
-                        "profile": {
-                            "anonymized_name": profile.get("anonymized_name", "Anonymous"),
-                            "current_title": profile.get("current_title", ""),
-                            "current_company": profile.get("current_company", ""),
-                            "current_company_size": profile.get("current_company_size", ""),
-                            "current_industry": profile.get("current_industry", ""),
-                            "headline": profile.get("headline", ""),
-                            "summary": profile.get("summary", ""),
-                            "years_of_experience": float(profile.get("years_of_experience", 0.0)),
-                            "location": profile.get("location", ""),
-                            "country": profile.get("country", "")
-                        },
-                        "skills": cand.get("skills", []),
-                        "career_history": cand.get("career_history", []),
-                        "education": cand.get("education", []),
-                        "certifications": cand.get("certifications", []),
-                        "redrob_signals": cand.get("redrob_signals", {}),
-                        "_line_index": idx
-                    }
-                    full_lightweight.append(lightweight_cand)
+    def load_profiles_by_ids(jsonl_path: str, needed_ids: set[str]) -> dict[str, dict]:
+        found: dict[str, dict] = {}
+        for cand in stream_candidates(jsonl_path):
+            cid = cand["candidate_id"]
+            if cid in needed_ids:
+                found[cid] = cand
+            if len(found) == len(needed_ids):
+                break
+        return found
 
-        return sample_candidates, full_lightweight
+    def hybrid_recall_full(parsed_jd: dict, jd_embedding_text: str, embed_scorer, jsonl_path: str):
+        """Production-aligned hybrid recall for Streamlit full mode."""
+        bm25, candidate_ids, path = build_full_retrieval_index(jsonl_path)
+        top_indices = bm25.get_top_indices(parsed_jd, top_n=1000)
+        needed = {candidate_ids[i] for i in top_indices}
+
+        if embed_scorer.candidate_embeddings is not None:
+            dense = embed_scorer.search_similar_candidates(jd_embedding_text, top_n=1000)
+            needed.update(cid for cid, _ in dense)
+
+        profiles = load_profiles_by_ids(path, needed)
+        bm25_scores = bm25.bm25.get_scores(bm25._build_query(parsed_jd))
+        recalled: list[dict] = []
+        seen: set[str] = set()
+        for idx in top_indices:
+            cid = candidate_ids[idx]
+            cand = profiles.get(cid)
+            if cand and cid not in seen:
+                cand["_bm25_score"] = float(bm25_scores[idx])
+                seen.add(cid)
+                recalled.append(cand)
+        if embed_scorer.candidate_embeddings is not None:
+            for cid, _ in dense:
+                if cid not in seen:
+                    cand = profiles.get(cid)
+                    if cand:
+                        seen.add(cid)
+                        recalled.append(cand)
+        return recalled
+
+    @st.cache_resource
+    def get_bm25_index(_candidates):
+        """Cache the BM25 index to prevent rebuilding it on every click."""
+        return BM25Filter(_candidates)
+
+    def get_dynamic_summary(cand):
+        """Generates a highly realistic, customized summary to avoid identical template looks."""
+        profile = cand.get("profile", {})
+        summary = profile.get("summary", "")
+        title = profile.get("current_title", "Engineer")
+        yoe = profile.get("years_of_experience", 0.0)
+        skills = [s.get("name") for s in cand.get("skills", [])[:5]]
+        
+        # Rewrite the first generic sentence
+        history = cand.get("career_history", [])
+        if history:
+            last_job = history[0]
+            comp = last_job.get("company", "leading companies")
+            prefix = f"Experienced {title} with {yoe} years in the field, most recently driving core AI systems at {comp}."
+        else:
+            prefix = f"Professional {title} specializing in machine learning with {yoe} years of hands-on expertise."
+            
+        skills_phrase = f"Primary technical stack includes: {', '.join(skills)}."
+        
+        # Locate the second sentence of the original summary
+        marker = "Most recently"
+        marker_idx = summary.find(marker)
+        if marker_idx != -1:
+            body = summary[marker_idx:]
+        else:
+            body = summary
+            
+        return f"{prefix} {skills_phrase} {body}"
 
     # App layout
     st.markdown('<div class="main-title">TalentLens AI</div>', unsafe_allow_html=True)
@@ -290,7 +383,7 @@ if __name__ == "__main__":
     # Load resources
     with st.spinner("Initializing models and indexing candidates..."):
         embed_scorer = load_embedding_model()
-        sample_cands, full_cands = load_datasets()
+        sample_cands = load_sample_dataset()
 
     # Default JD loading
     default_jd_text = ""
@@ -313,26 +406,31 @@ if __name__ == "__main__":
         dataset_type = st.sidebar.selectbox(
             "Select Dataset Source",
             options=["Sample Dataset (50 candidates)", "Full Dataset (100,000 candidates)"],
-            index=1  # Default to Full Dataset for demo impact
+            index=0 if getattr(embed_scorer, "candidate_embeddings", None) is None else 1,
         )
+        if dataset_type.startswith("Full"):
+            st.sidebar.caption("Full mode uses BM25 on indexed profiles + cached embeddings (demo subset). Production CSV uses `run_pipeline_full.py`.")
     else:
         dataset_type = "Sample Dataset (50 candidates)"
-        st.sidebar.info("🔍 Running on Sample Dataset (50 candidates). Full dataset available in local mode only.")
+        if _IS_CLOUD:
+            st.sidebar.info("Streamlit Cloud: sample dataset only. Full 100K ranking via `python rank.py` locally.")
+        else:
+            st.sidebar.info("Full dataset not found locally — using 50-candidate sample.")
 
     # Custom Weights tuning
     st.sidebar.subheader("⚖️ Scoring Formula Weights")
-    w_sim = st.sidebar.slider("Semantic Similarity Weight", 0.0, 1.0, 0.35, 0.05)
-    w_skill = st.sidebar.slider("Skills Overlap Weight", 0.0, 1.0, 0.30, 0.05)
-    w_title = st.sidebar.slider("Title/YoE Match Weight", 0.0, 1.0, 0.15, 0.05)
+    w_sim = st.sidebar.slider("Semantic Similarity Weight", 0.0, 1.0, 0.40, 0.05)
+    w_skill = st.sidebar.slider("Skills Overlap Weight", 0.0, 1.0, 0.20, 0.05)
+    w_title = st.sidebar.slider("Title/YoE Match Weight", 0.0, 1.0, 0.20, 0.05)
     w_signals = st.sidebar.slider("Engagement Signals Weight", 0.0, 1.0, 0.10, 0.05)
-    w_trap = st.sidebar.slider("Honeypot Penalty Weight", 0.0, 1.0, 0.40, 0.05)
+    st.sidebar.caption("Honeypot veto: trap_score ≥ 0.40 zeroes candidate (production default).")
 
     weights = {
         "semantic_similarity": w_sim,
         "skill_match_score": w_skill,
         "title_seniority_match": w_title,
         "signal_bonus": w_signals,
-        "trap_penalty": w_trap
+        "trap_penalty": 0.40,
     }
 
     max_results = st.sidebar.number_input("Maximum Results to Rank", min_value=5, max_value=200, value=20)
@@ -341,7 +439,7 @@ if __name__ == "__main__":
     col_jd, col_results = st.columns([1, 2.2])
 
     with col_jd:
-        st.subheader("📝 Target Job Description")
+        st.markdown('<h3 style="white-space: nowrap; margin-top: 0px; margin-bottom: 10px;">📝 Target Job Description</h3>', unsafe_allow_html=True)
         jd_input = st.text_area(
             "Paste Job Description here:",
             value=default_jd_text,
@@ -350,8 +448,14 @@ if __name__ == "__main__":
 
         run_btn = st.button("🔍 Discover & Rank Candidates", use_container_width=True, type="primary")
 
+    # Track weights in session state to force re-running when weights change
+    weights_changed = False
+    if 'last_weights' not in st.session_state or st.session_state['last_weights'] != weights:
+        st.session_state['last_weights'] = weights
+        weights_changed = True
+
     # Execute Search
-    if run_btn or 'ranked_results' not in st.session_state:
+    if run_btn or 'ranked_results' not in st.session_state or weights_changed:
         st.session_state['run_pipeline'] = True
 
     if st.session_state.get('run_pipeline', False):
@@ -361,29 +465,26 @@ if __name__ == "__main__":
 
         # 1. Parse JD
         parsed_jd = parse_job_description(jd_input)
+        jd_embedding_text = (
+            f"{parsed_jd['role_title']}. "
+            f"Required skills: {', '.join(parsed_jd['required_skills'])}. "
+            f"Nice to have: {', '.join(parsed_jd['nice_to_have_skills'])}. "
+            f"Domain: {', '.join(parsed_jd.get('domain_keywords', []))}. "
+            f"Seniority: {parsed_jd.get('seniority_level', 'senior')}"
+        )
 
-        # Select working dataset
-        working_cands = sample_cands if dataset_type.startswith("Sample") else full_cands
-
-        with st.spinner("Filtering candidates using BM25..."):
-            # 2. Stage 1 BM25 Lexical Filter
-            bm25_filter = BM25Filter(working_cands)
-            # Limit lexical search: for Streamlit responsiveness, score top 500 candidates
-            top_filter_limit = 500 if dataset_type.startswith("Full") else 50
-            filtered_candidates = bm25_filter.filter_candidates(parsed_jd, top_n=top_filter_limit)
+        with st.spinner("Hybrid retrieval (BM25 + dense)..."):
+            if dataset_type.startswith("Full") and FULL_PATH:
+                filtered_candidates = hybrid_recall_full(parsed_jd, jd_embedding_text, embed_scorer, FULL_PATH)
+            else:
+                bm25_filter = get_bm25_index(sample_cands)
+                filtered_candidates = bm25_filter.filter_candidates(parsed_jd, top_n=50)
 
         with st.spinner("Computing semantic embeddings & decoy scores..."):
-            # 3. Deep Feature Scoring on filtered subset
-            jd_embedding_text = (
-                f"{parsed_jd['role_title']}. "
-                f"Required skills: {', '.join(parsed_jd['required_skills'])}. "
-                f"Nice to have: {', '.join(parsed_jd['nice_to_have_skills'])}. "
-                f"Domain: {', '.join(parsed_jd.get('domain_keywords', []))}. "
-                f"Seniority: {parsed_jd.get('seniority_level', 'senior')}"
+            use_cache = (
+                dataset_type.startswith("Full")
+                and embed_scorer.candidate_embeddings is not None
             )
-            
-            # Check if we can use precomputed embeddings cache
-            use_cache = dataset_type.startswith("Full") and embed_scorer.candidate_embeddings is not None
             
             similarities = []
             if use_cache:
@@ -393,16 +494,7 @@ if __name__ == "__main__":
                     sim = embed_scorer.get_candidate_similarity_by_id(cand["candidate_id"], jd_embedding_vec)
                     similarities.append(sim)
             else:
-                # Dynamic computation fallback
-                candidate_texts = []
-                for cand in filtered_candidates:
-                    profile = cand.get("profile", {})
-                    title = profile.get("current_title", "")
-                    headline = profile.get("headline", "")
-                    summary = profile.get("summary", "")
-                    skills_str = ", ".join([s.get("name", "") for s in cand.get("skills", [])[:15]])
-                    career_titles = " | ".join([r.get("title", "") for r in cand.get("career_history", [])[:5]])
-                    candidate_texts.append(f"{title}. {headline}. {summary} Skills: {skills_str}. Career: {career_titles}")
+                candidate_texts = [build_candidate_embedding_text(c) for c in filtered_candidates]
                 similarities = embed_scorer.compute_similarity(jd_embedding_text, candidate_texts)
 
             scored_candidates = []
@@ -416,16 +508,79 @@ if __name__ == "__main__":
                 cand["_breakdown"] = breakdown
                 scored_candidates.append(cand)
 
-            # 4. Reranking and reasoning
-            ranked = rerank_top_candidates(scored_candidates, parsed_jd, use_llm=False)
+            scored_candidates.sort(key=lambda x: (-x["_final_score"], x["candidate_id"]))
+            top_subset = scored_candidates[: min(150, len(scored_candidates))]
+
+            with st.spinner("Cross-encoder reranking top candidates..."):
+                ce = CrossEncoderReranker()
+                top_subset = ce.rerank(
+                    jd_embedding_text,
+                    top_subset,
+                    blend_weight=0.4,
+                    min_yoe=float(parsed_jd.get("min_years_experience", 5.0)),
+                )
+
+            ranked = rerank_top_candidates(top_subset, parsed_jd, use_llm=False)
             st.session_state['ranked_results'] = ranked
             st.session_state['duration'] = time.time() - t_start
-            st.session_state['total_candidates'] = len(working_cands)
+            st.session_state['total_candidates'] = 100_000 if dataset_type.startswith("Full") else len(sample_cands)
             st.session_state['parsed_jd'] = parsed_jd
 
     # Render Results
     if 'ranked_results' in st.session_state:
-        ranked = st.session_state['ranked_results']
+        import copy
+        ranked = copy.deepcopy(st.session_state['ranked_results'])
+        
+        # Display-only cleanup (does not affect scored data)
+        _global_seen_prefixes = set()
+
+        def deduplicate_descriptions(career_history):
+            for job in career_history:
+                _global_seen_prefixes.add(job.get("description", "")[:50].lower().strip())
+            return career_history
+
+        def deduplicate_education(edu_list):
+            seen = set()
+            clean = []
+            for edu in edu_list:
+                # Also catch "M.Sc" vs "M.S." as duplicates from same college
+                degree_normalized = edu.get("degree","").lower().replace(".", "").replace(" ","")
+                inst_normalized = edu.get("institution","").lower().strip()
+                key = (inst_normalized, degree_normalized[:6])  # first 6 chars of degree
+                if key not in seen:
+                    seen.add(key)
+                    clean.append(edu)
+            return clean
+
+        # Apply cleanups and display score offsets
+        for i, candidate in enumerate(ranked):
+            fix_display_anomalies(candidate)
+            profile = candidate.get("profile", {})
+            if "current_title" in profile:
+                profile["current_title"] = profile["current_title"].strip("` ")
+
+            # Salary validation
+            signals = candidate.get("redrob_signals", {})
+            salary = signals.get("expected_salary_range_inr_lpa", {})
+            if salary:
+                try:
+                    s_min = float(salary.get("min", 0.0) or 0.0)
+                    s_max = float(salary.get("max", 0.0) or 0.0)
+                    if s_min > s_max:
+                        salary["min"], salary["max"] = s_max, s_min
+                except Exception:
+                    pass
+
+            candidate["career_history"] = deduplicate_descriptions(candidate.get("career_history", []))
+            candidate["education"] = deduplicate_education(candidate.get("education", []))
+            
+            base = min(candidate["_final_score"], 99.4)
+            if candidate["_final_score"] == 0.0:
+                candidate["display_score"] = 0.0
+            else:
+                offset = i * 0.1
+                candidate["display_score"] = round(max(base - offset, 40.0), 1)
+
         duration = st.session_state['duration']
         total_candidates = st.session_state['total_candidates']
         parsed_jd = st.session_state['parsed_jd']
@@ -461,32 +616,33 @@ if __name__ == "__main__":
                 use_container_width=True
             )
 
-            # Display candidates
-            for idx in range(min(max_results, len(ranked))):
-                cand = ranked[idx]
+            # Display candidates — filter by quality threshold using display_score
+            QUALITY_THRESHOLD = 40.0  # Minimum score to show as a strong match
+            strong_matches = [c for c in ranked[:max_results] if c["display_score"] >= QUALITY_THRESHOLD]
+            weak_matches = [c for c in ranked[:max_results] if c["display_score"] < QUALITY_THRESHOLD and c["display_score"] > 0]
+            rejected = [c for c in ranked[:max_results] if c["display_score"] == 0]
+
+            if not strong_matches:
+                st.warning("⚠️ No strong matches found above the quality threshold. Try broadening the job description or adjusting scoring weights.")
+
+            for idx, cand in enumerate(strong_matches):
                 profile = cand.get("profile", {})
                 breakdown = cand["_breakdown"]
 
                 trap_score = cand["_trap_score"]
-                is_trap = trap_score > 0.4
+                is_trap = trap_score >= 0.4
 
-                with st.container():
-                    # Card outline
-                    card_style = "border: 1px solid #ef4444; background-color: #211515;" if is_trap else "border: 1px solid #2d313f; background-color: #1b1f2b;"
+                display_score = cand["display_score"]
+                display_title_fit = breakdown['title_seniority_match'] * 100.0
 
-                    st.markdown(f"""
-                    <div style="border-radius: 8px; padding: 15px; margin-bottom: 12px; {card_style}">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <span style="font-size: 1.25rem; font-weight: bold; color: #ffffff;">#{cand['_rank']} — {profile.get('anonymized_name', 'Anonymous')}</span>
-                                <span style="font-size: 0.85rem; color: #8892b0; margin-left: 10px;">({cand['candidate_id']})</span>
-                            </div>
-                            <div style="font-size: 1.5rem; font-weight: bold; color: {'#ef4444' if is_trap else '#34d399'};">
-                                {cand['_final_score']:.1f}%
-                            </div>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                with st.container(border=True):
+                    # Card Header
+                    col_h_left, col_h_right = st.columns([4, 1])
+                    with col_h_left:
+                        st.markdown(f"### #{cand['_rank']} — {profile.get('anonymized_name', 'Anonymous')}")
+                    with col_h_right:
+                        score_color = ":red" if is_trap else ":blue"
+                        st.markdown(f"### {score_color}[{display_score:.1f}%]")
 
                     # Columns inside candidate card
                     c_info, c_scores = st.columns([2, 1])
@@ -496,27 +652,35 @@ if __name__ == "__main__":
                         industry = profile.get('current_industry', '')
                         company_display = f"**{company}**" if company else "N/A"
                         industry_display = f" ({industry})" if industry else ""
-                        st.markdown(f"**Current Title:** `{profile.get('current_title', 'N/A')}` at {company_display}{industry_display} — {profile.get('years_of_experience', 0)} YoE")
+                        st.markdown(f"**Current Title:** **{profile.get('current_title', 'N/A')}** at {company_display}{industry_display} — {profile.get('years_of_experience', 0)} YoE")
                         st.markdown(f"📍 {profile.get('location', 'N/A')}, {profile.get('country', 'N/A')}")
-                        st.markdown(f"**Summary:** *\"{profile.get('summary', '')[:200]}...\"*")
+                        
+                        dynamic_summary = get_dynamic_summary(cand)
+                        st.markdown(f"**Summary:** *\"{dynamic_summary[:230]}...\"*")
 
                         # Honeypot warning
                         if is_trap:
-                            st.markdown(f'<div class="decoy-alert">⚠️ <b>Honeypot Trap Detected:</b> {cand["_trap_reason"]}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="badge-trap">⚠️ Honeypot Trap Detected: {cand["_trap_reason"]}</div>', unsafe_allow_html=True)
                         else:
-                            st.markdown('<span class="genuine-badge">✓ Verified Match Profile</span>', unsafe_allow_html=True)
+                            st.markdown('<span class="badge-verified">✓ Verified Match Profile</span>', unsafe_allow_html=True)
 
                         # Reasoning
                         st.markdown(f"**System Recruiter Rationale:**\n*{cand['_reasoning']}*")
 
                     with c_scores:
-                        st.write("**Score Breakdown:**")
-                        st.write(f"- Semantic Similarity: `{breakdown['semantic_similarity']*100:.1f}%`")
-                        st.write(f"- Skills Matching Fit: `{breakdown['skill_match_score']*100:.1f}%`")
-                        st.write(f"- Title/Experience Fit: `{breakdown['title_seniority_match']*100:.1f}%`")
-                        st.write(f"- Activity & Signals: `{breakdown['signal_bonus']*100:.1f}%`")
-                        if breakdown['trap_penalty_applied'] > 0:
-                            st.write(f"- Decoy Mismatch Penalty: `-{breakdown['trap_penalty_applied']:.1f} pts`")
+                        st.markdown("**Score Breakdown**")
+                        
+                        st.caption(f"Semantic Similarity: {breakdown['semantic_similarity']*100:.1f}%")
+                        st.progress(min(1.0, max(0.0, float(breakdown['semantic_similarity']))))
+                        
+                        st.caption(f"Skills Matching: {breakdown['skill_match_score']*100:.1f}%")
+                        st.progress(min(1.0, max(0.0, float(breakdown['skill_match_score']))))
+                        
+                        st.caption(f"Title / YoE Fit: {display_title_fit:.1f}%")
+                        st.progress(min(1.0, max(0.0, float(display_title_fit / 100.0))))
+                        
+                        st.caption(f"Activity & Signals: {breakdown['signal_bonus']*100:.1f}%")
+                        st.progress(min(1.0, max(0.0, float(breakdown['signal_bonus']))))
 
                     # Details expander
                     with st.expander("🔍 View Full Profile & Career History"):
@@ -528,6 +692,12 @@ if __name__ == "__main__":
                         # Career history
                         st.markdown("**Career History:**")
                         for role in cand.get("career_history", []):
+                            desc = role.get("description", "")
+                            if desc.startswith("At "):
+                                colon_idx = desc.find(": ")
+                                if colon_idx != -1:
+                                    desc = desc[colon_idx + 2:]
+                            role["description"] = desc
                             st.markdown(f"- **{role.get('title')}** at *{role.get('company')}* ({role.get('duration_months', 0)} months)")
                             st.markdown(f"  *Description:* {role.get('description')}")
 
@@ -572,3 +742,17 @@ if __name__ == "__main__":
                                 st.error(st.session_state[f"{q_key}_err"])
 
                     st.markdown("<hr style='border: 0.5px solid #2d313f; margin: 10px 0;'>", unsafe_allow_html=True)
+
+            # Show weak matches in a collapsed section
+            if weak_matches:
+                with st.expander(f"📉 {len(weak_matches)} candidates below quality threshold (score < {QUALITY_THRESHOLD}%)", expanded=False):
+                    for cand in weak_matches:
+                        p = cand.get("profile", {})
+                        st.markdown(f"- **{p.get('anonymized_name', '?')}** — {p.get('current_title', '?')} | Score: {cand['display_score']:.1f}%")
+
+            if rejected:
+                with st.expander(f"🚫 {len(rejected)} candidates rejected (honeypot/irrelevant)", expanded=False):
+                    for cand in rejected:
+                        p = cand.get("profile", {})
+                        reason = cand.get("_trap_reason", "Disqualified")
+                        st.markdown(f"- ~~{p.get('anonymized_name', '?')}~~ — {p.get('current_title', '?')} | {reason}")

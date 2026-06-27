@@ -19,7 +19,7 @@ def parse_job_description(jd_input: dict | str) -> dict:
     if isinstance(jd_input, dict):
         return {
             "role_title": jd_input.get("role_title", "Senior AI Engineer"),
-            "min_years_experience": float(jd_input.get("min_years_experience", 4.0)),
+            "min_years_experience": float(jd_input.get("min_years_experience", 5.0)),
             "seniority_level": jd_input.get("seniority_level", "Senior"),
             "required_skills": [s.strip() for s in jd_input.get("required_skills", [])],
             "nice_to_have_skills": [s.strip() for s in jd_input.get("nice_to_have_skills", [])],

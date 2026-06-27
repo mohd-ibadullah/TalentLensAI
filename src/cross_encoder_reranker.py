@@ -73,14 +73,11 @@ class CrossEncoderReranker:
             # Blend: 60% original feature score + 40% cross-encoder score
             blended = (1 - blend_weight) * original_score + blend_weight * normalized_ce
             
-            # Apply YoE deficit penalty to blended score
+            # YoE already enforced in feature_scorer; light nudge only for borderline cases
             profile = cand.get("profile", {})
             yoe = float(profile.get("years_of_experience", 0.0))
-            if min_yoe > 0.0:
-                if yoe < 4.0:
-                    blended -= 50.0
-                elif yoe < min_yoe:
-                    blended -= 15.0
+            if min_yoe > 0.0 and yoe < min_yoe:
+                blended -= 10.0
                 
             cand["_final_score"] = blended
 

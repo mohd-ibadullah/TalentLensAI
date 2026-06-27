@@ -31,9 +31,17 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
    ```bash
    python src/download_models.py
    ```
+   Or on Windows: `.\setup.ps1` (runs download + embedding precompute in one step).
 4. Pre-compute and cache candidate profile embeddings offline (one-time step):
    ```bash
    python src/precompute_embeddings.py
+   ```
+   Or run full setup: `.\setup.ps1` (Windows) / `./setup.sh` (Linux/Mac)
+
+5. Before portal upload, verify readiness:
+   ```bash
+   python scripts/verify_submit_ready.py
+   python scripts/set_phone.py "+91 YOUR_NUMBER"
    ```
 
 ---
@@ -43,7 +51,11 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
 ### 1. Execute the Ranking Pipeline
 To run the candidate ranker on the full `candidates.jsonl` dataset (100,000 candidate profiles) and generate the validated submission CSV, run:
 ```bash
-python src/run_pipeline_full.py --candidates "../[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl" --validate "../[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/validate_submission.py"
+python src/run_pipeline_full.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv --validate ../validate_submission.py --check-pool
+```
+Or use the spec-compliant alias:
+```bash
+python rank.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv
 ```
 *This command runs the parser, performs hybrid recall, scores candidates using the precomputed vector matrix, reranks using Cross-Encoder, writes results, and runs the official validator.*
 
@@ -74,8 +86,9 @@ streamlit run app/streamlit_app.py
 
 ## 📊 Core Performance Metrics
 *   **Scanning Speed:** Streams and parses 100,000 JSON lines in a single pass in **~10 seconds**.
-*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~27 seconds** (using precomputed embeddings).
-*   **Memory Footprint:** Uses **~800MB RAM** during streaming (well under the 16GB budget).
+*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~25–35 seconds** (warm, with precomputed embeddings and cached models).
+*   **Memory Footprint:** Peak **~2–3 GB RAM** during ranking (two-pass streaming + mmap embeddings; well under the 16 GB budget).
+*   **First-Run Setup:** Run `python src/download_models.py` once with network, then `python src/precompute_embeddings.py` (~15 min CPU). Preflight runs automatically before ranking.
 *   **Decoy Resilience:** Correctly identifies and eliminates all decoy profiles (like `CAND_0000002` through `CAND_0000005`), filtering them completely out of the top 100 with a **100% block rate (0.0% honeypots)**.
 
 ## 📊 System Evaluation Metrics

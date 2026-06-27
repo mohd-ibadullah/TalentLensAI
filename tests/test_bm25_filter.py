@@ -72,3 +72,13 @@ def test_bm25_filter():
     assert results[0]["candidate_id"] == "CAND_AI"
     assert results[0]["_bm25_score"] > results[1]["_bm25_score"]
 
+def test_bm25_get_top_indices():
+    candidates = [
+        {"candidate_id": "CAND_AI", "profile": {"current_title": "Senior AI Engineer", "summary": "retrieval"}, "skills": [], "career_history": []},
+        {"candidate_id": "CAND_ACCNT", "profile": {"current_title": "Accountant", "summary": "auditing"}, "skills": [], "career_history": []},
+    ]
+    parsed_jd = {"role_title": "AI Engineer", "required_skills": ["Python"], "nice_to_have_skills": [], "domain_keywords": ["retrieval"]}
+    bm25 = BM25Filter(candidates)
+    indices = bm25.get_top_indices(parsed_jd, top_n=1)
+    assert indices == [0]
+
