@@ -210,14 +210,36 @@ if __name__ == "__main__":
     # Data paths — resolved relative to project root for portability (local + Streamlit Cloud)
     _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     SAMPLE_PATH = os.path.join(_PROJECT_ROOT, "data", "sample_candidates.json")
-    FULL_PATH = os.path.join(_PROJECT_ROOT, "data", "candidates.jsonl")  # Only available locally
     DEFAULT_JD_PATH = os.path.join(_PROJECT_ROOT, "config", "job_description.json")
-    _FULL_DATASET_AVAILABLE = os.path.exists(FULL_PATH)
+    
+    # Search for candidates.jsonl in multiple potential local paths
+    potential_paths = [
+        os.path.join(_PROJECT_ROOT, "data", "candidates.jsonl"),
+        os.path.join(_PROJECT_ROOT, "..", "candidates.jsonl"),
+        os.path.join(_PROJECT_ROOT, "..", "India_runs_data_and_ai_challenge", "candidates.jsonl"),
+        os.path.join(_PROJECT_ROOT, "..", "[PUB] India_runs_data_and_ai_challenge", "India_runs_data_and_ai_challenge", "candidates.jsonl"),
+        os.path.abspath(os.path.join(_PROJECT_ROOT, "..", "..", "[PUB] India_runs_data_and_ai_challenge", "India_runs_data_and_ai_challenge", "candidates.jsonl")),
+        "c:\\Users\\froms\\Downloads\\[PUB] India_runs_data_and_ai_challenge\\[PUB] India_runs_data_and_ai_challenge\\India_runs_data_and_ai_challenge\\candidates.jsonl"
+    ]
+    
+    FULL_PATH = None
+    for p in potential_paths:
+        if os.path.exists(p):
+            FULL_PATH = p
+            break
+            
+    _FULL_DATASET_AVAILABLE = FULL_PATH is not None
 
     @st.cache_resource
     def load_embedding_model():
         """Cache the embedding model locally so it's loaded only once."""
-        return EmbeddingScorer()
+        scorer = EmbeddingScorer()
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        npy_path = os.path.join(project_root, "data", "candidate_embeddings.npy")
+        json_path = os.path.join(project_root, "data", "candidate_ids.json")
+        if os.path.exists(npy_path) and os.path.exists(json_path):
+            scorer.load_precomputed_embeddings(npy_path, json_path)
+        return scorer
 
     @st.cache_data
     def load_datasets():
@@ -352,16 +374,6 @@ if __name__ == "__main__":
 
         with st.spinner("Computing semantic embeddings & decoy scores..."):
             # 3. Deep Feature Scoring on filtered subset
-            candidate_texts = []
-            for cand in filtered_candidates:
-                profile = cand.get("profile", {})
-                title = profile.get("current_title", "")
-                headline = profile.get("headline", "")
-                summary = profile.get("summary", "")
-                skills_str = ", ".join([s.get("name", "") for s in cand.get("skills", [])[:15]])
-                career_titles = " | ".join([r.get("title", "") for r in cand.get("career_history", [])[:5]])
-                candidate_texts.append(f"{title}. {headline}. {summary} Skills: {skills_str}. Career: {career_titles}")
-
             jd_embedding_text = (
                 f"{parsed_jd['role_title']}. "
                 f"Required skills: {', '.join(parsed_jd['required_skills'])}. "
@@ -369,7 +381,29 @@ if __name__ == "__main__":
                 f"Domain: {', '.join(parsed_jd.get('domain_keywords', []))}. "
                 f"Seniority: {parsed_jd.get('seniority_level', 'senior')}"
             )
-            similarities = embed_scorer.compute_similarity(jd_embedding_text, candidate_texts)
+            
+            # Check if we can use precomputed embeddings cache
+            use_cache = dataset_type.startswith("Full") and embed_scorer.candidate_embeddings is not None
+            
+            similarities = []
+            if use_cache:
+                # Instant matrix lookup
+                jd_embedding_vec = embed_scorer.get_embeddings([jd_embedding_text], is_query=True)[0]
+                for cand in filtered_candidates:
+                    sim = embed_scorer.get_candidate_similarity_by_id(cand["candidate_id"], jd_embedding_vec)
+                    similarities.append(sim)
+            else:
+                # Dynamic computation fallback
+                candidate_texts = []
+                for cand in filtered_candidates:
+                    profile = cand.get("profile", {})
+                    title = profile.get("current_title", "")
+                    headline = profile.get("headline", "")
+                    summary = profile.get("summary", "")
+                    skills_str = ", ".join([s.get("name", "") for s in cand.get("skills", [])[:15]])
+                    career_titles = " | ".join([r.get("title", "") for r in cand.get("career_history", [])[:5]])
+                    candidate_texts.append(f"{title}. {headline}. {summary} Skills: {skills_str}. Career: {career_titles}")
+                similarities = embed_scorer.compute_similarity(jd_embedding_text, candidate_texts)
 
             scored_candidates = []
             for cand, sim in zip(filtered_candidates, similarities):
