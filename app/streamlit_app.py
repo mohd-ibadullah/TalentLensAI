@@ -574,8 +574,9 @@ if __name__ == "__main__":
             candidate["career_history"] = deduplicate_descriptions(candidate.get("career_history", []))
             candidate["education"] = deduplicate_education(candidate.get("education", []))
             
+            is_trap = candidate.get("_trap_score", 0.0) >= 0.4
             base = min(candidate["_final_score"], 99.4)
-            if candidate["_final_score"] == 0.0:
+            if candidate["_final_score"] == 0.0 or is_trap:
                 candidate["display_score"] = 0.0
             else:
                 offset = i * 0.1
