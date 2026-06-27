@@ -13,19 +13,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.data_loader import stream_candidates
 from src.embedding_scorer import EmbeddingScorer
+from src.candidate_text import build_candidate_embedding_text
 
 def build_candidate_text(cand: dict) -> str:
-    """
-    Constructs the exact same candidate text format used during ranking
-    to ensure perfect query-passage alignment.
-    """
-    profile = cand.get("profile", {})
-    title = profile.get("current_title", "")
-    headline = profile.get("headline", "")
-    summary = profile.get("summary", "")
-    skills_str = ", ".join([s.get("name", "") for s in cand.get("skills", [])[:15]])
-    career_titles = " | ".join([r.get("title", "") for r in cand.get("career_history", [])[:5]])
-    return f"Title: {title}. Headline: {headline}. Skills: {skills_str}. Career: {career_titles}. Summary: {summary}"
+    return build_candidate_embedding_text(cand)
 
 def main():
     project_root = Path(__file__).resolve().parent.parent

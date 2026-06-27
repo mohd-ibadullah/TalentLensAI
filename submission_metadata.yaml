@@ -12,7 +12,7 @@ team_name: "talent-lens-ai-team"  # Used in leaderboard and announcements
 primary_contact:
   name: "Mohd Ibadullah"
   email: "mohdibadullah13@gmail.com"   # Used for all organizer communication
-  phone: "+91 99999 99999"        # Used for top-50 / top-10 outreach
+  phone: "+91 9030605408"        # Used for top-50 / top-10 outreach
 
 team_members:
   - name: "Mohd Ibadullah"
@@ -29,7 +29,11 @@ github_repo: "https://github.com/mohd-ibadullah/TalentLensAI"
 sandbox_link: "https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app"
 # Required. A working hosted environment where the ranker can be run.
 
-reproduce_command: "python src/run_pipeline_full.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv"
+reproduce_command: |
+  # One-time setup (with network, ~15 min):
+  pip install -r requirements.txt && python src/download_models.py && python src/precompute_embeddings.py
+  # Ranking (offline, ~30s warm / <5 min with setup):
+  python src/run_pipeline_full.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv
 # The single command that produces submission.csv from candidates.jsonl.
 # Should run end-to-end within 5 minutes on CPU with 16GB RAM and no network.
 
@@ -44,8 +48,8 @@ compute:
   os: "Windows 11"                              # Or "Ubuntu 22.04 LTS", etc.
   uses_gpu_for_inference: false                 # Must be false — see compute constraints
   has_network_during_ranking: false             # Must be false — no API calls during ranking
-  pre_computation_required: false               # true if you pre-compute embeddings or train models offline
-  pre_computation_time_minutes: 0               # Approximate, if applicable
+  pre_computation_required: true               # Embeddings precomputed offline (one-time, allowed before ranking)
+  pre_computation_time_minutes: 15               # python src/precompute_embeddings.py on 100K profiles (CPU)
 
 # ============================================================================
 # AI tools declaration
@@ -62,16 +66,13 @@ ai_usage_summary: |
 # Approach summary (optional but recommended)
 # ============================================================================
 methodology_summary: |
-  TalentLens AI uses a 6-stage ranking engine designed for both speed and precision.
-  It filters 100,000 candidates to the top 1,000 using a lightweight BM25 pass.
-  A honeypot trap detector checks profile consistency (detecting summary templates, 
-  title-skill mismatches, and duplicated career histories) to heavily penalize
-  decoy candidates. Semantic similarities are calculated using a local
-  BAAI/bge-base-en-v1.5 transformer model (768-dim, CLS-pooling with instruction-tuned 
-  query prefixes) over enriched candidate texts (title + headline + summary + skills + 
-  career titles). Sub-scores (similarity, skill match via RapidFuzz, experience, 
-  and Redrob signals) are aggregated and sorted with a rounded lexicographical
-  tie-breaker.
+  TalentLens AI uses a 6-stage hybrid ranking engine on 100K candidates.
+  Stage 1: BM25 lexical + BGE dense retrieval (~1,500 union). Stage 2: continuous
+  honeypot trap detector (title/skill/career/timeline checks). Stage 3: weighted
+  feature scoring (40/20/20/10 semantic/skills/title/signals). Stage 4: cross-encoder
+  rerank on top 150. Stage 5: profile-specific rule-based reasoning (offline).
+  Precomputed embeddings required (one-time setup via setup.ps1). Ranking runs offline
+  in ~30s on CPU with 16GB RAM budget.
 
 # ============================================================================
 # Declarations

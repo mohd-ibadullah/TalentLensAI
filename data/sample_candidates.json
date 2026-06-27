@@ -224,17 +224,6 @@
         "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
       },
       {
-        "company": "Wipro",
-        "title": "Operations Manager",
-        "start_date": "2021-09-13",
-        "end_date": "2022-11-07",
-        "duration_months": 14,
-        "is_current": false,
-        "industry": "IT Services",
-        "company_size": "10001+",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
-      },
-      {
         "company": "Acme Corp",
         "title": "Marketing Manager",
         "start_date": "2017-03-08",
@@ -513,7 +502,7 @@
         "is_current": true,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Led performance profiling and optimization efforts at Dunder Mifflin, identifying and resolving critical bottlenecks as Marketing Manager."
       },
       {
         "company": "Infosys",
@@ -524,7 +513,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "Designed the caching and performance optimization layer, reducing p95 latency by 40%."
       },
       {
         "company": "Globex Inc",
@@ -552,8 +541,8 @@
         "institution": "Lovely Professional University",
         "degree": "Ph.D",
         "field_of_study": "Electronics",
-        "start_year": 2013,
-        "end_year": 2016,
+        "start_year": 2020,
+        "end_year": 2023,
         "grade": "7.61 CGPA",
         "tier": "tier_3"
       }
@@ -695,7 +684,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Built event-driven architectures at Stark Industries, using message queues for async processing of high-volume workloads."
       },
       {
         "company": "Wipro",
@@ -717,7 +706,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       },
       {
         "company": "TCS",
@@ -728,7 +717,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Led cross-team engineering efforts focusing on scalable architecture and delivery velocity."
       }
     ],
     "education": [
@@ -844,7 +833,7 @@
         "is_current": true,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "Developed automated testing frameworks, improving code coverage from 45% to 85% across the platform."
       },
       {
         "company": "Pied Piper",
@@ -855,7 +844,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "11-50",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Built internal tooling and developer platforms, improving engineering velocity by 30%."
       }
     ],
     "education": [
@@ -983,7 +972,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "Led API design and developer experience improvements, creating standardized SDKs used by 12 internal teams."
       },
       {
         "company": "Initech",
@@ -994,7 +983,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Implemented CI/CD pipelines, cutting deployment cycles from weekly to multiple daily releases."
       }
     ],
     "education": [
@@ -1133,8 +1122,8 @@
         "institution": "SRM University",
         "degree": "M.Sc",
         "field_of_study": "Computer Engineering",
-        "start_year": 2009,
-        "end_year": 2013,
+        "start_year": 2013,
+        "end_year": 2017,
         "grade": "67%",
         "tier": "tier_2"
       }
@@ -1259,7 +1248,7 @@
         "is_current": true,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Led the observability initiative at Dunder Mifflin, implementing distributed tracing and structured logging across services."
       },
       {
         "company": "Wipro",
@@ -1270,7 +1259,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "Architected the migration from monolith to microservices, enabling independent team deployments."
       },
       {
         "company": "Stark Industries",
@@ -1281,7 +1270,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Drove technical initiatives across the platform, optimizing system throughput and operational reliability."
       },
       {
         "company": "Acme Corp",
@@ -1369,8 +1358,8 @@
       "endorsements_received": 34,
       "notice_period_days": 150,
       "expected_salary_range_inr_lpa": {
-        "min": 16.0,
-        "max": 7.3
+        "min": 7.3,
+        "max": 16.0
       },
       "preferred_work_mode": "remote",
       "willing_to_relocate": false,
@@ -1632,8 +1621,8 @@
         "institution": "Anna University",
         "degree": "B.Sc",
         "field_of_study": "Information Technology",
-        "start_year": 2015,
-        "end_year": 2020,
+        "start_year": 2020,
+        "end_year": 2025,
         "grade": "9.16 CGPA",
         "tier": "tier_2"
       }
@@ -1738,8 +1727,8 @@
       "endorsements_received": 9,
       "notice_period_days": 90,
       "expected_salary_range_inr_lpa": {
-        "min": 15.5,
-        "max": 13.9
+        "min": 13.9,
+        "max": 15.5
       },
       "preferred_work_mode": "flexible",
       "willing_to_relocate": false,
@@ -1777,19 +1766,10 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "Owned end-to-end feature delivery, from requirements gathering through production deployment."
       }
     ],
     "education": [
-      {
-        "institution": "Symbiosis International",
-        "degree": "B.Sc",
-        "field_of_study": "Physics",
-        "start_year": 2018,
-        "end_year": 2022,
-        "grade": "68%",
-        "tier": "tier_3"
-      },
       {
         "institution": "Christ University",
         "degree": "B.Sc",
@@ -1797,6 +1777,15 @@
         "start_year": 2011,
         "end_year": 2015,
         "grade": "7.28 CGPA",
+        "tier": "tier_3"
+      },
+      {
+        "institution": "Symbiosis International",
+        "degree": "B.Sc",
+        "field_of_study": "Physics",
+        "start_year": 2018,
+        "end_year": 2022,
+        "grade": "68%",
         "tier": "tier_3"
       }
     ],
@@ -1887,8 +1876,8 @@
       "endorsements_received": 31,
       "notice_period_days": 60,
       "expected_salary_range_inr_lpa": {
-        "min": 14.8,
-        "max": 7.9
+        "min": 7.9,
+        "max": 14.8
       },
       "preferred_work_mode": "flexible",
       "willing_to_relocate": false,
@@ -1926,7 +1915,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Managed cross-functional projects at Globex Inc, bridging product requirements with engineering execution as Civil Engineer."
       }
     ],
     "education": [
@@ -1943,8 +1932,8 @@
         "institution": "Amity University",
         "degree": "Ph.D",
         "field_of_study": "Information Technology",
-        "start_year": 2008,
-        "end_year": 2013,
+        "start_year": 2023,
+        "end_year": 2028,
         "grade": "8.29 CGPA",
         "tier": "tier_3"
       }
@@ -2036,8 +2025,8 @@
       "endorsements_received": 9,
       "notice_period_days": 30,
       "expected_salary_range_inr_lpa": {
-        "min": 11.6,
-        "max": 8.1
+        "min": 8.1,
+        "max": 11.6
       },
       "preferred_work_mode": "remote",
       "willing_to_relocate": false,
@@ -2086,7 +2075,7 @@
         "is_current": false,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Test automation and QA engineering for a fintech product. Built and maintained the end-to-end test suite using Selenium and pytest, plus the load-testing setup using Locust. Worked closely with developers on testability patterns and with product on acceptance criteria. Recent work has been on shifting test responsibility into the dev team \u2014 moving from QA-as-gate to QA-as-coach. Career has been entirely in QA/test engineering."
+        "description": "Owned the offline-online evaluation framework from scratch: NDCG, MRR, recall@K calibrated against A/B engagement metrics. Drove 4-month migration with recruiter feedback loop."
       },
       {
         "company": "Acme Corp",
@@ -2097,7 +2086,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "Rebuilt candidate-JD matching pipeline from BM25 to hybrid dense retrieval. Cut false-positive rate by 31%, validated across 3 recruiter cohorts over 6 weeks."
       }
     ],
     "education": [
@@ -2268,7 +2257,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "Led performance profiling and optimization efforts at Hooli, identifying and resolving critical bottlenecks as Mobile Developer."
       },
       {
         "company": "Globex Inc",
@@ -2380,8 +2369,8 @@
       "endorsements_received": 61,
       "notice_period_days": 90,
       "expected_salary_range_inr_lpa": {
-        "min": 21.8,
-        "max": 18.9
+        "min": 18.9,
+        "max": 21.8
       },
       "preferred_work_mode": "remote",
       "willing_to_relocate": false,
@@ -2419,7 +2408,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "Built and maintained core product capabilities, collaborating with stakeholders across engineering and product."
       },
       {
         "company": "TCS",
@@ -2430,7 +2419,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Managed the full release lifecycle, coordinating deployments across multiple service teams."
       },
       {
         "company": "Globex Inc",
@@ -2441,7 +2430,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Implemented CI/CD pipelines at Globex Inc, cutting deployment cycles from weekly to multiple daily releases as Operations Manager."
       }
     ],
     "education": [
@@ -2569,7 +2558,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Built real-time monitoring and alerting systems, reducing MTTR by 60% for production incidents."
       },
       {
         "company": "Infosys",
@@ -2580,7 +2569,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Designed and shipped critical system components, balancing technical debt management with new feature delivery."
       },
       {
         "company": "Initech",
@@ -2591,7 +2580,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       },
       {
         "company": "Acme Corp",
@@ -2602,7 +2591,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "Led the mobile API backend development at Acme Corp, optimizing payloads and caching for low-bandwidth scenarios as Accountant."
       }
     ],
     "education": [
@@ -2702,8 +2691,8 @@
       "endorsements_received": 23,
       "notice_period_days": 90,
       "expected_salary_range_inr_lpa": {
-        "min": 13.8,
-        "max": 8.4
+        "min": 8.4,
+        "max": 13.8
       },
       "preferred_work_mode": "hybrid",
       "willing_to_relocate": false,
@@ -2741,7 +2730,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Test automation and QA engineering for a fintech product. Built and maintained the end-to-end test suite using Selenium and pytest, plus the load-testing setup using Locust. Worked closely with developers on testability patterns and with product on acceptance criteria. Recent work has been on shifting test responsibility into the dev team \u2014 moving from QA-as-gate to QA-as-coach. Career has been entirely in QA/test engineering."
+        "description": "Led performance profiling and optimization efforts at Acme Corp, identifying and resolving critical bottlenecks as Frontend Engineer."
       },
       {
         "company": "Pied Piper",
@@ -2752,7 +2741,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "11-50",
-        "description": "Test automation and QA engineering for a fintech product. Built and maintained the end-to-end test suite using Selenium and pytest, plus the load-testing setup using Locust. Worked closely with developers on testability patterns and with product on acceptance criteria. Recent work has been on shifting test responsibility into the dev team \u2014 moving from QA-as-gate to QA-as-coach. Career has been entirely in QA/test engineering."
+        "description": "At Pied Piper: Built internal tooling and developer platforms, improving engineering velocity by 30%."
       },
       {
         "company": "Initech",
@@ -2763,7 +2752,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "Implemented CI/CD pipelines at Initech, cutting deployment cycles from weekly to multiple daily releases as Full Stack Developer."
       }
     ],
     "education": [
@@ -2879,7 +2868,7 @@
         "is_current": true,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Owned end-to-end feature delivery at Wayne Enterprises, from requirements gathering through production deployment as Project Manager."
       },
       {
         "company": "Wayne Enterprises",
@@ -2890,7 +2879,7 @@
         "is_current": false,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "At Wayne Enterprises: Architected the migration from monolith to microservices, enabling independent team deployments."
       },
       {
         "company": "Pied Piper",
@@ -2901,19 +2890,10 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "11-50",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "Led the mobile API backend development at Pied Piper, optimizing payloads and caching for low-bandwidth scenarios as Business Analyst."
       }
     ],
     "education": [
-      {
-        "institution": "IISc Bangalore",
-        "degree": "M.Tech",
-        "field_of_study": "Computer Science",
-        "start_year": 2010,
-        "end_year": 2014,
-        "grade": "72%",
-        "tier": "tier_1"
-      },
       {
         "institution": "IIT Guwahati",
         "degree": "M.Tech",
@@ -2921,6 +2901,15 @@
         "start_year": 2002,
         "end_year": 2006,
         "grade": "7.34 CGPA",
+        "tier": "tier_1"
+      },
+      {
+        "institution": "IISc Bangalore",
+        "degree": "M.Tech",
+        "field_of_study": "Computer Science",
+        "start_year": 2010,
+        "end_year": 2014,
+        "grade": "72%",
         "tier": "tier_1"
       }
     ],
@@ -2999,8 +2988,8 @@
       "endorsements_received": 25,
       "notice_period_days": 60,
       "expected_salary_range_inr_lpa": {
-        "min": 12.5,
-        "max": 7.7
+        "min": 7.7,
+        "max": 12.5
       },
       "preferred_work_mode": "hybrid",
       "willing_to_relocate": false,
@@ -3038,7 +3027,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Wipro: Led API design and developer experience improvements, creating standardized SDKs used by 12 internal teams."
       },
       {
         "company": "Stark Industries",
@@ -3049,7 +3038,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Stark Industries: Built internal tooling and developer platforms, improving engineering velocity by 30%."
       },
       {
         "company": "Dunder Mifflin",
@@ -3060,7 +3049,7 @@
         "is_current": false,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "At Dunder Mifflin: Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       }
     ],
     "education": [
@@ -3190,7 +3179,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "Built RAG ranking pipeline serving 50M+ queries/month: BM25 + dense retrieval with LLM re-ranker on top-50, fallback to LTR when latency budget was tight."
       },
       {
         "company": "Infosys",
@@ -3201,7 +3190,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Led the mobile API backend development at Infosys, optimizing payloads and caching for low-bandwidth scenarios as Marketing Manager."
       },
       {
         "company": "Stark Industries",
@@ -3212,7 +3201,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Led migration from keyword-based to embedding-based search across 30M+ corpus. Final ranker improved engagement by 24%, reduced time-to-shortlist by 38%."
       },
       {
         "company": "Dunder Mifflin",
@@ -3223,18 +3212,7 @@
         "is_current": false,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
-      },
-      {
-        "company": "Wipro",
-        "title": "Project Manager",
-        "start_date": "2014-03-24",
-        "end_date": "2015-06-17",
-        "duration_months": 15,
-        "is_current": false,
-        "industry": "IT Services",
-        "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Owned end-to-end ranking pipeline: embedding generation, Pinecone retrieval, XGBoost re-ranking, behavioral signal integration. Built offline metrics that correlated with live A/B engagement."
       },
       {
         "company": "TCS",
@@ -3245,7 +3223,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Designed semantic search for 500K-doc knowledge base using sentence-transformers + FAISS. 35% relevance improvement over BM25 baseline, validated via human relevance judgments."
       }
     ],
     "education": [
@@ -3421,7 +3399,7 @@
         "is_current": true,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "At Hooli: Built internal tooling and developer platforms, improving engineering velocity by 30%."
       }
     ],
     "education": [
@@ -3516,8 +3494,8 @@
       "endorsements_received": 21,
       "notice_period_days": 150,
       "expected_salary_range_inr_lpa": {
-        "min": 12.3,
-        "max": 8.5
+        "min": 8.5,
+        "max": 12.3
       },
       "preferred_work_mode": "remote",
       "willing_to_relocate": false,
@@ -3555,7 +3533,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Test automation and QA engineering for a fintech product. Built and maintained the end-to-end test suite using Selenium and pytest, plus the load-testing setup using Locust. Worked closely with developers on testability patterns and with product on acceptance criteria. Recent work has been on shifting test responsibility into the dev team \u2014 moving from QA-as-gate to QA-as-coach. Career has been entirely in QA/test engineering."
+        "description": "At Acme Corp: Implemented CI/CD pipelines, cutting deployment cycles from weekly to multiple daily releases."
       },
       {
         "company": "Flipkart",
@@ -3566,7 +3544,7 @@
         "is_current": false,
         "industry": "E-commerce",
         "company_size": "10001+",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Flipkart: Architected the migration from monolith to microservices, enabling independent team deployments."
       }
     ],
     "education": [
@@ -3706,7 +3684,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At TCS: Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       },
       {
         "company": "Infosys",
@@ -3717,7 +3695,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "At Infosys: Drove technical initiatives across the platform, optimizing system throughput and operational reliability."
       }
     ],
     "education": [
@@ -3835,7 +3813,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Tech Mahindra: Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       },
       {
         "company": "Mindtree",
@@ -3846,7 +3824,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Mindtree: Managed the full release lifecycle, coordinating deployments across multiple service teams."
       },
       {
         "company": "Zomato",
@@ -3857,7 +3835,7 @@
         "is_current": false,
         "industry": "Food Delivery",
         "company_size": "5001-10000",
-        "description": "Frontend engineering at a media company. React, TypeScript, and the typical surrounding tooling (Webpack, Jest, Cypress). Built the company's design system from scratch and led the migration from a legacy AngularJS app. Strong on the frontend craft \u2014 accessibility, performance, animations \u2014 but limited backend exposure."
+        "description": "At Zomato: Led cross-team engineering efforts focusing on scalable architecture and delivery velocity."
       }
     ],
     "education": [
@@ -4004,7 +3982,7 @@
         "is_current": true,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "At Initech: Built and maintained core product capabilities, collaborating with stakeholders across engineering and product."
       },
       {
         "company": "Acme Corp",
@@ -4015,7 +3993,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "At Acme Corp: Developed automated testing frameworks, improving code coverage from 45% to 85% across the platform."
       },
       {
         "company": "Acme Corp",
@@ -4026,27 +4004,27 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "At Acme Corp: Owned end-to-end feature delivery, from requirements gathering through production deployment."
       }
     ],
     "education": [
-      {
-        "institution": "Generic State University",
-        "degree": "M.Sc",
-        "field_of_study": "Statistics",
-        "start_year": 2008,
-        "end_year": 2012,
-        "grade": "81%",
-        "tier": "tier_4"
-      },
       {
         "institution": "Lovely Professional University",
         "degree": "B.E.",
         "field_of_study": "Machine Learning",
         "start_year": 2008,
-        "end_year": 2013,
+        "end_year": 2012,
         "grade": "83%",
         "tier": "tier_3"
+      },
+      {
+        "institution": "Generic State University",
+        "degree": "M.Sc",
+        "field_of_study": "Statistics",
+        "start_year": 2013,
+        "end_year": 2018,
+        "grade": "81%",
+        "tier": "tier_4"
       }
     ],
     "skills": [
@@ -4124,8 +4102,8 @@
       "endorsements_received": 8,
       "notice_period_days": 30,
       "expected_salary_range_inr_lpa": {
-        "min": 17.1,
-        "max": 8.0
+        "min": 8.0,
+        "max": 17.1
       },
       "preferred_work_mode": "hybrid",
       "willing_to_relocate": false,
@@ -4163,7 +4141,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Java backend development at a large enterprise \u2014 Spring Boot microservices, Kafka for inter-service messaging, Postgres + Redis for storage. Worked on the customer onboarding flow which involved orchestrating multiple downstream services. Solid on the Spring ecosystem, transaction handling, and the operational side of Java services. Looking to either go deeper on distributed systems or expand into modern application stacks."
+        "description": "Managed cross-functional projects at Infosys, bridging product requirements with engineering execution as DevOps Engineer."
       },
       {
         "company": "Wipro",
@@ -4179,15 +4157,6 @@
     ],
     "education": [
       {
-        "institution": "IIT Bombay",
-        "degree": "Ph.D",
-        "field_of_study": "Information Technology",
-        "start_year": 2006,
-        "end_year": 2010,
-        "grade": "6.55 CGPA",
-        "tier": "tier_1"
-      },
-      {
         "institution": "VJTI Mumbai",
         "degree": "B.E.",
         "field_of_study": "Artificial Intelligence",
@@ -4195,6 +4164,15 @@
         "end_year": 2020,
         "grade": "9.11 CGPA",
         "tier": "tier_2"
+      },
+      {
+        "institution": "IIT Bombay",
+        "degree": "Ph.D",
+        "field_of_study": "Information Technology",
+        "start_year": 2021,
+        "end_year": 2025,
+        "grade": "6.55 CGPA",
+        "tier": "tier_1"
       }
     ],
     "skills": [
@@ -4363,7 +4341,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "At Wipro: Led API design and developer experience improvements, creating standardized SDKs used by 12 internal teams."
       }
     ],
     "education": [
@@ -4509,7 +4487,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Wipro: Built internal tooling and developer platforms, improving engineering velocity by 30%."
       },
       {
         "company": "Globex Inc",
@@ -4520,7 +4498,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Led performance profiling and optimization efforts at Globex Inc, identifying and resolving critical bottlenecks as Mechanical Engineer."
       },
       {
         "company": "TCS",
@@ -4531,7 +4509,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "At TCS: Designed and shipped critical system components, balancing technical debt management with new feature delivery."
       }
     ],
     "education": [
@@ -4659,7 +4637,7 @@
         "is_current": true,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "Designed the multi-tenant isolation layer at Dunder Mifflin, ensuring data security and performance guarantees per customer."
       },
       {
         "company": "Hooli",
@@ -4670,7 +4648,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "At Hooli: Designed and shipped critical system components, balancing technical debt management with new feature delivery."
       },
       {
         "company": "Hooli",
@@ -4681,7 +4659,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "At Hooli: Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       }
     ],
     "education": [
@@ -4785,8 +4763,8 @@
       "endorsements_received": 45,
       "notice_period_days": 60,
       "expected_salary_range_inr_lpa": {
-        "min": 14.7,
-        "max": 14.2
+        "min": 14.2,
+        "max": 14.7
       },
       "preferred_work_mode": "flexible",
       "willing_to_relocate": false,
@@ -4835,7 +4813,7 @@
         "is_current": false,
         "industry": "AI/ML",
         "company_size": "201-500",
-        "description": "Trained and shipped multiple ranking models for our product's discovery feed using XGBoost and LightGBM. Designed features across three families: content metadata, user behavior signals, and item engagement history. Owned the offline-online correlation analysis that determined which offline metrics actually predicted A/B test outcomes. Worked closely with PMs to define the optimization target (click-through vs. dwell time vs. downstream conversion) \u2014 that work was as important as the modeling itself."
+        "description": "Led the end-to-end ranking overhaul at a recommendations-heavy product: sourcing, BGE-large embeddings, Pinecone retrieval, LTR re-scoring. Hardest part was building offline metrics that predicted live outcomes."
       },
       {
         "company": "Uber",
@@ -4846,7 +4824,7 @@
         "is_current": false,
         "industry": "Transportation",
         "company_size": "10001+",
-        "description": "Trained and shipped multiple ranking models for our product's discovery feed using XGBoost and LightGBM. Designed features across three families: content metadata, user behavior signals, and item engagement history. Owned the offline-online correlation analysis that determined which offline metrics actually predicted A/B test outcomes. Worked closely with PMs to define the optimization target (click-through vs. dwell time vs. downstream conversion) \u2014 that work was as important as the modeling itself."
+        "description": "Built hybrid BM25 + dense retrieval system (BGE embeddings, FAISS HNSW) serving 35M+ items. Reduced p95 latency by 60%, improved NDCG@10 by 18%."
       },
       {
         "company": "Zomato",
@@ -5044,7 +5022,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Java backend development at a large enterprise \u2014 Spring Boot microservices, Kafka for inter-service messaging, Postgres + Redis for storage. Worked on the customer onboarding flow which involved orchestrating multiple downstream services. Solid on the Spring ecosystem, transaction handling, and the operational side of Java services. Looking to either go deeper on distributed systems or expand into modern application stacks."
+        "description": "At Cognizant: Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       },
       {
         "company": "HCL",
@@ -5055,7 +5033,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Test automation and QA engineering for a fintech product. Built and maintained the end-to-end test suite using Selenium and pytest, plus the load-testing setup using Locust. Worked closely with developers on testability patterns and with product on acceptance criteria. Recent work has been on shifting test responsibility into the dev team \u2014 moving from QA-as-gate to QA-as-coach. Career has been entirely in QA/test engineering."
+        "description": "At HCL: Implemented CI/CD pipelines, cutting deployment cycles from weekly to multiple daily releases."
       },
       {
         "company": "Globex Inc",
@@ -5066,7 +5044,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Full-stack web application development at a SaaS company. Built React-based admin interfaces and the Node.js REST API backing them. Worked across the stack: frontend components, REST endpoint design, PostgreSQL schema, deployment via Docker/Kubernetes. Comfortable in most parts of a typical web stack though my comfort zone is the backend and database side. Recent learning has been on the testing and CI/CD discipline."
+        "description": "Implemented CI/CD pipelines at Globex Inc, cutting deployment cycles from weekly to multiple daily releases as Mobile Developer."
       }
     ],
     "education": [
@@ -5083,8 +5061,8 @@
         "institution": "Amity University",
         "degree": "Ph.D",
         "field_of_study": "Physics",
-        "start_year": 2011,
-        "end_year": 2015,
+        "start_year": 2021,
+        "end_year": 2025,
         "grade": "7.95 CGPA",
         "tier": "tier_3"
       }
@@ -5176,8 +5154,8 @@
       "endorsements_received": 22,
       "notice_period_days": 150,
       "expected_salary_range_inr_lpa": {
-        "min": 18.3,
-        "max": 15.7
+        "min": 15.7,
+        "max": 18.3
       },
       "preferred_work_mode": "flexible",
       "willing_to_relocate": true,
@@ -5215,7 +5193,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Led performance profiling and optimization efforts at Wipro, identifying and resolving critical bottlenecks as Graphic Designer."
       },
       {
         "company": "Dunder Mifflin",
@@ -5226,7 +5204,7 @@
         "is_current": false,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "Led API design and developer experience improvements at Dunder Mifflin, creating standardized SDKs used by 12 internal teams."
       },
       {
         "company": "Acme Corp",
@@ -5237,7 +5215,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "At Acme Corp: Designed and shipped critical system components, balancing technical debt management with new feature delivery."
       }
     ],
     "education": [
@@ -5383,7 +5361,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "At Wipro: Designed the caching and performance optimization layer, reducing p95 latency by 40%."
       },
       {
         "company": "Hooli",
@@ -5394,7 +5372,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "At Hooli: Led cross-team engineering efforts focusing on scalable architecture and delivery velocity."
       },
       {
         "company": "Infosys",
@@ -5405,7 +5383,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "At Infosys: Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       },
       {
         "company": "TCS",
@@ -5416,7 +5394,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "At TCS: Built and maintained core product capabilities, collaborating with stakeholders across engineering and product."
       },
       {
         "company": "Hooli",
@@ -5427,7 +5405,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Hooli: Managed the full release lifecycle, coordinating deployments across multiple service teams."
       },
       {
         "company": "Pied Piper",
@@ -5438,7 +5416,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "11-50",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Pied Piper: Built real-time monitoring and alerting systems, reducing MTTR by 60% for production incidents."
       },
       {
         "company": "Stark Industries",
@@ -5449,7 +5427,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "At Stark Industries: Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       }
     ],
     "education": [
@@ -5589,7 +5567,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Full-stack web application development at a SaaS company. Built React-based admin interfaces and the Node.js REST API backing them. Worked across the stack: frontend components, REST endpoint design, PostgreSQL schema, deployment via Docker/Kubernetes. Comfortable in most parts of a typical web stack though my comfort zone is the backend and database side. Recent learning has been on the testing and CI/CD discipline."
+        "description": "Built and shipped production rec system from offline experimentation to live A/B in 5 months. Combined matrix factorization, TF-IDF + embedding content features, and behavioral re-ranking."
       },
       {
         "company": "Wipro",
@@ -5600,7 +5578,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Frontend engineering at a media company. React, TypeScript, and the typical surrounding tooling (Webpack, Jest, Cypress). Built the company's design system from scratch and led the migration from a legacy AngularJS app. Strong on the frontend craft \u2014 accessibility, performance, animations \u2014 but limited backend exposure."
+        "description": "Built production recommendation system combining collaborative filtering, sentence-transformer embeddings, and behavioral re-ranking. Thompson sampling for cold-start improved new-user retention by 11%."
       }
     ],
     "education": [
@@ -5617,8 +5595,8 @@
         "institution": "Bharati Vidyapeeth",
         "degree": "M.S.",
         "field_of_study": "Data Science",
-        "start_year": 2010,
-        "end_year": 2015,
+        "start_year": 2014,
+        "end_year": 2019,
         "grade": "7.08 CGPA",
         "tier": "tier_3"
       }
@@ -5784,7 +5762,7 @@
         "is_current": true,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "At Initech: Owned end-to-end feature delivery, from requirements gathering through production deployment."
       },
       {
         "company": "Hooli",
@@ -5795,7 +5773,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Hooli: Designed the caching and performance optimization layer, reducing p95 latency by 40%."
       },
       {
         "company": "Dunder Mifflin",
@@ -5806,7 +5784,7 @@
         "is_current": false,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "At Dunder Mifflin: Owned the data pipeline architecture, building robust ETL workflows and monitoring dashboards."
       },
       {
         "company": "TCS",
@@ -5817,7 +5795,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "Led performance profiling and optimization efforts at TCS, identifying and resolving critical bottlenecks as Civil Engineer."
       },
       {
         "company": "Wayne Enterprises",
@@ -5828,7 +5806,7 @@
         "is_current": false,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Designed schema migration strategies at Wayne Enterprises, ensuring zero-downtime upgrades across distributed databases."
       }
     ],
     "education": [
@@ -5923,8 +5901,8 @@
       "endorsements_received": 3,
       "notice_period_days": 60,
       "expected_salary_range_inr_lpa": {
-        "min": 15.3,
-        "max": 9.7
+        "min": 9.7,
+        "max": 15.3
       },
       "preferred_work_mode": "remote",
       "willing_to_relocate": false,
@@ -5962,7 +5940,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Business analyst at a consulting firm, working primarily with retail and CPG clients. Conducted business diagnostics, process re-engineering work, and digital transformation strategy projects. Strong on stakeholder management, structured problem-solving, and the typical consulting toolkit (slide-craft, Excel modeling, executive communication). Recent project work involved AI-strategy advisory but my own technical depth in AI is limited."
+        "description": "Led the mobile API backend development at Stark Industries, optimizing payloads and caching for low-bandwidth scenarios as Business Analyst."
       },
       {
         "company": "Initech",
@@ -5973,7 +5951,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "At Initech: Owned end-to-end feature delivery, from requirements gathering through production deployment."
       },
       {
         "company": "Stark Industries",
@@ -5984,7 +5962,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "Led the mobile API backend development at Stark Industries, optimizing payloads and caching for low-bandwidth scenarios as Content Writer."
       },
       {
         "company": "Hooli",
@@ -5995,7 +5973,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "Owned the authentication and authorization layer at Hooli, implementing OAuth2 and RBAC patterns as Mechanical Engineer."
       },
       {
         "company": "Acme Corp",
@@ -6006,7 +5984,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "Owned end-to-end feature delivery at Acme Corp, from requirements gathering through production deployment as HR Manager."
       }
     ],
     "education": [
@@ -6149,7 +6127,7 @@
         "is_current": true,
         "industry": "Food Delivery",
         "company_size": "5001-10000",
-        "description": "Frontend engineering at a media company. React, TypeScript, and the typical surrounding tooling (Webpack, Jest, Cypress). Built the company's design system from scratch and led the migration from a legacy AngularJS app. Strong on the frontend craft \u2014 accessibility, performance, animations \u2014 but limited backend exposure."
+        "description": "Implemented CI/CD pipelines at Swiggy, cutting deployment cycles from weekly to multiple daily releases as Java Developer."
       },
       {
         "company": "Globex Inc",
@@ -6160,7 +6138,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Java backend development at a large enterprise \u2014 Spring Boot microservices, Kafka for inter-service messaging, Postgres + Redis for storage. Worked on the customer onboarding flow which involved orchestrating multiple downstream services. Solid on the Spring ecosystem, transaction handling, and the operational side of Java services. Looking to either go deeper on distributed systems or expand into modern application stacks."
+        "description": "Owned end-to-end feature delivery at Globex Inc, from requirements gathering through production deployment as .NET Developer."
       },
       {
         "company": "Hooli",
@@ -6171,7 +6149,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Frontend engineering at a media company. React, TypeScript, and the typical surrounding tooling (Webpack, Jest, Cypress). Built the company's design system from scratch and led the migration from a legacy AngularJS app. Strong on the frontend craft \u2014 accessibility, performance, animations \u2014 but limited backend exposure."
+        "description": "At Hooli: Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       }
     ],
     "education": [
@@ -6317,7 +6295,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "Implemented CI/CD pipelines at Acme Corp, cutting deployment cycles from weekly to multiple daily releases as Marketing Manager."
       },
       {
         "company": "Stark Industries",
@@ -6328,7 +6306,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Brand design and creative direction at a consumer-products company. Owned brand identity (logo, visual system, typography), packaging design, and digital creative across web and social. Led the recent rebrand and managed a small external agency for production work. Comfortable across the Adobe suite, Figma, and the production side of brand and packaging design."
+        "description": "Managed the full release lifecycle at Stark Industries, coordinating deployments across multiple service teams as Mechanical Engineer."
       }
     ],
     "education": [
@@ -6345,8 +6323,8 @@
         "institution": "Chandigarh University",
         "degree": "M.E.",
         "field_of_study": "Artificial Intelligence",
-        "start_year": 2007,
-        "end_year": 2011,
+        "start_year": 2015,
+        "end_year": 2019,
         "grade": "82%",
         "tier": "tier_3"
       }
@@ -6432,8 +6410,8 @@
       "endorsements_received": 9,
       "notice_period_days": 30,
       "expected_salary_range_inr_lpa": {
-        "min": 17.4,
-        "max": 16.0
+        "min": 16.0,
+        "max": 17.4
       },
       "preferred_work_mode": "hybrid",
       "willing_to_relocate": true,
@@ -6471,7 +6449,7 @@
         "is_current": true,
         "industry": "Manufacturing",
         "company_size": "501-1000",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "At Globex Inc: Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       }
     ],
     "education": [
@@ -6605,7 +6583,7 @@
         "is_current": true,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "At Hooli: Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       },
       {
         "company": "Acme Corp",
@@ -6616,7 +6594,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "At Acme Corp: Designed the caching and performance optimization layer, reducing p95 latency by 40%."
       },
       {
         "company": "Wayne Enterprises",
@@ -6627,7 +6605,7 @@
         "is_current": false,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "Designed the multi-tenant isolation layer at Wayne Enterprises, ensuring data security and performance guarantees per customer."
       },
       {
         "company": "Infosys",
@@ -6638,7 +6616,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Led performance profiling and optimization efforts at Infosys, identifying and resolving critical bottlenecks as Content Writer."
       },
       {
         "company": "Dunder Mifflin",
@@ -6649,7 +6627,7 @@
         "is_current": false,
         "industry": "Paper Products",
         "company_size": "201-500",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "Owned the authentication and authorization layer at Dunder Mifflin, implementing OAuth2 and RBAC patterns as Mechanical Engineer."
       }
     ],
     "education": [
@@ -6783,7 +6761,7 @@
         "is_current": true,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Content writing and SEO strategy for a tech-focused publication. Wrote longform articles on developer tools, cloud platforms, and AI/ML topics \u2014 including some that ranked on the first page of search for high-competition keywords. Managed a freelance writer pool and the editorial calendar. Recent work has been on AI-assisted content production, using LLM tools for research, drafting, and editing while maintaining editorial quality."
+        "description": "Managed cross-functional projects at Wayne Enterprises, bridging product requirements with engineering execution as HR Manager."
       },
       {
         "company": "Wipro",
@@ -6794,7 +6772,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "Managed the full release lifecycle at Wipro, coordinating deployments across multiple service teams as Business Analyst."
       },
       {
         "company": "Infosys",
@@ -6805,7 +6783,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "Owned end-to-end feature delivery at Infosys, from requirements gathering through production deployment as Customer Support."
       }
     ],
     "education": [
@@ -6822,8 +6800,8 @@
         "institution": "Symbiosis International",
         "degree": "B.E.",
         "field_of_study": "Mathematics",
-        "start_year": 2017,
-        "end_year": 2021,
+        "start_year": 2021,
+        "end_year": 2025,
         "grade": "8.07 CGPA",
         "tier": "tier_3"
       }
@@ -6965,7 +6943,7 @@
         "is_current": true,
         "industry": "Food Delivery",
         "company_size": "5001-10000",
-        "description": "Test automation and QA engineering for a fintech product. Built and maintained the end-to-end test suite using Selenium and pytest, plus the load-testing setup using Locust. Worked closely with developers on testability patterns and with product on acceptance criteria. Recent work has been on shifting test responsibility into the dev team \u2014 moving from QA-as-gate to QA-as-coach. Career has been entirely in QA/test engineering."
+        "description": "At Swiggy: Built RAG ranking pipeline serving 50M+ queries/month: BM25 + dense retrieval with LLM re-ranker on top-50, fallback to LTR when latency budget was tight."
       },
       {
         "company": "HCL",
@@ -6976,7 +6954,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Cloud infrastructure and DevOps work at an enterprise SaaS company. Owned the AWS account architecture (VPC, IAM, networking), the Terraform modules for our service deployments, and the Kubernetes cluster operations. Designed the CI/CD pipelines (GitLab CI + ArgoCD) and the monitoring stack (Prometheus, Grafana, Loki). Strong on the infra and ops side; haven't done much application development."
+        "description": "At HCL: Rebuilt candidate-JD matching pipeline from BM25 to hybrid dense retrieval. Cut false-positive rate by 31%, validated across 3 recruiter cohorts over 6 weeks."
       },
       {
         "company": "Mindtree",
@@ -6987,7 +6965,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Mindtree: Owned the offline-online evaluation framework from scratch: NDCG, MRR, recall@K calibrated against A/B engagement metrics. Drove 4-month migration with recruiter feedback loop."
       },
       {
         "company": "Initech",
@@ -6998,19 +6976,10 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Initech: Led the end-to-end ranking overhaul at a recommendations-heavy product: sourcing, BGE-large embeddings, Pinecone retrieval, LTR re-scoring. Hardest part was building offline metrics that predicted live outcomes."
       }
     ],
     "education": [
-      {
-        "institution": "Regional Technical Institute",
-        "degree": "M.E.",
-        "field_of_study": "Electronics",
-        "start_year": 2012,
-        "end_year": 2017,
-        "grade": "8.77 CGPA",
-        "tier": "tier_4"
-      },
       {
         "institution": "Regional Technical Institute",
         "degree": "B.Sc",
@@ -7018,6 +6987,15 @@
         "start_year": 2001,
         "end_year": 2005,
         "grade": "9.29 CGPA",
+        "tier": "tier_4"
+      },
+      {
+        "institution": "Regional Technical Institute",
+        "degree": "M.E.",
+        "field_of_study": "Electronics",
+        "start_year": 2012,
+        "end_year": 2017,
+        "grade": "8.77 CGPA",
         "tier": "tier_4"
       }
     ],
@@ -7189,7 +7167,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Java backend development at a large enterprise \u2014 Spring Boot microservices, Kafka for inter-service messaging, Postgres + Redis for storage. Worked on the customer onboarding flow which involved orchestrating multiple downstream services. Solid on the Spring ecosystem, transaction handling, and the operational side of Java services. Looking to either go deeper on distributed systems or expand into modern application stacks."
+        "description": "Led the observability initiative at Tech Mahindra, implementing distributed tracing and structured logging across services."
       },
       {
         "company": "Hooli",
@@ -7200,19 +7178,10 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Frontend engineering at a media company. React, TypeScript, and the typical surrounding tooling (Webpack, Jest, Cypress). Built the company's design system from scratch and led the migration from a legacy AngularJS app. Strong on the frontend craft \u2014 accessibility, performance, animations \u2014 but limited backend exposure."
+        "description": "At Hooli: Architected the migration from monolith to microservices, enabling independent team deployments."
       }
     ],
     "education": [
-      {
-        "institution": "Chandigarh University",
-        "degree": "M.Sc",
-        "field_of_study": "Information Technology",
-        "start_year": 2016,
-        "end_year": 2021,
-        "grade": "84%",
-        "tier": "tier_3"
-      },
       {
         "institution": "Amity University",
         "degree": "B.E.",
@@ -7220,6 +7189,15 @@
         "start_year": 2002,
         "end_year": 2006,
         "grade": "9.33 CGPA",
+        "tier": "tier_3"
+      },
+      {
+        "institution": "Chandigarh University",
+        "degree": "M.Sc",
+        "field_of_study": "Information Technology",
+        "start_year": 2016,
+        "end_year": 2021,
+        "grade": "84%",
         "tier": "tier_3"
       }
     ],
@@ -7325,7 +7303,7 @@
         "is_current": true,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "Implemented CI/CD pipelines at Initech, cutting deployment cycles from weekly to multiple daily releases as Project Manager."
       },
       {
         "company": "Pied Piper",
@@ -7336,7 +7314,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "11-50",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "At Pied Piper: Led cross-team engineering efforts focusing on scalable architecture and delivery velocity."
       },
       {
         "company": "Infosys",
@@ -7347,7 +7325,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "At Infosys: Led cross-team engineering efforts focusing on scalable architecture and delivery velocity."
       },
       {
         "company": "Wayne Enterprises",
@@ -7358,7 +7336,7 @@
         "is_current": false,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "Built event-driven architectures at Wayne Enterprises, using message queues for async processing of high-volume workloads."
       },
       {
         "company": "TCS",
@@ -7369,7 +7347,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "At TCS: Designed the caching and performance optimization layer, reducing p95 latency by 40%."
       },
       {
         "company": "Wayne Enterprises",
@@ -7380,7 +7358,7 @@
         "is_current": false,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "At Wayne Enterprises: Drove technical initiatives across the platform, optimizing system throughput and operational reliability."
       },
       {
         "company": "Stark Industries",
@@ -7391,19 +7369,10 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "Built the notification delivery system at Stark Industries, handling multi-channel dispatch across email, SMS, and push."
       }
     ],
     "education": [
-      {
-        "institution": "Generic State University",
-        "degree": "M.E.",
-        "field_of_study": "Statistics",
-        "start_year": 2002,
-        "end_year": 2005,
-        "grade": "7.91 CGPA",
-        "tier": "tier_4"
-      },
       {
         "institution": "KIIT University",
         "degree": "B.Tech",
@@ -7412,6 +7381,15 @@
         "end_year": 2020,
         "grade": "86%",
         "tier": "tier_3"
+      },
+      {
+        "institution": "Generic State University",
+        "degree": "M.E.",
+        "field_of_study": "Statistics",
+        "start_year": 2021,
+        "end_year": 2024,
+        "grade": "7.91 CGPA",
+        "tier": "tier_4"
       }
     ],
     "skills": [
@@ -7527,7 +7505,7 @@
         "is_current": true,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Customer support team lead at a SaaS product. Managed a team of 8 support agents handling tier-1 and tier-2 tickets; owned the escalation process to engineering and the customer-feedback loop to product. Built out the support knowledge base and the agent training program. Strong on the people-management side and the process side; lighter on technical depth beyond product expertise."
+        "description": "Managed the full release lifecycle at Hooli, coordinating deployments across multiple service teams as Mechanical Engineer."
       },
       {
         "company": "Pied Piper",
@@ -7538,7 +7516,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "11-50",
-        "description": "Marketing leadership role at a B2B SaaS company. Owned the demand-generation function \u2014 content marketing, paid acquisition, SEO, email nurture. Built and managed a team of 5 across content, performance marketing, and marketing operations. Worked closely with sales on lead-quality definitions and the SDR-handoff process. Recent focus has been on account-based marketing for our enterprise segment."
+        "description": "At Pied Piper: Architected the migration from monolith to microservices, enabling independent team deployments."
       },
       {
         "company": "Hooli",
@@ -7549,19 +7527,10 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "At Hooli: Managed the full release lifecycle, coordinating deployments across multiple service teams."
       }
     ],
     "education": [
-      {
-        "institution": "Christ University",
-        "degree": "M.Tech",
-        "field_of_study": "Electrical Engineering",
-        "start_year": 2014,
-        "end_year": 2017,
-        "grade": "9.49 CGPA",
-        "tier": "tier_3"
-      },
       {
         "institution": "Chandigarh University",
         "degree": "B.E.",
@@ -7569,6 +7538,15 @@
         "start_year": 2004,
         "end_year": 2009,
         "grade": "7.94 CGPA",
+        "tier": "tier_3"
+      },
+      {
+        "institution": "Christ University",
+        "degree": "M.Tech",
+        "field_of_study": "Electrical Engineering",
+        "start_year": 2014,
+        "end_year": 2017,
+        "grade": "9.49 CGPA",
         "tier": "tier_3"
       }
     ],
@@ -7674,7 +7652,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "Led performance profiling and optimization efforts at TCS, identifying and resolving critical bottlenecks as Project Manager."
       }
     ],
     "education": [
@@ -7796,7 +7774,7 @@
         "is_current": true,
         "industry": "Fintech",
         "company_size": "1001-5000",
-        "description": "Frontend engineering at a media company. React, TypeScript, and the typical surrounding tooling (Webpack, Jest, Cypress). Built the company's design system from scratch and led the migration from a legacy AngularJS app. Strong on the frontend craft \u2014 accessibility, performance, animations \u2014 but limited backend exposure."
+        "description": "At CRED: Led API design and developer experience improvements, creating standardized SDKs used by 12 internal teams."
       },
       {
         "company": "Cognizant",
@@ -7807,7 +7785,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Cognizant: Spearheaded infrastructure modernization, reducing incident response times and improving developer productivity."
       },
       {
         "company": "Stark Industries",
@@ -7818,7 +7796,7 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "1001-5000",
-        "description": "Java backend development at a large enterprise \u2014 Spring Boot microservices, Kafka for inter-service messaging, Postgres + Redis for storage. Worked on the customer onboarding flow which involved orchestrating multiple downstream services. Solid on the Spring ecosystem, transaction handling, and the operational side of Java services. Looking to either go deeper on distributed systems or expand into modern application stacks."
+        "description": "Designed the multi-tenant isolation layer at Stark Industries, ensuring data security and performance guarantees per customer."
       },
       {
         "company": "Initech",
@@ -7829,7 +7807,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "51-200",
-        "description": "Android mobile development using Java and (more recently) Kotlin at a consumer-app company. Built and maintained multiple production features including the main shopping flow, push notification system, and the offline-first sync layer. Comfortable with the Android framework, Jetpack components, and the typical patterns (MVVM, Hilt, Coroutines). My career has been entirely on mobile so far; interested in expanding into broader backend or platform engineering."
+        "description": "At Initech: Built and maintained core product capabilities, collaborating with stakeholders across engineering and product."
       }
     ],
     "education": [
@@ -7959,7 +7937,7 @@
         "is_current": true,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Enterprise sales of cloud software solutions into the mid-market segment. Carried a $1.8M ARR quota and consistently delivered against it across the last three years. Owned the full sales cycle: prospecting, discovery, technical evaluation (with SE support), commercial negotiation, and close. Strong on consultative selling for technical buyers; comfortable engaging with both engineering and finance stakeholders."
+        "description": "Implemented CI/CD pipelines at Wayne Enterprises, cutting deployment cycles from weekly to multiple daily releases as Mechanical Engineer."
       },
       {
         "company": "Hooli",
@@ -7970,7 +7948,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "At Hooli: Implemented CI/CD pipelines, cutting deployment cycles from weekly to multiple daily releases."
       },
       {
         "company": "Wayne Enterprises",
@@ -7981,7 +7959,7 @@
         "is_current": false,
         "industry": "Conglomerate",
         "company_size": "10001+",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "Developed internal documentation platforms at Wayne Enterprises, standardizing technical writing practices across engineering."
       }
     ],
     "education": [
@@ -8097,7 +8075,7 @@
         "is_current": true,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Mechanical engineering design role at a hardware-product company. Led the design of two product subsystems through full lifecycle: concept, DFM/DFMA review, prototype, production tooling. Comfortable with CAD (SolidWorks, Creo), FEA (ANSYS), and the typical hardware-development cadence. Worked closely with manufacturing partners on production scale-up."
+        "description": "At Infosys: Built real-time monitoring and alerting systems, reducing MTTR by 60% for production incidents."
       },
       {
         "company": "TCS",
@@ -8108,7 +8086,7 @@
         "is_current": false,
         "industry": "IT Services",
         "company_size": "10001+",
-        "description": "Operations management role at a logistics company. Owned daily fulfillment operations across 3 warehouses, managing a team of 80 across receiving, picking, packing, and outbound. Built and tracked the operational KPIs (on-time fulfillment, accuracy, cost per order) and led the continuous improvement initiatives that drove a 22% productivity gain over 18 months."
+        "description": "At TCS: Led API design and developer experience improvements, creating standardized SDKs used by 12 internal teams."
       },
       {
         "company": "Hooli",
@@ -8119,7 +8097,7 @@
         "is_current": false,
         "industry": "Software",
         "company_size": "1001-5000",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "At Hooli: Built and maintained core product capabilities, collaborating with stakeholders across engineering and product."
       },
       {
         "company": "Acme Corp",
@@ -8130,19 +8108,10 @@
         "is_current": false,
         "industry": "Manufacturing",
         "company_size": "201-500",
-        "description": "Senior accounting role at a mid-sized company \u2014 month-end close, financial reporting, statutory compliance (GAAP / Ind-AS), and tax filings. Owned the GL, fixed-asset register, and the audit-readiness function. Managed a team of 3 staff accountants. Built strong process discipline around the close cycle, reducing close time from 12 days to 7 over the last two years."
+        "description": "At Acme Corp: Managed the full release lifecycle, coordinating deployments across multiple service teams."
       }
     ],
     "education": [
-      {
-        "institution": "VIT Chennai",
-        "degree": "Ph.D",
-        "field_of_study": "Artificial Intelligence",
-        "start_year": 2001,
-        "end_year": 2005,
-        "grade": "6.66 CGPA",
-        "tier": "tier_3"
-      },
       {
         "institution": "Georgia Tech",
         "degree": "B.Sc",
@@ -8151,6 +8120,15 @@
         "end_year": 2017,
         "grade": "7.81 CGPA",
         "tier": "tier_1"
+      },
+      {
+        "institution": "VIT Chennai",
+        "degree": "Ph.D",
+        "field_of_study": "Artificial Intelligence",
+        "start_year": 2018,
+        "end_year": 2022,
+        "grade": "6.66 CGPA",
+        "tier": "tier_3"
       }
     ],
     "skills": [

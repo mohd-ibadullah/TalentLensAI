@@ -1,233 +1,180 @@
 import os
 import sys
 
-def generate_rule_based_reasoning(candidate: dict, score: float, breakdown: dict, target_skills: set[str] | None = None, rank: int | None = None) -> str:
+from src.feature_scorer import match_skill
+
+
+def _matched_jd_skills(candidate: dict, target_skills: set[str]) -> list[str]:
+    """Return JD skills matched via exact, substring, or fuzzy match."""
+    required = list(target_skills)
+    matched: list[str] = []
+    seen: set[str] = set()
+    for s in candidate.get("skills", []):
+        name = s.get("name", "")
+        if not name:
+            continue
+        hit, is_match, _ = match_skill(name, required)
+        if is_match and hit and hit.lower() not in seen:
+            matched.append(hit)
+            seen.add(hit.lower())
+    return matched
+
+
+def generate_rule_based_reasoning(
+    candidate: dict,
+    score: float,
+    breakdown: dict,
+    target_skills: set[str] | None = None,
+    rank: int | None = None,
+) -> str:
     """
-    Generate dynamic, non-templated candidate reasoning highlighting credentials,
-    specific skills matched, platform signals, and potential concerns.
+    Profile-specific recruiter reasoning for Stage 4 manual review.
+    Uses facts from the candidate record — no generic template pools.
     """
     profile = candidate.get("profile", {})
     title = profile.get("current_title", "Engineer")
+    company = profile.get("current_company", "")
     yoe = profile.get("years_of_experience", 0.0)
-    
-    # Check trap status
     trap_score = breakdown.get("trap_score", 0.0)
-    is_trap = trap_score > 0.4
-    
-    # Count and extract matched skills (filter by target_skills to avoid non-JD or excluded skills like Computer Vision)
-    skills = candidate.get("skills", [])
-    matched_skills = []
-    
-    if target_skills:
-        target_skills_lower = {s.lower() for s in target_skills}
-        for s in skills:
-            s_name = s.get("name", "")
-            if s_name.lower() in target_skills_lower:
-                matched_skills.append(s_name)
-    else:
-        # Fallback to AI_SKILLS taxonomy if target_skills not provided
-        from src.honeypot_detector import AI_SKILLS
-        for s in skills:
-            s_name = s.get("name", "")
-            if s_name.lower() in {sk.lower() for sk in AI_SKILLS}:
-                matched_skills.append(s_name)
-                
-    ai_skill_count = len(matched_skills)
-    
-    if is_trap:
-        return f"FLAGGED DECOY: Title is {title} with {yoe} yrs; claimed {ai_skill_count} AI skills but career history indicates a mismatch. Trap score: {trap_score:.2f}."
 
-    # Extract signals
+    if trap_score >= 0.40:
+        return (
+            f"Disqualified decoy profile: {title} ({yoe} YoE) shows trap score {trap_score:.2f} — "
+            f"{candidate.get('_trap_reason', 'title/skills/career mismatch')}."
+        )
+
+    skills = _matched_jd_skills(candidate, target_skills or set())
+    skills_text = ", ".join(skills[:4]) if skills else "limited direct JD skill overlap"
+
     signals = candidate.get("redrob_signals", {})
-    resp_rate = signals.get("recruiter_response_rate", -1)
-    notice_days = signals.get("notice_period_days", -1)
-    
-    # Get a list of up to 3 matched skills to reference
-    matched_skills_str = ", ".join(matched_skills[:3]) if matched_skills else "relevant technical skills"
-    
-    # Determine rank bucket
-    if rank is None:
-        if score >= 85:
-            bucket = "top"
-        elif score >= 75:
-            bucket = "strong"
-        else:
-            bucket = "adjacent"
+    resp = signals.get("recruiter_response_rate", -1)
+    notice = signals.get("notice_period_days", -1)
+    open_work = signals.get("open_to_work_flag", None)
+
+    signal_bits: list[str] = []
+    if resp != -1:
+        signal_bits.append(f"{int(resp * 100)}% recruiter response rate")
+    if notice != -1:
+        signal_bits.append(f"{notice}-day notice period")
+    if open_work is True:
+        signal_bits.append("open to work")
+    signals_text = "; ".join(signal_bits) if signal_bits else "neutral platform signals"
+
+    career = candidate.get("career_history", [])
+    recent_role = career[0].get("title", "") if career else ""
+    recent_company = career[0].get("company", "") if career else ""
+
+    concerns: list[str] = []
+    if yoe < 5.0:
+        concerns.append(f"below JD minimum of 5 years (has {yoe})")
+    if resp != -1 and resp < 0.20:
+        concerns.append("low recruiter engagement")
+    if notice != -1 and notice > 60:
+        concerns.append(f"long notice ({notice} days)")
+    if breakdown.get("title_seniority_match", 0) < 0.5:
+        concerns.append("title domain is weak for senior AI/search role")
+    if not skills:
+        concerns.append("few explicit JD skills on profile")
+
+    rank = rank or 999
+    if rank <= 10:
+        tone = "Strong top-tier match"
+    elif rank <= 30:
+        tone = "Solid fit"
+    elif rank <= 60:
+        tone = "Qualified but not ideal"
     else:
-        if rank <= 15:
-            bucket = "top"
-        elif rank <= 50:
-            bucket = "strong"
-        else:
-            bucket = "adjacent"
-            
-    # Deterministic RNG based on candidate ID to ensure reproducible text generation
-    import random
-    cand_id = candidate.get("candidate_id", "CAND_0000000")
-    seed = sum(ord(char) for char in cand_id)
-    rng = random.Random(seed)
-    
-    if bucket == "top":
-        openings = [
-            f"Exceptional {title} offering {yoe} years of experience",
-            f"Top-tier candidate currently working as {title} ({yoe} YoE)",
-            f"Highly relevant {title} with {yoe} years of background",
-            f"Outstanding candidate as {title} showing {yoe} years of experience"
-        ]
-        mid_phrases = [
-            f"demonstrates strong proficiency in {matched_skills_str} and alignment with the JD",
-            f"offers solid expertise in {matched_skills_str} which matches the core ranking mandate",
-            f"has successfully deployed systems involving {matched_skills_str} at scale",
-            f"shows deep technical expertise in {matched_skills_str} and search infrastructure"
-        ]
-        end_phrases = []
-        if resp_rate != -1:
-            end_phrases.append(f"Highly active on Redrob with a {int(resp_rate*100)}% recruiter response rate.")
-            end_phrases.append(f"Excellent platform engagement with {int(resp_rate*100)}% response rate.")
-        if notice_days != -1 and notice_days < 30:
-            end_phrases.append(f"Available quickly with a short notice period of {notice_days} days.")
-        if not end_phrases:
-            end_phrases.append("Matches the product company background and scale requirements perfectly.")
-            
-        reasoning = f"{rng.choice(openings)}, {rng.choice(mid_phrases)}. {rng.choice(end_phrases)}"
-        
-    elif bucket == "strong":
-        openings = [
-            f"Strong {title} with {yoe} years of experience",
-            f"Competent {title} ({yoe} YoE)",
-            f"Solid candidate working as {title} with {yoe} years in the field",
-            f"Well-qualified {title} showing {yoe} YoE"
-        ]
-        mid_phrases = [
-            f"matching key job requirements like {matched_skills_str}",
-            f"possessing practical experience in {matched_skills_str}",
-            f"with matching skills in {matched_skills_str} and solid backend fundamentals",
-            f"who brings relevant experience in {matched_skills_str}"
-        ]
-        concerns = []
-        if resp_rate != -1 and resp_rate < 0.3:
-            concerns.append(f"though platform response rate is lower ({int(resp_rate*100)}%)")
-        if notice_days != -1 and notice_days > 60:
-            concerns.append(f"note the longer notice period of {notice_days} days")
-        if yoe < 5.0:
-            concerns.append(f"slightly below the preferred 5+ years of experience")
-            
-        if concerns:
-            reasoning = f"{rng.choice(openings)}, {rng.choice(mid_phrases)}, {rng.choice(concerns)}."
-        else:
-            reasoning = f"{rng.choice(openings)}, {rng.choice(mid_phrases)}. Good overall behavioral signals."
-            
-    else: # adjacent / lower-ranked candidates
-        openings = [
-            f"Adjacent candidate working as {title} ({yoe} YoE)",
-            f"Candidate with {yoe} years experience as {title}",
-            f"Alternative profile showing {yoe} YoE as {title}",
-            f"{title} with {yoe} years of background"
-        ]
-        mid_phrases = [
-            f"mostly showing adjacent skills like {matched_skills_str}",
-            f"with limited direct exposure to search/ranking but lists {matched_skills_str}",
-            f"possessing partial overlap in {matched_skills_str}",
-            f"having some background in {matched_skills_str} but less specialized"
-        ]
-        gaps = [
-            "included as potential pipeline filler",
-            "lower title relevance to the specific AI/ML requirements",
-            "moderate fit with some technical gaps for this senior role",
-            "would require substantial ramp-up time for retrieval systems"
-        ]
-        
-        reasoning = f"{rng.choice(openings)}, {rng.choice(mid_phrases)}; {rng.choice(gaps)}."
-        
-    return reasoning
+        tone = "Marginal fit"
+
+    company_part = f" at {company}" if company else ""
+    career_part = ""
+    if recent_role and recent_company:
+        career_part = f" Recent role: {recent_role} at {recent_company}."
+
+    base = (
+        f"{tone}: {title}{company_part} with {yoe} years experience.{career_part} "
+        f"Matched JD skills: {skills_text}. Redrob signals: {signals_text}."
+    )
+
+    if concerns:
+        return f"{base} Concerns: {'; '.join(concerns)}."
+    return base
+
 
 def rerank_top_candidates(top_candidates: list[dict], parsed_jd: dict, use_llm: bool = False) -> list[dict]:
     """
-    Reranks the top candidates and generates the required reasoning text.
-    Returns the final list of candidates with ranks, scores, and reasonings.
+    Assign ranks and generate reasoning. Caps scores before sort so CSV tie-break
+    matches model order (submission_spec: equal scores break by candidate_id ascending).
     """
     final_ranked = []
-    
-    # If use_llm is requested, try to use LLM APIs
+
     llm_success = False
     if use_llm:
-        # Check environment variables
         openai_key = os.environ.get("OPENAI_API_KEY")
         gemini_key = os.environ.get("GEMINI_API_KEY")
-        
+
         if gemini_key:
             try:
-                # We can import google.generativeai if installed, or do a simple REST API call
                 import google.generativeai as genai
                 genai.configure(api_key=gemini_key)
-                model = genai.GenerativeModel('gemini-1.5-flash')
-                
+                model = genai.GenerativeModel("gemini-1.5-flash")
                 print("Using Gemini API for candidate reasoning...")
                 for cand in top_candidates:
-                    score = cand["_final_score"]
-                    breakdown = cand["_breakdown"]
-                    
-                    # Call Gemini to write a summary
                     prompt = (
-                        f"You are a professional tech recruiter. Given candidate profile summary: '{cand['profile']['summary']}', "
-                        f"current title: '{cand['profile']['current_title']}', experience: {cand['profile']['years_of_experience']} years, "
-                        f"skills: {[s['name'] for s in cand['skills']]}, and target job description: '{parsed_jd['role_title']}'. "
-                        f"Write a concise 1-sentence summary of why they are or are not a good fit for this role. "
-                        f"Keep it under 25 words. Keep it professional."
+                        f"You are a professional tech recruiter. Given candidate profile summary: "
+                        f"'{cand['profile']['summary']}', current title: '{cand['profile']['current_title']}', "
+                        f"experience: {cand['profile']['years_of_experience']} years, "
+                        f"skills: {[s['name'] for s in cand['skills']]}, and target job: "
+                        f"'{parsed_jd['role_title']}'. Write one concise sentence (under 30 words) "
+                        f"on fit for this role. Be specific; cite profile facts only."
                     )
                     response = model.generate_content(prompt)
-                    cand["_reasoning"] = response.text.strip().replace('"', '')
+                    cand["_reasoning"] = response.text.strip().replace('"', "")
                 llm_success = True
             except Exception as e:
-                print(f"Failed to use Gemini API: {e}. Falling back to template-based reasoning.")
-                
+                print(f"Failed to use Gemini API: {e}. Falling back to rule-based reasoning.")
+
         elif openai_key and not llm_success:
             try:
                 from openai import OpenAI
                 client = OpenAI(api_key=openai_key)
                 print("Using OpenAI API for candidate reasoning...")
                 for cand in top_candidates:
-                    score = cand["_final_score"]
-                    breakdown = cand["_breakdown"]
-                    
                     prompt = (
-                        f"Write a concise 1-sentence recruiter reasoning under 20 words for candidate: "
-                        f"Title: {cand['profile']['current_title']}, YoE: {cand['profile']['years_of_experience']}, "
-                        f"Skills: {[s['name'] for s in cand['skills']]}. Role: {parsed_jd['role_title']}."
+                        f"Write one recruiter sentence (under 25 words) for: "
+                        f"Title: {cand['profile']['current_title']}, YoE: "
+                        f"{cand['profile']['years_of_experience']}, Skills: "
+                        f"{[s['name'] for s in cand['skills']]}. Role: {parsed_jd['role_title']}. "
+                        f"Cite profile facts only."
                     )
                     response = client.chat.completions.create(
                         model="gpt-4o-mini",
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=50
+                        max_tokens=60,
                     )
-                    cand["_reasoning"] = response.choices[0].message.content.strip().replace('"', '')
+                    cand["_reasoning"] = response.choices[0].message.content.strip().replace('"', "")
                 llm_success = True
             except Exception as e:
-                print(f"Failed to use OpenAI API: {e}. Falling back to template-based reasoning.")
+                print(f"Failed to use OpenAI API: {e}. Falling back to rule-based reasoning.")
 
-    # Apply template-based reasoning if LLM was not used or failed
-    if not llm_success:
-        # First sort them so we can assign ranks and generate rank-consistent reasoning
-        sorted_candidates = sorted(
-            top_candidates,
-            key=lambda x: (-round(x["_final_score"] / 100.0, 4), x["candidate_id"])
-        )
-        target_skills = set(parsed_jd.get("required_skills", []) + parsed_jd.get("nice_to_have_skills", []))
-        for rank, cand in enumerate(sorted_candidates, 1):
-            cand["_rank"] = rank
-            score = cand["_final_score"]
-            breakdown = cand["_breakdown"]
-            cand["_reasoning"] = generate_rule_based_reasoning(cand, score, breakdown, target_skills, rank)
-        return sorted_candidates
-            
-    # If LLM succeeded, apply standard sorting and ranking
+    for cand in top_candidates:
+        cand["_final_score"] = min(99.4, max(0.0, cand["_final_score"]))
+
     sorted_candidates = sorted(
         top_candidates,
-        key=lambda x: (-round(x["_final_score"] / 100.0, 4), x["candidate_id"])
+        key=lambda x: (-round(x["_final_score"] / 100.0, 4), x["candidate_id"]),
     )
-    
-    # Assign ranks from 1 to N
-    for rank, cand in enumerate(sorted_candidates, 1):
-        cand["_rank"] = rank
-        
+
+    target_skills = set(parsed_jd.get("required_skills", []) + parsed_jd.get("nice_to_have_skills", []))
+
+    if not llm_success:
+        for rank, cand in enumerate(sorted_candidates, 1):
+            cand["_rank"] = rank
+            cand["_reasoning"] = generate_rule_based_reasoning(
+                cand, cand["_final_score"], cand["_breakdown"], target_skills, rank
+            )
+    else:
+        for rank, cand in enumerate(sorted_candidates, 1):
+            cand["_rank"] = rank
+
     return sorted_candidates

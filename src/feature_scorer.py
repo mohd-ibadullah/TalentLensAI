@@ -83,63 +83,68 @@ def compute_skill_match_score(candidate_skills: list[dict], parsed_jd: dict) -> 
             matched_nice.add(nice_match)
             total_points += 0.5 * nice_score * prof_mult * end_mult
 
-    # Normalize to [0.0, 1.0] and cap at 1.0
-    normalized_score = min(1.0, total_points / max_possible_points) if max_possible_points > 0 else 0.0
+    # Normalize to [0.0, 1.0] based on required skills count, cap at 0.994
+    normalized_score = min(0.994, total_points / max_possible_points) if max_possible_points > 0 else 0.0
     return normalized_score
 
 def compute_title_seniority_match(profile: dict, parsed_jd: dict) -> float:
     """
     Calculates title alignment and years of experience fit.
-    Returns a score in [0.0, 1.0].
+    3-component scoring: seniority match (40%), domain match (30%), YoE match (30%).
+    Returns a score in [0.0, 0.97] — hard cap, never 100%.
     """
     current_title = profile.get("current_title", "").lower()
     yoe = float(profile.get("years_of_experience", 0.0))
     
-    target_title = parsed_jd.get("role_title", "").lower()
-    min_yoe = float(parsed_jd.get("min_years_experience", 4.0))
+    min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
+    jd_seniority = parsed_jd.get("seniority_level", "senior").lower()
     
-    # 1. Title Relevance Score
-    title_relevance = 0.1
+    # 1. Seniority match (40% weight)
+    senior_keywords = ["senior", "lead", "staff", "principal", "head", "director"]
+    mid_keywords = ["engineer", "scientist", "analyst", "specialist", "developer"]
     
-    # Negative keywords — roles clearly unrelated to Search/AI/NLP JD
-    negative_titles = [
-        "computer vision", "frontend", "front-end", "front end", "android",
-        "ios developer", "ui designer", "ux designer", "graphic designer",
-        "customer support", "sales", "marketing", "hr manager",
-        "accountant", "finance", "legal", "operations manager",
-        "network admin", "system administrator", "devops"
+    if jd_seniority == "senior":
+        if any(k in current_title for k in senior_keywords):
+            title_score = 1.0
+        elif any(k in current_title for k in mid_keywords):
+            title_score = 0.72
+        else:
+            title_score = 0.40
+    else:
+        title_score = 0.80
+
+    # 2. Domain match (30% weight) — is the title in AI/ML/Search domain?
+    ai_keywords = ["ai", "ml", "nlp", "data", "machine learning", "search",
+                   "recommendation", "applied scientist", "research", "deep learning"]
+    
+    # Negative domain — clearly non-tech or non-AI roles
+    negative_domains = [
+        "mechanical", "civil", "electrical", "chemical", "structural",
+        "frontend", "android", "ios", "ui designer", "ux designer",
+        "customer support", "sales", "marketing", "hr", "accountant",
+        "finance", "legal", "operations", "graphic designer",
+        "content writer", "teacher", "professor"
     ]
     
-    # Check for negative title match first
-    if any(neg in current_title for neg in negative_titles):
-        title_relevance = 0.05  # Heavy penalty for clearly irrelevant roles
-    # Direct exact match or strong containment of keyword search / AI terms
-    elif any(term in current_title for term in target_title.split()):
-        title_relevance = 1.0
+    if any(k in current_title for k in negative_domains):
+        domain_score = 0.05
+    elif any(k in current_title for k in ai_keywords):
+        domain_score = 1.0
+    elif "software" in current_title or "backend" in current_title or "cloud" in current_title:
+        domain_score = 0.50
     else:
-        ai_terms = ["ai", "ml", "machine learning", "nlp", "search", "retrieval",
-                     "ranking", "data scientist", "deep learning", "applied scientist"]
-        if any(term in current_title for term in ai_terms):
-            title_relevance = 0.8
-        elif "software engineer" in current_title or "backend engineer" in current_title or "developer" in current_title or "analyst" in current_title:
-            title_relevance = 0.6
-        
-    # 2. Years of Experience Fit — stronger penalty for far below minimum
-    yoe_score = 0.0
+        domain_score = 0.30
+
+    # 3. YoE match (30% weight) — continuous scoring
     if yoe >= min_yoe:
-        yoe_score = 1.0
-    elif yoe >= min_yoe * 0.8:
-        # Within 80-100% of requirement (e.g., 4-5 YoE when 5 required) — slight penalty
-        yoe_score = 0.8
-    elif yoe >= min_yoe * 0.6:
-        # Within 60-80% of requirement (e.g., 3-4 YoE when 5 required) — moderate penalty
-        yoe_score = 0.5
+        yoe_score = min(1.0, 0.75 + (yoe - min_yoe) * 0.025)
     elif yoe > 0:
-        # Below 60% of requirement — heavy penalty
-        yoe_score = 0.2 * (yoe / min_yoe)
-        
-    # Combine: 50% title relevance, 50% experience relevance (increased YoE weight)
-    return 0.5 * title_relevance + 0.5 * yoe_score
+        yoe_score = max(0.0, (yoe / min_yoe) * 0.75)
+    else:
+        yoe_score = 0.0
+
+    raw = (title_score * 0.40) + (domain_score * 0.30) + (yoe_score * 0.30)
+    return min(raw, 0.97)  # Hard cap at 97%, never 100%
 
 def compute_signal_bonus(signals: dict) -> float:
     """
@@ -324,12 +329,20 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     if is_langchain_only:
         disqualifier_penalty += 20.0
         
+    # E. Non-tech engineer (mechanical, civil, electrical, etc.) with zero AI/ML skills
+    non_tech_engineer_titles = [
+        "mechanical engineer", "civil engineer", "electrical engineer",
+        "chemical engineer", "structural engineer", "environmental engineer",
+        "industrial engineer"
+    ]
+    is_non_tech_engineer = any(nt in title_lower for nt in non_tech_engineer_titles)
+    if is_non_tech_engineer and not has_nlp_ir and not has_production_ml:
+        disqualifier_penalty += 100.0  # Complete rejection
+        
     # Calculate Behavioral Signals adjustment
     behavioral_adjustment = 0.0
     resp = signals.get("recruiter_response_rate", -1)
-    if resp != -1 and resp < 0.15:
-        behavioral_adjustment -= 10.0
-        
+    # Low response rate is already reflected in signal_bonus; avoid double-penalizing here.
     last_active = signals.get("last_active_date", None)
     if last_active:
         try:
@@ -352,18 +365,15 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     # Multiplicative Veto Factors
     # 1. Honeypot/Trap Factor (Score set to exactly 0.0 if flagged)
     trap_factor = 1.0
-    if trap_score > 0.40:
+    if trap_score >= 0.40:
         trap_factor = 0.0
         
-    # 2. YoE Hard Gate (Set score to 0.0 if experience is below 4 years)
+    # 2. YoE Hard Gate — align with JD minimum (default 5.0 years)
     yoe_factor = 1.0
     yoe_penalty_applied = 0.0
-    if yoe < 4.0:
+    if yoe < min_yoe:
         yoe_factor = 0.0
-        yoe_penalty_applied = 100.0  # Pushes out entirely
-    elif yoe < min_yoe:
-        yoe_factor = 0.70  # Scale down candidates below minimum target
-        yoe_penalty_applied = 30.0
+        yoe_penalty_applied = 100.0
         
     # 3. Disqualifier Factors
     disq_factor = 1.0
@@ -380,6 +390,9 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     if is_langchain_only:
         disq_factor *= 0.50
         disqualifier_penalty_applied += 20.0
+    if is_non_tech_engineer and not has_nlp_ir and not has_production_ml:
+        disq_factor *= 0.0  # Absolute rejection for non-tech engineers
+        disqualifier_penalty_applied += 100.0
         
     # Calculate multiplied score
     base_score = scaled_positive + career_bonus
@@ -387,7 +400,8 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     
     # Final Score with behavioral adjustment
     final_score = multiplied_score + behavioral_adjustment
-    final_score = min(100.0, max(0.0, final_score))
+    # Cap score to avoid displaying a flat 100.0%
+    final_score = min(99.4, max(0.0, final_score))
     
     # Return score and component breakdown (compatible with UI display)
     breakdown = {
