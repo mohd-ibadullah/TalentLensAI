@@ -5,7 +5,7 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
 ---
 
 ## 🌟 Key Features
-1. **Lexical BM25 Filtering (Stage 1):** Instantly filters candidate pools down from 100,000 to the top 1,000 using a memory-efficient index.
+1. **Hybrid Retrieval (Stage 1):** Fuses lexical BM25 with dense semantic search (using cached vector embeddings) to retrieve candidate pools of ~1,400 candidates from 100,000 in seconds.
 2. **Honeypot/Trap Detector (Stage 2):** Detects keyword-stuffer profiles using career mismatch algorithms, role category mapping, summary templates checking, and career title-description consistency checks.
 3. **Deep Scorer (Stage 3):** Combines semantic text similarity (`BAAI/bge-base-en-v1.5`, 768-dim with instruction-tuned query encoding), weighted skill-matching (with `RapidFuzz`), title relevance, and Redrob signals (recruiter response rate, connection counts, open-to-work status, profile completeness) without penalizing missing values.
 4. **Interactive Dashboard:** Premium dark-themed Streamlit application allowing custom JDs, dynamic weight tuning, and detailed candidate card expansions.
@@ -31,6 +31,10 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
    ```bash
    python src/download_models.py
    ```
+4. Pre-compute and cache candidate profile embeddings offline (one-time step):
+   ```bash
+   python src/precompute_embeddings.py
+   ```
 
 ---
 
@@ -39,9 +43,9 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
 ### 1. Execute the Ranking Pipeline
 To run the candidate ranker on the full `candidates.jsonl` dataset (100,000 candidate profiles) and generate the validated submission CSV, run:
 ```bash
-python src/run_pipeline_full.py
+python src/run_pipeline_full.py --candidates "../[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl" --validate "../[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/validate_submission.py"
 ```
-*This command runs the parser, performs coarse-to-deep scoring, generates `mohd_ibadullah.csv` in `outputs/` and `India_runs_data_and_ai_challenge/`, and automatically verifies it against `validate_submission.py`.*
+*This command runs the parser, performs hybrid recall, scores candidates using the precomputed vector matrix, reranks using Cross-Encoder, writes results, and runs the official validator.*
 
 To run the pipeline on the development sample dataset (50 profiles) for testing:
 ```bash
@@ -58,20 +62,21 @@ streamlit run app/streamlit_app.py
 
 ## 🔍 System Architecture & Pipeline Flow
 1. **JD Parsing:** Standardizes job title, required skills, optional skills, experience, and domain keywords.
-2. **BM25 Lexical Filter (100K ➔ 1K):** A fast single-pass search index reduces candidate count by filtering summaries, titles, and skills against the JD.
+2. **Hybrid Retrieval (BM25 + Dense Semantic Recall):** Fuses the top 1,000 lexical BM25 results with the top 1,000 dense semantic vector matches. Eliminating duplicates, this yields a highly targeted recall pool of ~1,400–1,500 candidates, preventing keyword mismatch misses.
 3. **Honeypot Mismatch Check:** Flags candidates claiming advanced AI skills but whose career history reveals unrelated roles (e.g. Accountant, HR, Operations, Customer Support), or those using copy-pasted summary templates.
-4. **Embedding Scorer:** Computes semantic similarity between the parsed JD and the candidate profiles using a local `BAAI/bge-base-en-v1.5` transformer model (768-dim, CLS-pooling with instruction prefix for queries, batch size = 128, max length = 160) on CPU.
+4. **Embedding Scorer:** Matches the parsed JD query against candidate profiles. When cached vectors are available, similarity is resolved via dot product matrix multiplication in O(1) time per candidate.
 5. **Aggregated Feature Scorer:**
-   $$Final\_Score = 100 \times \left( \frac{0.40 \times Sim + 0.20 \times Skills + 0.20 \times Title + 0.10 \times Signals}{0.90} \right) - 40 \times Trap\_Score - YoE\_Penalty + Career\_Bonus - Disqualifier\_Penalty + Behavioral\_Adj$$
+   $$Final\_Score = (\text{Raw\_Positive\_Score} + \text{Career\_Bonus}) \times \text{Trap\_Factor} \times \text{YoE\_Factor} \times \text{Disq\_Factor} + \text{Behavioral\_Adj}$$
+   Where critical violations (Honeypot, YoE < 4.0, HR/Marketing stuffing) act as absolute vetoes, multiplying the score by `0.0`.
 6. **Tie-Breaker Sort:** Sorts candidates by rounded score (4 decimals) descending, then candidate_id ascending.
 
 ---
 
 ## 📊 Core Performance Metrics
 *   **Scanning Speed:** Streams and parses 100,000 JSON lines in a single pass in **~10 seconds**.
-*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~144 seconds**.
+*   **Total Runtime:** Evaluates, scores, ranks, and outputs the top 100 candidates on a standard CPU in **~27 seconds** (using precomputed embeddings).
 *   **Memory Footprint:** Uses **~800MB RAM** during streaming (well under the 16GB budget).
-*   **Decoy Resilience:** Correctly identifies and penalizes all decoy profiles (like `CAND_0000002` through `CAND_0000005`), filtering them completely out of the top 100 (0.0% honeypot rate).
+*   **Decoy Resilience:** Correctly identifies and eliminates all decoy profiles (like `CAND_0000002` through `CAND_0000005`), filtering them completely out of the top 100 with a **100% block rate (0.0% honeypots)**.
 
 ## 📊 System Evaluation Metrics
 
