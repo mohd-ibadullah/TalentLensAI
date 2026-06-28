@@ -19,3 +19,14 @@ outputs/timing_test.csv
 outputs/qa_*.csv
 scratch/
 
+# Untracked files kept locally but not in git repo
+Summarize_the_consensus_of_academic_literature_and.pdf
+TalentLensAI_Submission.pdf
+TalentLensAI_Submission.pptx
+_qa_audit.py
+mohd_ibadullah.csv
+CHANGELOG.md
+Project_Abstract.md
+INTERVIEW_PREP_GUIDE.md
+LICENSE
+ARCHITECTURE.md
