@@ -51,13 +51,14 @@ TalentLens AI is a multi-stage candidate discovery and ranking engine built for 
 ### 1. Execute the Ranking Pipeline
 To run the candidate ranker on the full `candidates.jsonl` dataset (100,000 candidate profiles) and generate the validated submission CSV, run:
 ```bash
-python src/run_pipeline_full.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv --validate ../validate_submission.py --check-pool
+# Replace <participant_id> with your actual registered participant ID (e.g. mohd_ibadullah or team_xxx)
+python src/run_pipeline_full.py --candidates ./candidates.jsonl --out ./outputs/<participant_id>.csv --validate ../validate_submission.py --check-pool
 ```
 Or use the spec-compliant alias:
 ```bash
-python rank.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv
+python rank.py --candidates ./candidates.jsonl --out ./outputs/<participant_id>.csv
 ```
-*This command runs the parser, performs hybrid recall, scores candidates using the precomputed vector matrix, reranks using Cross-Encoder, writes results, and runs the official validator.*
+*Note: If `candidates.jsonl` is not present in the current folder, the pipeline automatically looks for it in parent folders (e.g., `../candidates.jsonl`).*
 
 To run the pipeline on the development sample dataset (50 profiles) for testing:
 ```bash

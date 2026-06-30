@@ -9,12 +9,28 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CSV = ROOT / "outputs" / "mohd_ibadullah.csv"
-XLSX = ROOT / "outputs" / "mohd_ibadullah.xlsx"
+
+# Resolve filename dynamically or from command line
+sub_name = "mohd_ibadullah"
+if len(sys.argv) > 1:
+    sub_name = Path(sys.argv[1]).stem
+else:
+    # Scan outputs dir for any non-temp csv file
+    out_dir = ROOT / "outputs"
+    if out_dir.exists():
+        csv_files = [p for p in out_dir.glob("*.csv") if not p.name.startswith(("_", "qa_", "rank_", "timing_", "sample_"))]
+        if csv_files:
+            sub_name = csv_files[0].stem
+
+CSV = ROOT / "outputs" / f"{sub_name}.csv"
+XLSX = ROOT / "outputs" / f"{sub_name}.xlsx"
 META = ROOT / "submission_metadata.yaml"
 EMB = ROOT / "data" / "candidate_embeddings.npy"
 IDS = ROOT / "data" / "candidate_ids.json"
 VALIDATOR = ROOT.parent / "[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/validate_submission.py"
+if not VALIDATOR.exists():
+    VALIDATOR = ROOT.parent / "validate_submission.py"
+
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))

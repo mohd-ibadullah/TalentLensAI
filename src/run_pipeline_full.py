@@ -51,6 +51,19 @@ def main():
         return
 
     candidates_path = args.candidates
+    if not os.path.exists(candidates_path) and candidates_path == "./candidates.jsonl":
+        fallback_paths = [
+            project_root.parent / "candidates.jsonl",
+            project_root.parent / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge" / "candidates.jsonl",
+            project_root.parent / "India_runs_data_and_ai_challenge" / "candidates.jsonl",
+            project_root / "candidates.jsonl"
+        ]
+        for p in fallback_paths:
+            if p.exists():
+                print(f"DEBUG: Default candidates.jsonl not found at current dir. Found at: {p}")
+                candidates_path = str(p)
+                break
+
     jd_config_path = args.jd
     output_csv_path = args.out
 
