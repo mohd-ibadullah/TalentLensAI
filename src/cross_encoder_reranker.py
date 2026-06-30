@@ -14,7 +14,7 @@ class CrossEncoderReranker:
         ms-marco-MiniLM-L6-v2 is optimized for passage retrieval and runs fast on CPU.
         """
         print(f"Loading cross-encoder model '{model_name}' (CPU)...")
-        self.model = CrossEncoder(model_name, max_length=256)
+        self.model = CrossEncoder(model_name, max_length=256, device="cpu")
         self.model_name = model_name
 
     def build_candidate_text(self, candidate: dict) -> str:
