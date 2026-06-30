@@ -13,7 +13,7 @@ class EmbeddingScorer:
         """
         print(f"Loading embedding model '{model_name}' (CPU)...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name)
+        self.model = AutoModel.from_pretrained(model_name).to("cpu")
         self.model.eval() # Set model to evaluation mode
         self.model_name = model_name
         self._is_bge = "bge" in model_name.lower()
@@ -105,6 +105,8 @@ class EmbeddingScorer:
                 return_tensors='pt'
             )
             
+            # Move inputs to CPU
+            encoded_input = {k: v.to("cpu") for k, v in encoded_input.items()}
             # Compute token embeddings
             with torch.no_grad():
                 model_output = self.model(**encoded_input)
