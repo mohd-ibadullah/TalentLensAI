@@ -543,11 +543,21 @@ if __name__ == "__main__":
         def deduplicate_education(edu_list):
             seen = set()
             clean = []
+            # Map common degree variants to canonical form
+            _DEGREE_ALIASES = {
+                "msc": "msc", "ms": "msc", "masc": "msc", "meng": "meng",
+                "bsc": "bsc", "bs": "bsc", "btech": "btech", "be": "btech",
+                "mba": "mba", "phd": "phd", "phd": "phd", "md": "md",
+                "llb": "llb", "llm": "llm", "mca": "mca", "bca": "bca",
+            }
             for edu in edu_list:
-                # Also catch "M.Sc" vs "M.S." as duplicates from same college
-                degree_normalized = edu.get("degree","").lower().replace(".", "").replace(" ","")
+                degree_raw = edu.get("degree","")
+                degree_normalized = degree_raw.lower().replace(".", "").replace(" ","")
+                # Map to canonical form if known
+                degree_canonical = _DEGREE_ALIASES.get(degree_normalized, degree_normalized)
+                field_normalized = edu.get("field_of_study","").lower().strip()
                 inst_normalized = edu.get("institution","").lower().strip()
-                key = (inst_normalized, degree_normalized[:6])  # first 6 chars of degree
+                key = (inst_normalized, degree_canonical, field_normalized)
                 if key not in seen:
                     seen.add(key)
                     clean.append(edu)
@@ -744,29 +754,35 @@ if __name__ == "__main__":
                                 tier_badge = f" `{tier}`" if tier and tier != 'unknown' else ""
                                 st.markdown(f"- **{degree}** in *{field}* from **{institution}** ({years}){tier_badge}")
 
-                        # Suggested Interview Questions Section
-                        if not is_trap:
-                            st.markdown("<hr style='border: 0.5px solid #2d313f; margin: 10px 0;'>", unsafe_allow_html=True)
-                            st.markdown("**🎯 Suggested Interview Questions**")
+                        # (Interview questions moved outside expander - see below)
 
-                            q_key = f"questions_{cand['candidate_id']}"
-                            if q_key not in st.session_state:
-                                st.session_state[q_key] = None
-                                st.session_state[f"{q_key}_err"] = None
+                    # Suggested Interview Questions (outside expander, inside card)
+                    if not is_trap:
+                        st.markdown("<hr style='border: 0.5px solid #2d313f; margin: 10px 0;'>", unsafe_allow_html=True)
+                        st.markdown("**🎯 Suggested Interview Questions**")
 
-                            if st.button("💬 Generate Targeted Questions", key=f"btn_{cand['candidate_id']}"):
-                                with st.spinner("Analyzing profile gaps and generating questions..."):
+                        q_key = f"questions_{cand['candidate_id']}"
+                        if q_key not in st.session_state:
+                            st.session_state[q_key] = None
+                            st.session_state[f"{q_key}_err"] = None
+
+                        if st.button("💬 Generate Targeted Questions", key=f"btn_{cand['candidate_id']}"):
+                            with st.spinner("Analyzing profile gaps and generating questions..."):
+                                try:
                                     questions, err = generate_interview_questions(jd_input, cand)
                                     st.session_state[q_key] = questions
                                     st.session_state[f"{q_key}_err"] = err
+                                except Exception as e:
+                                    st.session_state[q_key] = None
+                                    st.session_state[f"{q_key}_err"] = f"Exception: {str(e)}"
 
-                            if st.session_state[q_key]:
-                                st.info(st.session_state[q_key])
-                                st.caption("⚠️ AI-generated questions — verify before use")
-                            elif st.session_state[f"{q_key}_err"]:
-                                st.error(st.session_state[f"{q_key}_err"])
+                        if st.session_state[q_key]:
+                            st.info(st.session_state[q_key])
+                            st.caption("⚠️ AI-generated questions — verify before use")
+                        elif st.session_state[f"{q_key}_err"]:
+                            st.error(st.session_state[f"{q_key}_err"])
 
-                    st.markdown("<hr style='border: 0.5px solid #2d313f; margin: 10px 0;'>", unsafe_allow_html=True)
+
 
             # Show weak matches in a collapsed section
             if weak_matches:
