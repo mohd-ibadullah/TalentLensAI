@@ -22,7 +22,7 @@ def ensure_models_cached(verbose: bool = True) -> None:
 
     models = [
         ("BAAI/bge-base-en-v1.5", "embedding"),
-        ("cross-encoder/ms-marco-MiniLM-L6-v2", "cross-encoder"),
+        ("cross-encoder/ettin-reranker-17m-v1", "cross-encoder"),
     ]
 
     for model_id, label in models:

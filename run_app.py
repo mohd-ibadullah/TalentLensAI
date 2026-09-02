@@ -6,7 +6,7 @@ import starlette.middleware.gzip
 starlette.middleware.gzip.DEFAULT_EXCLUDED_CONTENT_TYPES = ("text/event-stream",)
 
 class MockIdentityResponder:
-    def __init__(self, app, minimum_size):
+    def __init__(self, app, minimum_size, **kwargs):
         self.app = app
         self.minimum_size = minimum_size
         self.send = None

@@ -17,13 +17,40 @@ def parse_job_description(jd_input: dict | str) -> dict:
     Returns a structured dictionary of requirements.
     """
     if isinstance(jd_input, dict):
+        # Sanitize role_title
+        role_title = jd_input.get("role_title", "Senior AI Engineer")
+        if not isinstance(role_title, str) or not role_title:
+            role_title = "Senior AI Engineer"
+        
+        # Sanitize min_years_experience
+        try:
+            min_yoe = float(jd_input.get("min_years_experience", 5.0))
+        except (ValueError, TypeError):
+            min_yoe = 5.0
+        
+        # Sanitize seniority_level
+        seniority = jd_input.get("seniority_level", "Senior")
+        if not isinstance(seniority, str) or not seniority:
+            seniority = "Senior"
+        
+        # Sanitize skills lists — handle string, None, or non-iterable values
+        def _ensure_list(val):
+            if val is None:
+                return []
+            if isinstance(val, str):
+                return [s.strip() for s in val.split(",") if s.strip()]
+            try:
+                return [str(s).strip() for s in val]
+            except (TypeError, ValueError):
+                return []
+        
         return {
-            "role_title": jd_input.get("role_title", "Senior AI Engineer"),
-            "min_years_experience": float(jd_input.get("min_years_experience", 5.0)),
-            "seniority_level": jd_input.get("seniority_level", "Senior"),
-            "required_skills": [s.strip() for s in jd_input.get("required_skills", [])],
-            "nice_to_have_skills": [s.strip() for s in jd_input.get("nice_to_have_skills", [])],
-            "domain_keywords": [k.strip() for k in jd_input.get("domain_keywords", [])]
+            "role_title": role_title,
+            "min_years_experience": min_yoe,
+            "seniority_level": seniority,
+            "required_skills": _ensure_list(jd_input.get("required_skills", [])),
+            "nice_to_have_skills": _ensure_list(jd_input.get("nice_to_have_skills", [])),
+            "domain_keywords": _ensure_list(jd_input.get("domain_keywords", []))
         }
     
     # If it is a string (free-text), extract using rules

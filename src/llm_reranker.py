@@ -55,7 +55,10 @@ def generate_rule_based_reasoning(
     if resp != -1:
         signal_bits.append(f"{int(resp * 100)}% recruiter response rate")
     if notice != -1:
-        signal_bits.append(f"{notice}-day notice period")
+        if notice == 0:
+            signal_bits.append("immediate joiner (0-day notice)")
+        else:
+            signal_bits.append(f"{notice}-day notice period")
     if open_work is True:
         signal_bits.append("open to work")
     signals_text = "; ".join(signal_bits) if signal_bits else "neutral platform signals"
@@ -76,15 +79,16 @@ def generate_rule_based_reasoning(
     if not skills:
         concerns.append("few explicit JD skills on profile")
 
-    rank = rank or 999
-    if rank <= 10:
-        tone = "Strong top-tier match"
-    elif rank <= 30:
-        tone = "Solid fit"
-    elif rank <= 60:
-        tone = "Qualified but not ideal"
+    # Score-based adjective banding (tied to actual score, not rank position)
+    effective_score = score * 100.0 if (0.0 < score <= 1.0) else float(score)
+    if effective_score >= 85.0:
+        tone = "Top-tier match"
+    elif effective_score >= 70.0:
+        tone = "Strong match"
+    elif effective_score >= 50.0:
+        tone = "Moderate match"
     else:
-        tone = "Marginal fit"
+        tone = "Weak match — review carefully"
 
     company_part = f" at {company}" if company else ""
     career_part = ""
