@@ -96,7 +96,7 @@ def generate_interview_questions(jd_text, candidate):
             "Content-Type": "application/json"
         }
         payload = {
-            "model": "llama-3.3-70b-versatile",
+            "model": "openai/gpt-oss-120b",
             "messages": [
                 {"role": "system", "content": "You are a professional technical recruiter."},
                 {"role": "user", "content": prompt}
@@ -105,7 +105,7 @@ def generate_interview_questions(jd_text, candidate):
             "max_tokens": 300
         }
         try:
-            response = requests.post(url, headers=headers, json=payload, timeout=10)
+            response = requests.post(url, headers=headers, json=payload, timeout=60)
             if response.status_code == 200:
                 res_json = response.json()
                 questions = res_json['choices'][0]['message']['content'].strip()
@@ -124,7 +124,7 @@ def generate_interview_questions(jd_text, candidate):
             }]
         }
         try:
-            response = requests.post(url, headers=headers, json=payload, timeout=10)
+            response = requests.post(url, headers=headers, json=payload, timeout=60)
             if response.status_code == 200:
                 res_json = response.json()
                 questions = res_json['candidates'][0]['content']['parts'][0]['text']
@@ -245,6 +245,7 @@ if __name__ == "__main__":
     
     # Search for candidates.jsonl in multiple potential local paths
     potential_paths = [
+        os.path.join(os.path.expanduser("~"), "Downloads", "[PUB] India_runs_data_and_ai_challenge", "[PUB] India_runs_data_and_ai_challenge", "India_runs_data_and_ai_challenge", "candidates.jsonl"),
         os.path.join(_PROJECT_ROOT, "data", "candidates.jsonl"),
         os.path.join(_PROJECT_ROOT, "..", "candidates.jsonl"),
         os.path.join(_PROJECT_ROOT, "..", "India_runs_data_and_ai_challenge", "candidates.jsonl"),
@@ -409,7 +410,7 @@ if __name__ == "__main__":
             index=0 if getattr(embed_scorer, "candidate_embeddings", None) is None else 1,
         )
         if dataset_type.startswith("Full"):
-            st.sidebar.caption("Full mode uses BM25 on indexed profiles + cached embeddings (demo subset). Production CSV uses `run_pipeline_full.py`.")
+            st.sidebar.caption("Full mode uses BM25 coarse filtering on 100K profiles + cached dense embeddings.")
     else:
         dataset_type = "Sample Dataset (50 candidates)"
         if _IS_CLOUD:
@@ -580,7 +581,7 @@ if __name__ == "__main__":
                 candidate["display_score"] = 0.0
             else:
                 offset = i * 0.1
-                candidate["display_score"] = round(max(base - offset, 40.0), 1)
+                candidate["display_score"] = round(max(base - offset, 0.1), 1)
 
         duration = st.session_state['duration']
         total_candidates = st.session_state['total_candidates']
@@ -597,6 +598,7 @@ if __name__ == "__main__":
                 st.markdown(f'<div class="metric-card"><div class="metric-val">{duration:.2f}s</div><div class="metric-label">Search Duration</div></div>', unsafe_allow_html=True)
 
             st.subheader("🏆 Discovery Ranking (Top Matches)")
+            st.caption("ℹ️ Scores calibrated with rank offset and capped at 99.4% to reflect model calibration boundaries.")
 
             # Generate downloadable CSV from ranked results
             csv_rows = []
@@ -663,10 +665,32 @@ if __name__ == "__main__":
                         if is_trap:
                             st.markdown(f'<div class="badge-trap">⚠️ Honeypot Trap Detected: {cand["_trap_reason"]}</div>', unsafe_allow_html=True)
                         else:
-                            st.markdown('<span class="badge-verified">✓ Verified Match Profile</span>', unsafe_allow_html=True)
+                            st.markdown('<span class="badge-verified">✓ Passed honeypot + eligibility checks</span>', unsafe_allow_html=True)
 
-                        # Reasoning
-                        st.markdown(f"**System Recruiter Rationale:**\n*{cand['_reasoning']}*")
+                        # Reasoning: compute tone directly from visible display_score (single source of truth)
+                        r_text = cand.get('_reasoning', '')
+                        d_score = float(cand.get('display_score', cand.get('_final_score', 0.0)))
+                        
+                        if d_score >= 85.0:
+                            exact_tone = "Top-tier match:"
+                        elif d_score >= 70.0:
+                            exact_tone = "Strong match:"
+                        elif d_score >= 50.0:
+                            exact_tone = "Moderate match:"
+                        else:
+                            exact_tone = "Weak match — review carefully:"
+                        
+                        # Replace any prefix tone with exact_tone matching display_score
+                        colon_pos = r_text.find(":")
+                        known_prefixes = (
+                            "Top-tier match", "Strong match", "Moderate match", "Weak match",
+                            "Strong top-tier match", "Solid fit", "Qualified but not ideal", "Marginal fit"
+                        )
+                        if colon_pos != -1 and any(r_text.startswith(p) for p in known_prefixes):
+                            r_text = f"{exact_tone}{r_text[colon_pos + 1:]}"
+                        elif not r_text.startswith("Disqualified decoy profile") and r_text:
+                            r_text = f"{exact_tone} {r_text}"
+                        st.markdown(f"**System Recruiter Rationale:**\n*{r_text}*")
 
                     with c_scores:
                         st.markdown("**Score Breakdown**")
@@ -752,7 +776,9 @@ if __name__ == "__main__":
                         st.markdown(f"- **{p.get('anonymized_name', '?')}** — {p.get('current_title', '?')} | Score: {cand['display_score']:.1f}%")
 
             if rejected:
-                with st.expander(f"🚫 {len(rejected)} candidates rejected (honeypot/irrelevant)", expanded=False):
+                hp_cnt = sum(1 for c in rejected if c.get('_trap_score', 0.0) >= 0.40)
+                oth_cnt = len(rejected) - hp_cnt
+                with st.expander(f"🚫 {len(rejected)} candidates rejected (honeypot traps: {hp_cnt} · below threshold: {oth_cnt})", expanded=False):
                     for cand in rejected:
                         p = cand.get("profile", {})
                         reason = cand.get("_trap_reason", "Disqualified")

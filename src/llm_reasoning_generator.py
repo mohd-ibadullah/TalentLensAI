@@ -163,7 +163,6 @@ def main():
     default_candidates_paths = [
         project_root.parent / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge" / "candidates.jsonl",
         project_root / "candidates.jsonl",
-        Path("c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl")
     ]
     
     default_candidates = None
@@ -185,7 +184,7 @@ def main():
                         help="Groq API Key")
     parser.add_argument("--gemini-model", default="gemini-2.5-flash-lite",
                         help="Gemini model name")
-    parser.add_argument("--groq-model", default="llama-3.3-70b-versatile",
+    parser.add_argument("--groq-model", default="openai/gpt-oss-120b",
                         help="Groq model name")
     args = parser.parse_args()
 
@@ -305,12 +304,15 @@ def main():
     df_out.to_csv(sub_path, index=False)
     print(f"Updated CSV saved to {sub_path}")
     
-    # Also save to the outer copy in the nesting folder if exists
-    outer_path = Path("c:/Users/froms/Downloads/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/mohd_ibadullah.csv")
+    # Also save to the outer copy in the parent nesting folder if exists
+    outer_path = project_root.parent / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge" / "mohd_ibadullah.csv"
     if outer_path.exists() or outer_path.parent.exists():
-        os.makedirs(outer_path.parent, exist_ok=True)
-        df_out.to_csv(outer_path, index=False)
-        print(f"Copy saved to {outer_path}")
+        try:
+            os.makedirs(outer_path.parent, exist_ok=True)
+            df_out.to_csv(outer_path, index=False)
+            print(f"Copy saved to {outer_path}")
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
