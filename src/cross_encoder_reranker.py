@@ -1,6 +1,6 @@
 """
 Cross-Encoder Reranker for top-100 candidate precision improvement.
-Uses cross-encoder/ms-marco-MiniLM-L6-v2 to score (JD, candidate) pairs
+Uses cross-encoder/ettin-reranker-17m-v1 to score (JD, candidate) pairs
 and blends with original feature scores.
 """
 import time

@@ -46,8 +46,9 @@ def compute_skill_match_score(candidate_skills: list[dict], parsed_jd: dict) -> 
     Weighs required skills higher than nice-to-have, and scales based on 
     proficiency and endorsements.
     """
-    required = parsed_jd.get("required_skills", [])
-    nice = parsed_jd.get("nice_to_have_skills", [])
+    candidate_skills = candidate_skills or []
+    required = parsed_jd.get("required_skills", []) or []
+    nice = parsed_jd.get("nice_to_have_skills", []) or []
     
     if not required:
         return 1.0 # Avoid division by zero
@@ -94,9 +95,15 @@ def compute_title_seniority_match(profile: dict, parsed_jd: dict) -> float:
     Returns a score in [0.0, 0.97] — hard cap, never 100%.
     """
     current_title = profile.get("current_title", "").lower()
-    yoe = float(profile.get("years_of_experience", 0.0))
+    try:
+        yoe = float(profile.get("years_of_experience", 0.0))
+    except (ValueError, TypeError):
+        yoe = 0.0
     
-    min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
+    try:
+        min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
+    except (ValueError, TypeError):
+        min_yoe = 5.0
     jd_seniority = parsed_jd.get("seniority_level", "senior").lower()
     
     # 1. Seniority match (40% weight)
@@ -219,9 +226,9 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     if weights is None:
         weights = SCORING_WEIGHTS
         
-    profile = candidate.get("profile", {})
-    skills = candidate.get("skills", [])
-    signals = candidate.get("redrob_signals", {})
+    profile = candidate.get("profile") or {}
+    skills = candidate.get("skills") or []
+    signals = candidate.get("redrob_signals") or {}
     
     # Compute components
     skill_score = compute_skill_match_score(skills, parsed_jd)
@@ -251,8 +258,14 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     penalty = weights["trap_penalty"] * trap_score * 100.0
     
     # Calculate YoE deficit penalty (hard gate rules)
-    yoe = float(profile.get("years_of_experience", 0.0))
-    min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
+    try:
+        yoe = float(profile.get("years_of_experience", 0.0))
+    except (ValueError, TypeError):
+        yoe = 0.0
+    try:
+        min_yoe = float(parsed_jd.get("min_years_experience", 5.0))
+    except (ValueError, TypeError):
+        min_yoe = 5.0
     
     # Calculate Career Relevance Bonus
     career_history = candidate.get("career_history", [])

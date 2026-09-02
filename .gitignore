@@ -13,13 +13,43 @@ htmlcov/
 .coverage
 data/candidate_embeddings.npy
 data/candidate_ids.json
-outputs/mohd_ibadullah_e2e_test.csv
-outputs/rank_smoke.csv
-outputs/timing_test.csv
-outputs/qa_*.csv
+
+# Large data files
+candidates.jsonl
+candidates.corrupted.jsonl
+data/candidates.json
+data/embeddings_meta.json
+
+# PII file
+submission_metadata.yaml
+
+# Archives
+*.zip
+
+# Local/cache
+.freebuff/
 scratch/
 
-# Untracked files kept locally but not in git repo
+# Evidence folders
+TALENTLENS_GPU_FINAL_EVIDENCE/
+TalentLens_Paper_Flat/
+
+# Paper scratch files
+PAPER_FIGURE_PROMPTS.md
+check_tex.py
+tex_pieces.json
+eval_data.json
+human_evaluation.html
+kaggle_precompute_embeddings.py
+reference_paper_images/
+
+# Outputs (keep only specific ones)
+outputs/*.csv
+outputs/*.json
+outputs/*.jsonl
+outputs/*.txt
+
+# Local-only docs
 Summarize_the_consensus_of_academic_literature_and.pdf
 TalentLensAI_Submission.pdf
 TalentLensAI_Submission.pptx
@@ -30,3 +60,4 @@ Project_Abstract.md
 INTERVIEW_PREP_GUIDE.md
 LICENSE
 ARCHITECTURE.md
+scripts/final_qa_audit.py

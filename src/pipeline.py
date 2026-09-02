@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import json
+import hashlib
 import pandas as pd
 from pathlib import Path
 
@@ -71,6 +72,14 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
         all_candidates = load_sample_candidates(candidates_path)
         print(f"Loaded {len(all_candidates)} candidates.")
 
+        if not all_candidates:
+            print("Loaded 0 candidates. Writing empty output.")
+            out_dir = os.path.dirname(out_csv_path)
+            if out_dir:
+                os.makedirs(out_dir, exist_ok=True)
+            pd.DataFrame(columns=["candidate_id", "rank", "score", "reasoning"]).to_csv(out_csv_path, index=False)
+            return []
+
         embedding_scorer = EmbeddingScorer()
         bm25_filter = BM25Filter(all_candidates)
         candidates_for_deep_scoring = bm25_filter.filter_candidates(parsed_jd, top_n=2000)
@@ -89,16 +98,73 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
 
         # Verify if precomputed embeddings match the current loaded candidates
         if has_precomputed:
+            # 1. Check candidate ID list integrity
             try:
                 with open(json_path, "r", encoding="utf-8") as f:
                     precomputed_ids = json.load(f)
-                dataset_ids = candidate_ids[:10]
-                pre_subset = precomputed_ids[:10]
-                if len(precomputed_ids) != total_count or dataset_ids != pre_subset:
-                    print("Warning: Candidate dataset has changed or size mismatch. Disabling precomputed embeddings cache to ensure accuracy.")
+                id_fingerprint = hashlib.sha256(
+                    json.dumps(precomputed_ids, sort_keys=False).encode()
+                ).hexdigest()
+                dataset_fingerprint = hashlib.sha256(
+                    json.dumps(candidate_ids, sort_keys=False).encode()
+                ).hexdigest()
+                if len(precomputed_ids) != total_count or id_fingerprint != dataset_fingerprint:
+                    print("Warning: Candidate ID list has changed or size mismatch. Disabling precomputed embeddings cache.")
                     has_precomputed = False
             except Exception:
                 has_precomputed = False
+
+            # 2. Check text fingerprint (catches changes to build_candidate_embedding_text)
+            if has_precomputed:
+                meta_path = project_root / "data" / "embeddings_meta.json"
+                if not meta_path.exists():
+                    print("UNVERIFIED CACHE: data/embeddings_meta.json not found. Encoding fresh to ensure accuracy.")
+                    has_precomputed = False
+                else:
+                    try:
+                        with open(meta_path, "r", encoding="utf-8") as f:
+                            meta = json.load(f)
+                        stored_fp = meta.get("text_fingerprint", "")
+                        stored_model = meta.get("model_name", "")
+                        stored_maxseq = meta.get("max_seq_length", 0)
+                        stored_n = meta.get("n_candidates", 0)
+
+                        # Recompute fingerprint over sampled texts from the streaming pass
+                        h = hashlib.sha256()
+                        h.update(f"{stored_model}|{stored_maxseq}|{stored_n}".encode())
+                        # We need to re-encode a sample using build_candidate_document
+                        # (the BM25 text builder, which should match what was precomputed)
+                        # But precompute uses build_candidate_embedding_text, not build_candidate_document.
+                        # We must use the same builder that was used during precomputation.
+                        # Since we already streamed candidates and have corpus_docs, we can't
+                        # easily re-build embedding texts here without re-reading.
+                        # Instead, we use the corpus_docs (BM25 docs) as a proxy — but they differ.
+                        # Correct approach: re-read a sample from the JSONL and build embedding text.
+                        # For efficiency, we sample every 500th from the streaming pass.
+                        # Unfortunately the generator is already exhausted. So we re-read a sample.
+                        sample_indices = set(range(0, total_count, 500))
+                        sample_texts = []
+                        for i, cand in enumerate(stream_candidates(candidates_path)):
+                            if i in sample_indices:
+                                sample_texts.append(build_candidate_embedding_text(cand))
+                            if i >= max(sample_indices):
+                                break
+                        for t in sample_texts:
+                            h.update(t.encode("utf-8"))
+                        recomputed_fp = h.hexdigest()
+
+                        if recomputed_fp != stored_fp:
+                            print(f"CACHE MISMATCH: text_fingerprint changed!")
+                            print(f"  Stored:  {stored_fp}")
+                            print(f"  Current: {recomputed_fp}")
+                            print(f"  (Likely cause: candidate_text.py was modified)")
+                            print("Disabling precomputed embeddings. Falling back to on-the-fly encoding.")
+                            has_precomputed = False
+                        else:
+                            print(f"Cache fingerprint verified: {recomputed_fp[:16]}...")
+                    except Exception as e:
+                        print(f"Warning: Could not verify embeddings metadata: {e}. Disabling cache.")
+                        has_precomputed = False
 
         # Load embedding model and load precomputed files if valid
         embedding_scorer = EmbeddingScorer()
@@ -149,6 +215,17 @@ def run_ranking_pipeline(candidates_path: str, jd_input: dict, out_csv_path: str
             print("Precomputed vectors not found or disabled. Falling back to BM25-only retrieval.")
                 
     print(f"Coarse filter completed. Evaluating {len(candidates_for_deep_scoring)} candidates.")
+    
+    # Early return if no candidates survived the coarse filter
+    if len(candidates_for_deep_scoring) == 0:
+        print("No candidates found after coarse filtering. Writing empty output.")
+        out_dir = os.path.dirname(out_csv_path)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+        pd.DataFrame(columns=["candidate_id", "rank", "score", "reasoning"]).to_csv(out_csv_path, index=False)
+        duration = time.time() - start_time
+        print(f"Pipeline completed (empty result) in {duration:.2f} seconds.")
+        return []
     
     # 3. Stage 2 & 3: Honeypot Detection & Feature Scoring
     print("\nStep 3: Evaluating Honeypot trap scores and Semantic embeddings...")

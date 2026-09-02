@@ -5,7 +5,9 @@ Saves candidate_embeddings.npy (100K x 768 float32 matrix) and candidate_ids.jso
 import os
 import sys
 import json
+import hashlib
 import numpy as np
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Add project root to python path to allow running directly
@@ -17,6 +19,16 @@ from src.candidate_text import build_candidate_embedding_text
 
 def build_candidate_text(cand: dict) -> str:
     return build_candidate_embedding_text(cand)
+
+
+def text_fingerprint(candidates, build_fn, model_name: str, max_seq: int) -> str:
+    """Compute SHA-256 fingerprint over the actual embedded text (sampled every 500th candidate)."""
+    h = hashlib.sha256()
+    h.update(f"{model_name}|{max_seq}|{len(candidates)}".encode())
+    for c in candidates[::500]:
+        h.update(build_fn(c).encode("utf-8"))
+    return h.hexdigest()
+
 
 def main():
     project_root = Path(__file__).resolve().parent.parent
@@ -78,6 +90,37 @@ def main():
     print(f"Saving candidate ID ordering to {ids_out}...")
     with open(ids_out, "w", encoding="utf-8") as f:
         json.dump(candidate_ids, f)
+
+    # Write embeddings_meta.json with text fingerprint for cache validation
+    meta_path = data_dir / "embeddings_meta.json"
+    fingerprint = text_fingerprint(
+        # Rebuild texts from stored candidates for fingerprinting.
+        # We already have candidate_texts in memory from the loop above.
+        # But candidate_texts is a list of strings, not candidates.
+        # We need the original candidates. Since we streamed them, we re-read.
+        # Actually, we can use the candidate_texts list directly.
+        # text_fingerprint expects (candidates, build_fn, model_name, max_seq)
+        # We'll adapt: just hash the texts directly.
+        [], build_candidate_text, scorer.model_name, 160
+    )
+    # More efficient: hash the texts we already built
+    h = hashlib.sha256()
+    h.update(f"{scorer.model_name}|160|{len(candidate_texts)}".encode())
+    for t in candidate_texts[::500]:
+        h.update(t.encode("utf-8"))
+    fingerprint = h.hexdigest()
+
+    meta = {
+        "text_fingerprint": fingerprint,
+        "model_name": scorer.model_name,
+        "max_seq_length": 160,
+        "n_candidates": len(candidate_texts),
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2)
+    print(f"Saved embeddings metadata to {meta_path}")
+    print(f"Text fingerprint: {fingerprint}")
         
     print("\n" + "=" * 60)
     print("Precomputation completed successfully!")
