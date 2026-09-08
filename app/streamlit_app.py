@@ -63,7 +63,8 @@ def get_api_key():
             pass
     return None
 
-def generate_interview_questions(jd_text, candidate):
+def generate_interview_questions(jd_text, candidate, _retry=True):
+    """Generate targeted interview questions via LLM. Retries once on transient failure."""
     api_key = get_api_key()
     if not api_key:
         return None, "Add API Key (GEMINI_API_KEY or api_key) to .env to enable this feature"
@@ -102,16 +103,34 @@ def generate_interview_questions(jd_text, candidate):
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.5,
-            "max_tokens": 300
+            "max_tokens": 800
         }
         try:
             response = requests.post(url, headers=headers, json=payload, timeout=60)
             if response.status_code == 200:
                 res_json = response.json()
-                questions = res_json['choices'][0]['message']['content'].strip()
+                choice = res_json.get('choices', [{}])[0]
+                questions = choice.get('message', {}).get('content', '').strip()
+                finish_reason = choice.get('finish_reason', 'unknown')
+                if not questions:
+                    if _retry:
+                        time.sleep(1)
+                        return generate_interview_questions(jd_text, candidate, _retry=False)
+                    return None, "API returned an empty response. Please try again."
+                if finish_reason == 'length':
+                    questions += "\n\n⚠️ Note: Response may be partially truncated."
                 return questions, None
+            elif response.status_code == 429 and _retry:
+                time.sleep(2)
+                return generate_interview_questions(jd_text, candidate, _retry=False)
             else:
-                return None, f"Groq API Error (HTTP {response.status_code}): {response.text[:200]}"
+                error_detail = response.text[:200] if response.text else 'Unknown error'
+                return None, f"API Error (HTTP {response.status_code}): {error_detail}"
+        except requests.exceptions.Timeout:
+            if _retry:
+                time.sleep(1)
+                return generate_interview_questions(jd_text, candidate, _retry=False)
+            return None, "Request timed out. Please try again."
         except Exception as e:
             return None, f"Connection error: {str(e)}"
     else:
@@ -128,9 +147,22 @@ def generate_interview_questions(jd_text, candidate):
             if response.status_code == 200:
                 res_json = response.json()
                 questions = res_json['candidates'][0]['content']['parts'][0]['text']
+                if not questions:
+                    if _retry:
+                        time.sleep(1)
+                        return generate_interview_questions(jd_text, candidate, _retry=False)
+                    return None, "API returned an empty response. Please try again."
                 return questions, None
+            elif response.status_code == 429 and _retry:
+                time.sleep(2)
+                return generate_interview_questions(jd_text, candidate, _retry=False)
             else:
                 return None, f"Gemini API Error (HTTP {response.status_code}): {response.text[:200]}"
+        except requests.exceptions.Timeout:
+            if _retry:
+                time.sleep(1)
+                return generate_interview_questions(jd_text, candidate, _retry=False)
+            return None, "Request timed out. Please try again."
         except Exception as e:
             return None, f"Connection error: {str(e)}"
 
@@ -777,7 +809,21 @@ if __name__ == "__main__":
                                     st.session_state[f"{q_key}_err"] = f"Exception: {str(e)}"
 
                         if st.session_state[q_key]:
-                            st.info(st.session_state[q_key])
+                            # Clean up formatting: collapse extra blank lines and strip indent
+                            import re as _re
+                            raw_q = st.session_state[q_key]
+                            # Remove blank lines between number and question text
+                            raw_q = _re.sub(r'(?<=\d\.)\s*\n\s+', ' ', raw_q)
+                            # Collapse multiple blank lines into one
+                            raw_q = _re.sub(r'\n{3,}', '\n\n', raw_q)
+                            # Escape HTML
+                            safe_q = raw_q.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                            # Convert newlines to <br> for HTML display
+                            safe_q = safe_q.replace('\n', '<br>')
+                            st.markdown(
+                                f"<div style='background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2);border-radius:8px;padding:16px;margin:8px 0;font-size:0.95rem;line-height:1.8;'>{safe_q}</div>",
+                                unsafe_allow_html=True,
+                            )
                             st.caption("⚠️ AI-generated questions — verify before use")
                         elif st.session_state[f"{q_key}_err"]:
                             st.error(st.session_state[f"{q_key}_err"])

@@ -1737,7 +1737,7 @@
     \IfNoValueTF { #1 } {
     } { \tex_gdef:D \abstractname { #1 } }
     \parindent \z@
-    \leftskip = .1 \textwidth
+    \leftskip = 0pt \relax % PATCHED: full-width abstract (was .1\textwidth)
     % \box_if_empty:NTF \g_ceur_key_box
     % { \leftskip = .1 \textwidth }
     % {

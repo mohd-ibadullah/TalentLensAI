@@ -3,6 +3,24 @@
 % TalentLens identity-leakage study. Clean CEUR-WS working-notes paper.
 % Plain official format: no math mode, no special typography.
 
+% --- Layout hygiene: prevent float gaps and cramped tables ---
+\usepackage{float}                          % float placement control
+\usepackage{booktabs}                       % professional rules (toprule/midrule)
+\usepackage[section]{placeins}              % keep floats inside their own section
+\renewcommand{\arraystretch}{1.25}         % breathing room between table rows
+
+% --- Even justification: kill the "ladder" look from long \texttt/DOI tokens ---
+\usepackage{microtype}                      % protrusion + expansion = smooth line edges
+\emergencystretch=2em                       % allow extra stretch instead of ugly gaps
+
+% --- Uniform paragraphs: every paragraph flush-left, separated by space ---
+\usepackage{parskip}                        % no alternating first-line indents
+
+% --- Full-width abstract (override CEURART's inset side block) ---
+\makeatletter
+\AddToHook{env/abstract/begin}{\leftskip=0pt\relax}
+\makeatother
+
 \graphicspath{{./}{./paper_figures/}}
 
 % Upright (non-italic) affiliation for a clean, standard look.
@@ -31,7 +49,7 @@ name of a candidate influences their rank is rarely measured. We decompose ident
 stage by stage in a hybrid retrieval pipeline evaluated on the TalentCLEF 2026 Task A
 benchmark, which provides English and Spanish splits with 472 CVs each and official human
 relevance judgments. Holding every other byte of a CV constant and substituting only the
-the name of the candidate across four name-origin groups and two genders, we find a monotonic
+name of the candidate across four name-origin groups and two genders, we find a monotonic
 leakage gradient. BM25 is almost name-blind, with a Rank-Biased Overlap of about 0.99,
 while dense retrieval with \texttt{bge-base-en-v1.5} reorders candidates substantially,
 reaching RBO 0.669 in English and 0.639 in Spanish. Hybrid fusion and cross-encoder
@@ -65,11 +83,11 @@ dedicated bias-mitigation component. The organizers state that the bias-track re
 should be interpreted as evidence of ranking robustness under the specific masculine and
 feminine name variants used in the benchmark, rather than as a comprehensive demonstration
 of fairness or bias mitigation \cite{gasco2026talentclef}. They further hypothesise that the
-the skill and task extraction of the winning system reduced surface-lexical influence, but that
+skill and task extraction of the winning system reduced surface-lexical influence, but that
 hypothesis was never tested.
 
 We test it. We ask a narrower and falsifiable question: given a fixed CV, how much does the
-the name of the candidate alone move their rank, and where in the pipeline does that movement
+name of the candidate alone move their rank, and where in the pipeline does that movement
 happen?
 
 Our contributions are as follows.
@@ -112,7 +130,7 @@ Our contributions are as follows.
 
 \section{Experimental Setup}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\textwidth]{figure_1.png}
 \caption{Pipeline architecture: four retrieval stages with measured rank stability (RBO).}
@@ -138,9 +156,12 @@ nothing else. This is what lets us attribute rank movement to the name alone.
 
 \textbf{Pipeline.} We evaluate four stages.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
-\begin{tabular}{ll}
+\caption{Retrieval pipeline stages evaluated in this study.}
+\label{tab:pipeline}
+\small
+\begin{tabular}{@{}lp{0.68\textwidth}@{}}
 \toprule
 stage & implementation \\
 \midrule
@@ -176,7 +197,7 @@ treat them as such rather than as zero.
 
 \subsection{Leakage is monotonic in lexical content}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figure_2.png}
 \caption{Rank stability (RBO) under name-only perturbation across four retrieval stages. BM25 is almost name-blind; dense retrieval reorders substantially.}
@@ -186,8 +207,10 @@ treat them as such rather than as zero.
 Rank stability under name-only perturbation, measured as RBO where 1.0 means the name has
 no effect. These are the post-fix values from the full GPU run.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
+\caption{Rank stability (RBO) under name-only perturbation, per stage and language.}
+\label{tab:stage_rbo}
 \begin{tabular}{lcc}
 \toprule
 stage & RBO English & RBO Spanish \\
@@ -206,9 +229,12 @@ stable and dense retrieval the least, with hybrid fusion and reranking in betwee
 paired-bootstrap gaps against BM25 are reported next. All 30 comparisons are significant
 after Bonferroni correction at the 0.001667 threshold, with n equal to 90 per comparison.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
-\begin{tabular}{lcc}
+\caption{Paired-bootstrap RBO gaps against BM25, with 95\% confidence intervals.}
+\label{tab:bm25_gaps}
+\small
+\begin{tabular}{@{}lcc@{}}
 \toprule
 comparison & change in RBO & 95\% CI \\
 \midrule
@@ -224,7 +250,7 @@ ES: BM25 to Rerank & +0.1386 & [0.1268, 0.1502] \\
 
 \subsection{The intervention closes the gap completely}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figure_3.png}
 \caption{Effect of identity-header stripping on rank stability (RBO). The intervention closes the leakage gap completely.}
@@ -237,15 +263,20 @@ Bonferroni correction. \texttt{strip-identity} and \texttt{skill-only} reach exa
 documented 1.06\% residual, which reflects the 5 of 472 documents where the name occurs
 below the header and survives masking.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
-\begin{tabular}{lcc}
+\caption{RBO improvement from identity interventions, per stage and language.}
+\label{tab:intervention_rbo}
+\small
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-stage & change in RBO English & change in RBO Spanish \\
+ & \multicolumn{2}{c}{English} & \multicolumn{2}{c}{Spanish} \\
+\cmidrule(lr){2-3} \cmidrule(l){4-5}
+stage & change in RBO & 95\% CI & change in RBO & 95\% CI \\
 \midrule
-Dense & +0.3351 [0.3132, 0.3585] & +0.3629 [0.3374, 0.3889] \\
-Hybrid & +0.2283 [0.2104, 0.2462] & +0.2283 [0.2090, 0.2484] \\
-Rerank & +0.1007 [0.0901, 0.1116] & +0.1400 [0.1282, 0.1516] \\
+Dense & +0.3351 & [0.3132, 0.3585] & +0.3629 & [0.3374, 0.3889] \\
+Hybrid & +0.2283 & [0.2104, 0.2462] & +0.2283 & [0.2090, 0.2484] \\
+Rerank & +0.1007 & [0.0901, 0.1116] & +0.1400 & [0.1282, 0.1516] \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -258,9 +289,13 @@ substantive comparisons are reported below.
 
 \textbf{English.} Intervention against \texttt{none}, average precision.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
-\begin{tabular}{llcccc}
+\caption{English average-precision effect of each intervention, against \texttt{none}.}
+\label{tab:map_english}
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}llcccc@{}}
 \toprule
 stage & intervention & change in MAP & 95\% CI & p & verdict \\
 \midrule
@@ -276,9 +311,13 @@ rerank & mask-name & -0.0086 & [-0.0241, +0.0052] & 0.257 & not sig \\
 
 \textbf{Spanish.} Intervention against \texttt{none}, average precision.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
-\begin{tabular}{llcccc}
+\caption{Spanish average-precision effect of each intervention, against \texttt{none}.}
+\label{tab:map_spanish}
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}llcccc@{}}
 \toprule
 stage & intervention & change in MAP & 95\% CI & p & verdict \\
 \midrule
@@ -321,7 +360,7 @@ observation rather than the load-bearing claim.
 
 \subsection{Cross-lingual asymmetry}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figure_4.png}
 \caption{Cross-lingual comparison: dense stage RBO and MAP before and after identity stripping.}
@@ -353,8 +392,10 @@ intervention that is free everywhere and corrective in at least one setting.
 CPU-only timing on the English dev set, with 472 CVs, 10 queries, a 512-token window, and 5
 repeats per stage, with the cache cleared where effective.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
+\caption{CPU median latency per query, per stage (English dev set).}
+\label{tab:latency}
 \begin{tabular}{lc}
 \toprule
 stage & median latency per query \\
@@ -382,7 +423,7 @@ a reliable cold-start estimate. We state this as an open measurement rather than
 
 \subsection{Accuracy and robustness trade-off}
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\textwidth]{figure_5.png}
 \caption{Robustness gain against accuracy effect for the strip-identity intervention. The horizontal axis is the change in RBO and the vertical axis the change in MAP. Every stage gains robustness, while the accuracy change stays near zero or turns positive.}
