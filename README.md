@@ -33,7 +33,7 @@ Every number below is measured by a script in the scripts folder. Nothing is est
 | Corpus size | 100,000 profiles, 100% populated | data integrity guard with SHA256 |
 | Name blindness | 800 of 800 name swaps give identical rankings | scripts/measure_name_blindness.py |
 | Honeypot detection | decoy profiles removed from the shortlist | tests folder |
-| Tests | 177 passing | pytest -q |
+| Tests | 176 passing | pytest -q |
 | Latency | BM25 index about 25 seconds one time, about 13 seconds per repeat query | scripts/recompute_all_metrics.py |
 | Cache safety | embeddings carry a text fingerprint, so stale vectors are detected and refused | src/pipeline.py |
 
@@ -55,9 +55,7 @@ the identity header closes the gap to RBO 1.000 at no measurable accuracy cost.
 
 Benchmark: TalentCLEF 2026 Task A, CC-BY-4.0, DOI 10.5281/zenodo.17625261.
 
-Paper source: paper_draft.tex.
-
-Preprint link: coming soon.
+Paper source: paper/PAPER_DRAFT.tex (compiled PDF included in the paper folder).
 
 ## Fairness and honesty
 
