@@ -30,6 +30,15 @@ A Streamlit dashboard is included for interactive use.
 
 ![TalentLens AI pipeline architecture](docs/architecture.png)
 
+## Research and testing
+
+The system was tested through a series of controlled experiments before freezing the
+ranking formula: name-swap consistency tests across 800 profiles, decoy and honeypot
+detection tests, employer-perturbation audits, and benchmark evaluation on the public
+TalentCLEF Task A dataset with human relevance judgments. Findings from that testing fed
+directly into the final scoring design — including the decision to exclude candidate
+names from every ranking stage.
+
 ## Measured results
 
 Every number below is measured by a script in the scripts folder. Nothing is estimated.
