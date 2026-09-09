@@ -1,7 +1,7 @@
 # TalentLens AI — Complete Technical Documentation
 
-> **Version:** 1.0 (generated September 2026)
-> **Audience:** An engineer or AI agent with **zero prior context** on this repository.
+> **Version:** 1.0 (September 2026)
+> **Audience:** An engineer with zero prior context on this repository.
 > **Everything below is derived from the actual code, docs, and paper in this repo.** Where information does not exist in the repo, the section explicitly says "Not yet defined".
 
 ---
