@@ -101,6 +101,8 @@ streamlit run app/streamlit_app.py
 
 https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app/
 
+![TalentLens AI demo — job description in, ranked candidates out](docs/demo.gif)
+
 ## License
 
 Code and study are released under CC-BY-4.0. The benchmark data remains under the
