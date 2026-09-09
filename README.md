@@ -10,6 +10,8 @@ TalentLens ranks a large candidate pool against a job description using a hybrid
 pipeline. It runs fully on CPU, is tested against 100,000 profiles, and its ranking is
 verified to ignore candidate names.
 
+![TalentLens AI demo — job description in, ranked candidates out](docs/demo.gif)
+
 ## What it does
 
 The pipeline has three stages.
@@ -100,8 +102,6 @@ streamlit run app/streamlit_app.py
 ## Live demo
 
 https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app/
-
-![TalentLens AI demo — job description in, ranked candidates out](docs/demo.gif)
 
 ## License
 
