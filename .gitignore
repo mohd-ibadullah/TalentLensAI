@@ -61,6 +61,7 @@ eval_data.json
 human_evaluation.html
 scripts/kaggle_precompute_embeddings.py
 reference_paper_images/
+paper/PAPER_FIGURE_PROMPTS.md
 
 # Outputs (keep only specific ones)
 outputs/*.csv

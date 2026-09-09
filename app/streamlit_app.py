@@ -179,8 +179,22 @@ if __name__ == "__main__":
     # Custom premium styling
     st.markdown("""
     <style>
-        /* Hide Streamlit Deploy/Stop header toolbar completely */
-        header[data-testid="stHeader"], footer {
+        /* Hide Streamlit Deploy/Stop items but KEEP the header bar itself:
+           the sidebar-reopen button lives in the header when the sidebar is
+           collapsed, so hiding the header entirely makes the sidebar
+           unrecoverable. Make the header transparent and non-interactive
+           except for its buttons instead. */
+        header[data-testid="stHeader"] {
+            background: transparent !important;
+            pointer-events: none !important;
+        }
+        header[data-testid="stHeader"] button {
+            pointer-events: auto !important;
+        }
+        header[data-testid="stHeader"] button[kind="header"] {
+            display: none !important;  /* Deploy / Run buttons */
+        }
+        footer {
             display: none !important;
         }
         

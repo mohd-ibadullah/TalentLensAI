@@ -1,5 +1,11 @@
 # TalentLens AI
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Tests](https://img.shields.io/badge/tests-176%20passing-brightgreen)
+![CPU Only](https://img.shields.io/badge/compute-CPU%20only-success)
+![License](https://img.shields.io/badge/license-CC--BY--4.0-lightgrey)
+![Streamlit](https://img.shields.io/badge/UI-Streamlit-red)
+
 TalentLens ranks a large candidate pool against a job description using a hybrid retrieval
 pipeline. It runs fully on CPU, is tested against 100,000 profiles, and its ranking is
 verified to ignore candidate names.
