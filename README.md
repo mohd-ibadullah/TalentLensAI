@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Tests](https://img.shields.io/badge/tests-177%20passing-brightgreen)
 ![CPU Only](https://img.shields.io/badge/compute-CPU%20only-success)
-![License](https://img.shields.io/badge/license-CC--BY--4.0-lightgrey)
+![License](https://img.shields.io/badge/license-MIT-green)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red)
 
 TalentLens ranks a large candidate pool against a job description using a hybrid retrieval
