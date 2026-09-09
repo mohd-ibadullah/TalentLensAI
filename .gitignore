@@ -80,3 +80,5 @@ docs/Project_Abstract.md
 docs/INTERVIEW_PREP_GUIDE.md
 docs/human_evaluation.html
 scripts/final_qa_audit.py
+# Local-only research folder (not part of the product repo)
+paper/
