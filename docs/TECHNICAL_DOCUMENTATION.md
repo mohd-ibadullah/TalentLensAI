@@ -246,7 +246,7 @@ This prevents the classic "stale vectors silently poison the ranking" failure.
 - **pytest** — test suite (177 passing tests reported).
 - **LaTeX (CEUR-WS `ceurart` class)** — research paper in `paper/`.
 - **Streamlit/Starlette gzip monkeypatch** — `run_app.py` and the top of `app/streamlit_app.py` patch `starlette.middleware.gzip` for headless/cloud deployment compatibility.
-- License: **CC-BY-4.0** for code+study; benchmark data remains under the TalentCLEF license with attribution.
+- License: **MIT** for code; benchmark data remains under the TalentCLEF license with attribution.
 
 ---
 
@@ -472,7 +472,7 @@ TalentLensAI/
 ├── .env.example                 # Template: optional GEMINI_API_KEY / api_key (Groq) — NOT needed for ranking
 ├── .gitignore                   # Excludes .env, embeddings cache, caches, junk
 ├── .mailmap                     # Git identity canonicalization
-├── LICENSE                      # CC-BY-4.0
+├── LICENSE                      # MIT
 ├── README.md                    # Product overview, measured results, quick start, live demo link
 ├── ARCHITECTURE.md              # Architecture notes
 ├── CHANGELOG.md                 # Release history
@@ -813,5 +813,5 @@ No other contributors. Advisor/guide attribution: **Not yet defined** (not prese
 - **Offline verification:** Stage-3 sandbox verification required offline execution → `download_models.py` + preflight exist so no network calls happen during ranking.
 - **Name-blindness requirement:** ranking must not read candidate names (verified by 800/800 swap test and unit tests).
 - **Honesty policy (self-imposed):** no estimated or circular metrics; every published number must be reproducible by a script in `scripts/`.
-- **License:** code + study CC-BY-4.0; TalentCLEF benchmark data used under its license with attribution (DOI 10.5281/zenodo.17625261).
+- **License:** code MIT; TalentCLEF benchmark data used under its license with attribution (DOI 10.5281/zenodo.17625261).
 - **Deadlines / grading criteria / guide's requirements:** Not yet defined in the repository (no dates, rubric, or advisor requirements are committed).

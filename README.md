@@ -102,4 +102,4 @@ https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app/
 
 ## License
 
-Code is released under CC-BY-4.0.
+Code is released under the MIT License.
