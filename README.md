@@ -24,7 +24,7 @@ The pipeline has three stages.
 
 A Streamlit dashboard is included for interactive use.
 
-![Architecture](paper/paper_figures/figure_1.png)
+![TalentLens AI pipeline architecture](docs/architecture.png)
 
 ## Measured results
 
