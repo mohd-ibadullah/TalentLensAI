@@ -465,8 +465,12 @@ if __name__ == "__main__":
             st.sidebar.info("Full dataset not found locally — using 50-candidate sample.")
 
     # Custom Weights tuning (defaults loaded from config/scoring_weights.json)
-    from src.feature_scorer import load_scoring_weights
-    _default_weights = load_scoring_weights()
+    try:
+        from src.feature_scorer import load_scoring_weights
+        _default_weights = load_scoring_weights()
+    except (ImportError, AttributeError):
+        from src.feature_scorer import SCORING_WEIGHTS
+        _default_weights = SCORING_WEIGHTS
     st.sidebar.subheader("⚖️ Scoring Formula Weights")
     w_sim = st.sidebar.slider("Semantic Similarity Weight", 0.0, 1.0, _default_weights["semantic_similarity"], 0.05)
     w_skill = st.sidebar.slider("Skills Overlap Weight", 0.0, 1.0, _default_weights["skill_match_score"], 0.05)
