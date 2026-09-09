@@ -1,6 +1,6 @@
 """
 Full pipeline runner for production ranking.
-Usage: python src/run_pipeline_full.py --candidates ./candidates.jsonl --jd ./config/job_description.json --out ./outputs/mohd_ibadullah.csv
+Usage: python src/run_pipeline_full.py --candidates ./candidates.jsonl --jd ./config/job_description.json --out ./outputs/sample_ranking_output.csv
 """
 import json
 import os
@@ -33,7 +33,7 @@ def main():
                         help="Path to job_description.json")
     parser.add_argument("--weights", default=str(project_root / "config" / "scoring_weights.json"),
                         help="Path to scoring_weights.json (scoring formula weights)")
-    parser.add_argument("--out", default=str(project_root / "outputs" / "mohd_ibadullah.csv"),
+    parser.add_argument("--out", default=str(project_root / "outputs" / "sample_ranking_output.csv"),
                         help="Output CSV path")
     parser.add_argument("--validate", default=None,
                         help="Path to validate_submission.py (optional)")

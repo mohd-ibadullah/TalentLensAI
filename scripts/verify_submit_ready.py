@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 # Resolve filename dynamically or from command line
-sub_name = "mohd_ibadullah"
+sub_name = "sample_ranking_output"
 if len(sys.argv) > 1:
     sub_name = Path(sys.argv[1]).stem
 else:

@@ -29,6 +29,6 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
 
 if __name__ == "__main__":
     root = Path(__file__).resolve().parent.parent
-    csv_path = root / "outputs" / "mohd_ibadullah.csv"
-    xlsx_path = root / "outputs" / "mohd_ibadullah.xlsx"
+    csv_path = root / "outputs" / "sample_ranking_output.csv"
+    xlsx_path = root / "outputs" / "sample_ranking_output.xlsx"
     csv_to_xlsx(str(csv_path), str(xlsx_path))

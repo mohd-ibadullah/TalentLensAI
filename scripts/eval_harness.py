@@ -178,7 +178,7 @@ def build_pool(project_root, jd_config_path, n_candidates=500):
     bm25_top = bm25.filter_candidates(parsed_jd, top_n=n_candidates)
     bm25_ids = {c["candidate_id"] for c in bm25_top}
 
-    sub_path = project_root / "outputs" / "mohd_ibadullah.csv"
+    sub_path = project_root / "outputs" / "sample_ranking_output.csv"
     our_top_ids = set()
     if sub_path.exists():
         df = pd.read_csv(sub_path)

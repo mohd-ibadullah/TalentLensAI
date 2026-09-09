@@ -553,11 +553,11 @@ TalentLensAI/
 │   ├── reference_paper_images/  # Reference paper snapshots
 │   └── TalentLens_Paper_Flat/   # Flattened paper build
 │
-├── outputs/                     # Generated ranking CSVs (e.g. outputs/mohd_ibadullah.csv)
+├── outputs/                     # Generated ranking CSVs (e.g. outputs/sample_ranking_output.csv)
 ├── images/                      # Static images
 ├── scratch/                     # Scratch space (gitignored)
 ├── .streamlit/                  # Streamlit config (theme/secrets)
-├── candidates.jsonl (root), candidates.corrupted.jsonl, mohd_ibadullah.csv, *.zip,
+├── candidates.jsonl (root), candidates.corrupted.jsonl, sample_ranking_output.csv, *.zip,
 │   eval_data.json, tex_pieces.json, cc-by.pdf/svg/png, research PDFs  # Local working files
 └── __pycache__/ .pytest_cache/ .freebuff/  # Caches (gitignored)
 ```
@@ -576,7 +576,7 @@ python rank.py --candidates ./candidates.jsonl --out ./outputs/participant_id.cs
 python src/run_pipeline_full.py \
     --candidates ./candidates.jsonl \
     --jd ./config/job_description.json \
-    --out ./outputs/mohd_ibadullah.csv \
+    --out ./outputs/sample_ranking_output.csv \
     [--validate validate_submission.py] \
     [--check-pool] [--skip-preflight] [--setup] [--allow-bm25-only]
 ```
@@ -585,7 +585,7 @@ python src/run_pipeline_full.py \
 | --- | --- |
 | `--candidates` | Path to candidates JSONL (default `./candidates.jsonl`, with 4 fallback locations searched) |
 | `--jd` | JD JSON path (default `config/job_description.json`) |
-| `--out` | Output CSV path (default `outputs/mohd_ibadullah.csv`) |
+| `--out` | Output CSV path (default `outputs/sample_ranking_output.csv`) |
 | `--validate` | Optional external validator script, run as `python <validator> <out.csv>` |
 | `--check-pool` | Verify every output `candidate_id` exists in the corpus |
 | `--setup` | Run model download + embedding precompute once, then exit |
@@ -800,7 +800,7 @@ From the repo's own signals (paper TODOs, README, structure) — priority order 
 
 | Person | Role | Evidence |
 | --- | --- | --- |
-| **Mohd Ibadullah** (Keshav Memorial Institute of Technology, JNTUH; mohdibadullah24@kmit.edu.in) | Sole author and developer — entire pipeline, tests, scripts, dashboard, and paper (all 50 commits, single contributor) | Git history (single identity), paper authorship, `outputs/mohd_ibadullah.csv`, submission metadata |
+| **Mohd Ibadullah** (Keshav Memorial Institute of Technology, JNTUH; mohdibadullah24@kmit.edu.in) | Sole author and developer — entire pipeline, tests, scripts, dashboard, and paper (all 50 commits, single contributor) | Git history (single identity), paper authorship, `outputs/sample_ranking_output.csv`, submission metadata |
 
 No other contributors. Advisor/guide attribution: **Not yet defined** (not present in the repo).
 

@@ -71,7 +71,7 @@ def main():
                         help="Path to candidates.jsonl")
     parser.add_argument("--jd", default=str(project_root / "config" / "job_description.json"),
                         help="Path to job_description.json")
-    parser.add_argument("--submission", default=str(project_root / "outputs" / "mohd_ibadullah.csv"),
+    parser.add_argument("--submission", default=str(project_root / "outputs" / "sample_ranking_output.csv"),
                         help="Path to our submission CSV")
     parser.add_argument("--kappa", action="store_true",
                         help="Run UMBRELA harness + κ validation instead of pseudo-relevance")

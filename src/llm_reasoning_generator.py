@@ -176,7 +176,7 @@ def main():
                         help="Path to candidates.jsonl")
     parser.add_argument("--jd", default=str(project_root / "config" / "job_description.json"),
                         help="Path to job_description.json")
-    parser.add_argument("--submission", default=str(project_root / "outputs" / "mohd_ibadullah.csv"),
+    parser.add_argument("--submission", default=str(project_root / "outputs" / "sample_ranking_output.csv"),
                         help="Path to our submission CSV to update")
     parser.add_argument("--gemini-key", default=os.environ.get("GEMINI_API_KEY", ""),
                         help="Gemini API Key")
@@ -305,7 +305,7 @@ def main():
     print(f"Updated CSV saved to {sub_path}")
     
     # Also save to the outer copy in the parent nesting folder if exists
-    outer_path = project_root.parent / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge" / "mohd_ibadullah.csv"
+    outer_path = project_root.parent / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge" / "sample_ranking_output.csv"
     if outer_path.exists() or outer_path.parent.exists():
         try:
             os.makedirs(outer_path.parent, exist_ok=True)

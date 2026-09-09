@@ -23,7 +23,7 @@ Rank-aware summaries citing skills, company, Redrob signals — no API calls
 [Stage 6] CSV Output
 Top 100 ranked candidates — validator PASS, monotonic scores
          ↓
-Output: mohd_ibadullah.csv — ~80–150 seconds warm (models + embeddings cached)
+Output: sample_ranking_output.csv — ~80–150 seconds warm (models + embeddings cached)
 ```
 
 ## Key Design Decisions
@@ -61,5 +61,5 @@ python src/precompute_embeddings.py
 
 ## Reproduce Command
 ```bash
-python rank.py --candidates ./candidates.jsonl --out ./outputs/mohd_ibadullah.csv
+python rank.py --candidates ./candidates.jsonl --out ./outputs/sample_ranking_output.csv
 ```
