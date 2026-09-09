@@ -31,6 +31,8 @@ def main():
                         help="Path to candidates.jsonl")
     parser.add_argument("--jd", default=str(project_root / "config" / "job_description.json"),
                         help="Path to job_description.json")
+    parser.add_argument("--weights", default=str(project_root / "config" / "scoring_weights.json"),
+                        help="Path to scoring_weights.json (scoring formula weights)")
     parser.add_argument("--out", default=str(project_root / "outputs" / "mohd_ibadullah.csv"),
                         help="Output CSV path")
     parser.add_argument("--validate", default=None,
@@ -81,6 +83,9 @@ def main():
     with open(jd_config_path, "r", encoding="utf-8") as f:
         jd_input = json.load(f)
 
+    from src.feature_scorer import load_scoring_weights
+    scoring_weights = load_scoring_weights(args.weights)
+
     print(f"Loaded Job Description: {jd_input['role_title']}")
     print(f"Running pipeline on dataset: {candidates_path}")
 
@@ -93,7 +98,8 @@ def main():
         jd_input=jd_input,
         out_csv_path=output_csv_path,
         top_n=100,
-        use_llm=False
+        use_llm=False,
+        weights=scoring_weights
     )
     
     # Run validation if validator path provided

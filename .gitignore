@@ -29,18 +29,37 @@ submission_metadata.yaml
 # Local/cache
 .freebuff/
 scratch/
+images/
+
+# CC-BY logo local copies (doclicense package ships its own)
+cc-by.pdf
+cc-by.png
+cc-by.svg
+paper/cc-by.pdf
+paper/cc-by.png
+paper/cc-by.svg
+
+# LaTeX build artifacts
+paper/PAPER_DRAFT.aux
+paper/PAPER_DRAFT.abs
+paper/PAPER_DRAFT.log
+paper/PAPER_DRAFT.out
+paper/PAPER_DRAFT.bbl
+paper/PAPER_DRAFT.blg
+paper/PAPER_DRAFT.xmpdata
+paper/PAPER_DRAFT.pdf
+paper/pdfa.xmpi
 
 # Evidence folders
 TALENTLENS_GPU_FINAL_EVIDENCE/
 TalentLens_Paper_Flat/
 
 # Paper scratch files
-PAPER_FIGURE_PROMPTS.md
-check_tex.py
-tex_pieces.json
+scripts/check_tex.py
+scripts/tex_pieces.json
 eval_data.json
 human_evaluation.html
-kaggle_precompute_embeddings.py
+scripts/kaggle_precompute_embeddings.py
 reference_paper_images/
 
 # Outputs (keep only specific ones)
@@ -49,14 +68,14 @@ outputs/*.json
 outputs/*.jsonl
 outputs/*.txt
 
-# Local-only docs
+# Local-only docs (moved to docs/)
 Summarize_the_consensus_of_academic_literature_and.pdf
 TalentLensAI_Submission.pdf
 TalentLensAI_Submission.pptx
-_qa_audit.py
+scripts/qa_audit.py
 mohd_ibadullah.csv
-CHANGELOG.md
-Project_Abstract.md
-INTERVIEW_PREP_GUIDE.md
-ARCHITECTURE.md
+docs/CHANGELOG.md
+docs/Project_Abstract.md
+docs/INTERVIEW_PREP_GUIDE.md
+docs/human_evaluation.html
 scripts/final_qa_audit.py

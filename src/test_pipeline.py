@@ -22,7 +22,8 @@ def test():
                         help="Path to job_description.json")
     parser.add_argument("--out", default=str(project_root / "outputs" / "sample_test_run.csv"),
                         help="Output CSV path")
-    args = parser.parse_args()
+    # Ignore pytest's own CLI args; use defaults when run under pytest
+    args = parser.parse_args([])
 
     candidates_path = args.data
     jd_config_path = args.jd

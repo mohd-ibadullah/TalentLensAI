@@ -27,7 +27,7 @@ Every number below is measured by a script in the scripts folder. Nothing is est
 | Corpus size | 100,000 profiles, 100% populated | data integrity guard with SHA256 |
 | Name blindness | 800 of 800 name swaps give identical rankings | scripts/measure_name_blindness.py |
 | Honeypot detection | decoy profiles removed from the shortlist | tests folder |
-| Tests | 176 passing | pytest -q |
+| Tests | 177 passing | pytest -q |
 | Latency | BM25 index about 25 seconds one time, about 13 seconds per repeat query | scripts/recompute_all_metrics.py |
 | Cache safety | embeddings carry a text fingerprint, so stale vectors are detected and refused | src/pipeline.py |
 
@@ -78,7 +78,7 @@ cd talent-lens-ai
 pip install -r requirements.txt
 python src/download_models.py
 python src/precompute_embeddings.py
-python rank.py --candidates ./candidates.jsonl --out ./outputs/participant_id.csv
+python rank.py --candidates ./data/sample_candidates.json --out ./outputs/participant_id.csv
 pytest -q
 streamlit run app/streamlit_app.py
 ```

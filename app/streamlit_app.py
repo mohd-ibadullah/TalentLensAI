@@ -450,12 +450,14 @@ if __name__ == "__main__":
         else:
             st.sidebar.info("Full dataset not found locally — using 50-candidate sample.")
 
-    # Custom Weights tuning
+    # Custom Weights tuning (defaults loaded from config/scoring_weights.json)
+    from src.feature_scorer import load_scoring_weights
+    _default_weights = load_scoring_weights()
     st.sidebar.subheader("⚖️ Scoring Formula Weights")
-    w_sim = st.sidebar.slider("Semantic Similarity Weight", 0.0, 1.0, 0.40, 0.05)
-    w_skill = st.sidebar.slider("Skills Overlap Weight", 0.0, 1.0, 0.20, 0.05)
-    w_title = st.sidebar.slider("Title/YoE Match Weight", 0.0, 1.0, 0.20, 0.05)
-    w_signals = st.sidebar.slider("Engagement Signals Weight", 0.0, 1.0, 0.10, 0.05)
+    w_sim = st.sidebar.slider("Semantic Similarity Weight", 0.0, 1.0, _default_weights["semantic_similarity"], 0.05)
+    w_skill = st.sidebar.slider("Skills Overlap Weight", 0.0, 1.0, _default_weights["skill_match_score"], 0.05)
+    w_title = st.sidebar.slider("Title/YoE Match Weight", 0.0, 1.0, _default_weights["title_seniority_match"], 0.05)
+    w_signals = st.sidebar.slider("Engagement Signals Weight", 0.0, 1.0, _default_weights["signal_bonus"], 0.05)
     st.sidebar.caption("Honeypot veto: trap_score ≥ 0.40 zeroes candidate (production default).")
 
     weights = {

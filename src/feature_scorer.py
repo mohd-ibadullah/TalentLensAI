@@ -1,3 +1,5 @@
+import json
+import os
 import numpy as np
 from rapidfuzz import fuzz
 
@@ -9,6 +11,25 @@ SCORING_WEIGHTS = {
     "signal_bonus": 0.10,
     "trap_penalty": 0.40
 }
+
+
+def load_scoring_weights(path: str | None = None) -> dict:
+    """Load scoring weights from config/scoring_weights.json.
+    Falls back to the hardcoded defaults if the file is missing or invalid."""
+    if path is None:
+        path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "..", "config", "scoring_weights.json"
+        )
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            loaded = json.load(f)
+        if isinstance(loaded, dict) and loaded:
+            merged = dict(SCORING_WEIGHTS)
+            merged.update({k: float(v) for k, v in loaded.items() if k in SCORING_WEIGHTS})
+            return merged
+    except (OSError, ValueError, TypeError):
+        pass
+    return dict(SCORING_WEIGHTS)
 
 PROFICIENCY_MULTIPLIERS = {
     "beginner": 0.6,
@@ -224,7 +245,7 @@ def calculate_candidate_score(candidate: dict, semantic_similarity: float, trap_
     Returns final score and a dictionary containing individual components.
     """
     if weights is None:
-        weights = SCORING_WEIGHTS
+        weights = load_scoring_weights()
         
     profile = candidate.get("profile") or {}
     skills = candidate.get("skills") or []

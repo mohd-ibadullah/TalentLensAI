@@ -1,0 +1,7 @@
+{
+  "semantic_similarity": 0.40,
+  "skill_match_score": 0.20,
+  "title_seniority_match": 0.20,
+  "signal_bonus": 0.10,
+  "trap_penalty": 0.40
+}
