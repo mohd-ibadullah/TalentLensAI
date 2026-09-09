@@ -78,7 +78,7 @@ ettin-reranker-17m-v1, RapidFuzz, Streamlit, pytest
 ## Quick start
 
 ```bash
-cd TalentLens-AI
+cd TalentLensAI
 pip install -r requirements.txt
 python src/download_models.py
 python src/precompute_embeddings.py
@@ -102,4 +102,4 @@ https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app/
 
 ## License
 
-Code is released under the MIT License.
+Code is released under the MIT License. TalentCLEF Task A benchmark data remains under its own CC-BY license.
