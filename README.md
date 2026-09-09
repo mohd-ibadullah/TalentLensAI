@@ -10,6 +10,8 @@ TalentLens ranks a large candidate pool against a job description using a hybrid
 pipeline. It runs fully on CPU, is tested against 100,000 profiles, and its ranking is
 verified to ignore candidate names.
 
+## Demo
+
 ![TalentLens AI demo — job description in, ranked candidates out](docs/demo.gif)
 
 ## What it does
@@ -23,6 +25,8 @@ The pipeline has three stages.
    recruiter signals, then reranked with the ettin-reranker-17m-v1 cross encoder.
 
 A Streamlit dashboard is included for interactive use.
+
+## Architecture
 
 ![TalentLens AI pipeline architecture](docs/architecture.png)
 
