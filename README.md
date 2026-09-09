@@ -48,21 +48,6 @@ Why name blindness matters. The pipeline never reads a candidate name while rank
 unchanged. The only place employer names are read is the consulting career rule, disclosed
 below.
 
-## Research
-
-This repository backs a measured study on identity leakage in resume retrieval.
-
-Where Does the Name Leak? A Stage-Wise Decomposition of Identity Sensitivity in Resume
-Retrieval, by Mohd Ibadullah.
-
-On the TalentCLEF 2026 benchmark, dense retrieval reorders candidates when only the name
-changes (RBO 0.669 English, 0.639 Spanish), while BM25 stays almost name blind. Removing
-the identity header closes the gap to RBO 1.000 at no measurable accuracy cost.
-
-Benchmark: TalentCLEF 2026 Task A, CC-BY-4.0, DOI 10.5281/zenodo.17625261.
-
-Paper source: paper/PAPER_DRAFT.tex (compiled PDF included in the paper folder).
-
 ## Fairness and honesty
 
 Candidate names are excluded from ranking. Names appear only in the user interface for
@@ -101,7 +86,6 @@ streamlit run app/streamlit_app.py
 | app | Streamlit dashboard |
 | tests | unit, integration and fairness tests |
 | scripts | evaluation, measurement and audit scripts |
-| paper/ | paper source, figures, and compiled PDFs |
 
 ## Live demo
 
@@ -109,5 +93,4 @@ https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app/
 
 ## License
 
-Code and study are released under CC-BY-4.0. The benchmark data remains under the
-TalentCLEF license with attribution.
+Code is released under CC-BY-4.0.
