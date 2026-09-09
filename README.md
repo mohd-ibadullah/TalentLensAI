@@ -12,7 +12,7 @@ verified to ignore candidate names.
 
 ## Demo
 
-![TalentLens AI demo — job description in, ranked candidates out](docs/demo.gif)
+![TalentLens AI demo, job description in, ranked candidates out](docs/demo.gif)
 
 ## What it does
 
@@ -36,7 +36,7 @@ The system was tested through a series of controlled experiments before freezing
 ranking formula: name-swap consistency tests across 800 profiles, decoy and honeypot
 detection tests, employer-perturbation audits, and benchmark evaluation on the public
 TalentCLEF Task A dataset with human relevance judgments. Findings from that testing fed
-directly into the final scoring design — including the decision to exclude candidate
+directly into the final scoring design, including the decision to exclude candidate
 names from every ranking stage.
 
 ## Measured results
