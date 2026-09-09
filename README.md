@@ -84,7 +84,7 @@ ettin-reranker-17m-v1, RapidFuzz, Streamlit, pytest
 ## Quick start
 
 ```bash
-cd talent-lens-ai
+cd TalentLens-AI
 pip install -r requirements.txt
 python src/download_models.py
 python src/precompute_embeddings.py
