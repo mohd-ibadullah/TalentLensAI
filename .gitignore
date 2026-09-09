@@ -82,3 +82,9 @@ docs/human_evaluation.html
 scripts/final_qa_audit.py
 # Local-only research folder (not part of the product repo)
 paper/
+
+# git history-rewrite working folder (git filter-repo etc.)
+.git-rewrite/
+
+# Author identity canonicalization (privacy / history-rewrite evidence)
+.mailmap

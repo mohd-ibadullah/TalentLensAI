@@ -229,7 +229,7 @@ This prevents the classic "stale vectors silently poison the ranking" failure.
 | rank-bm25 | ≥0.2.2 | `BM25Okapi` lexical retrieval |
 | sentence-transformers | ≥2.2.0 | `CrossEncoder` reranking |
 | python-dotenv | ≥1.0.0 | .env loading support |
-| pytest | ≥7.0.0 | 176 tests |
+| pytest | ≥7.0.0 | 177 tests |
 | openpyxl | ≥3.1.0 | Excel export helper (`src/csv_to_xlsx.py`) |
 | requests | ≥2.28.0 | LLM API calls (Gemini / Groq) |
 
@@ -243,7 +243,7 @@ This prevents the classic "stale vectors silently poison the ranking" failure.
 
 ### 4.4 Tools & infrastructure
 - **Streamlit Cloud** — public live demo: `https://talentlensai-nxrk7zxjmaxvnwnubyvz7n.streamlit.app/` (sample dataset only; cloud guard via `STREAMLIT_RUNTIME_ENV`).
-- **pytest** — test suite (176 passing tests reported).
+- **pytest** — test suite (177 passing tests reported).
 - **LaTeX (CEUR-WS `ceurart` class)** — research paper in `paper/`.
 - **Streamlit/Starlette gzip monkeypatch** — `run_app.py` and the top of `app/streamlit_app.py` patch `starlette.middleware.gzip` for headless/cloud deployment compatibility.
 - License: **CC-BY-4.0** for code+study; benchmark data remains under the TalentCLEF license with attribution.
@@ -507,7 +507,7 @@ TalentLensAI/
 │   └── streamlit_app.py         # Full dashboard: dataset switcher, weight sliders, ranking UI,
 │                                #   score cards, CSV download, LLM interview questions
 │
-├── tests/                       # Canonical pytest suite (176 tests reported passing)
+├── tests/                       # Canonical pytest suite (177 tests reported passing)
 │   ├── test_bm25_filter.py
 │   ├── test_data_integrity.py
 │   ├── test_feature_scorer.py
@@ -724,7 +724,7 @@ Without it, only the 50-candidate sample mode works.
 python rank.py --candidates ./candidates.jsonl --out ./outputs/participant_id.csv
 
 # Tests
-pytest -q                                  # 176 tests expected to pass
+pytest -q                                  # 177 tests expected to pass
 
 # Dashboard
 streamlit run app/streamlit_app.py         # local (sample + full modes)
@@ -745,7 +745,7 @@ api_key=<groq-key>      # Groq-hosted model for interview questions
 **Done and measured (from README + scripts):**
 
 - Full 6-stage pipeline implemented, CLI + Streamlit UI, live Streamlit Cloud demo deployed.
-- 176 pytest tests passing (`pytest -q`).
+- 177 pytest tests passing (`pytest -q`).
 - Corpus: 100,000 profiles, 100% populated, SHA-256-verified integrity guard.
 - Name blindness: 800/800 name-swap comparisons yield identical rankings.
 - Embedding cache with dual fingerprint verification (IDs + text) implemented and tested.
