@@ -16,7 +16,7 @@ The pipeline has three stages.
 
 A Streamlit dashboard is included for interactive use.
 
-![Architecture](paper_figures/figure_1.png)
+![Architecture](paper/paper_figures/figure_1.png)
 
 ## Measured results
 
@@ -91,7 +91,7 @@ streamlit run app/streamlit_app.py
 | app | Streamlit dashboard |
 | tests | unit, integration and fairness tests |
 | scripts | evaluation, measurement and audit scripts |
-| paper_figures | figures used in the paper |
+| paper/ | paper source, figures, and compiled PDFs |
 
 ## Live demo
 
